@@ -8,6 +8,7 @@ import com.jfixby.cmns.api.json.Json;
 import com.jfixby.cmns.api.log.L;
 import com.jfixby.cmns.api.path.AbsolutePath;
 import com.jfixby.cmns.api.path.ChildrenList;
+import com.jfixby.r3.api.assets.AssetsManager;
 import com.jfixby.r3.api.resources.manager.PackageDescriptor;
 import com.jfixby.r3.api.resources.manager.PackageSearchParameters;
 import com.jfixby.r3.api.resources.manager.PackageSearchResult;
@@ -73,8 +74,6 @@ public class FileSystemBasedResource implements Resource {
 	}
 
 	public void autoResolveAssets(Collection<AssetID> dependencies) {
-		// AssetsManager.autoResolveAssets(dependencies);
-		L.d("AssetsManager.autoResolveAssets(dependencies);");
-		throw new Error();
+		AssetsManager.autoResolveAssets(dependencies);
 	}
 }
