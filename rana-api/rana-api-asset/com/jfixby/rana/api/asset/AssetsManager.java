@@ -21,22 +21,7 @@ public class AssetsManager {
 	public static final AssetsManagerComponent component() {
 		return componentInstaller.getComponent();
 	}
-
-	public static Collection<PackageReader> findPackageReaders(PackageFormat format) {
-		return invoke().findPackageReaders(format);
-	}
-
-	public static void registerPackageReader(PackageReader loader) {
-		invoke().registerPackageReader(loader);
-	}
-
-	public static Collection<PackageFormat> listAcceptablePackageFormats() {
-		return invoke().listAcceptablePackageFormats();
-	}
-
-	public static void printAllPackageReaders() {
-		invoke().printInstalledPackageReaders();
-	}
+	
 
 	public static void registerAsset(AssetID asset_id, AssetContainer container) {
 		invoke().registerAssetContainer(asset_id, container);
@@ -54,13 +39,7 @@ public class AssetsManager {
 		invoke().releaseAllAssets(consumer);
 	}
 
-	public static boolean autoResolveAsset(AssetID dependency) {
-		return invoke().autoResolveAsset(dependency);
-	}
-
-	public static void autoResolveAssets(Collection<AssetID> dependencies) {
-		invoke().autoResolveAssets(dependencies);
-	}
+	
 
 	public static void printAllLoadedAssets() {
 		invoke().printAllLoadedAssets();
@@ -70,8 +49,13 @@ public class AssetsManager {
 		invoke().checkAll();
 	}
 
-	public static PackageFormat newPackageFormat(String format_name) {
-		return invoke().newPackageFormat(format_name);
+	
+	public static boolean autoResolveAsset(AssetID dependency) {
+		return invoke().autoResolveAsset(dependency);
+	}
+
+	public static void autoResolveAssets(Collection<AssetID> dependencies) {
+		invoke().autoResolveAssets(dependencies);
 	}
 
 }

@@ -1,5 +1,6 @@
 package com.jfixby.rana.api.pkg;
 
+import com.jfixby.cmns.api.collections.Collection;
 import com.jfixby.cmns.api.components.ComponentInstaller;
 
 public class ResourcesManager {
@@ -32,6 +33,28 @@ public class ResourcesManager {
 
 	public static void printAllPackages() {
 		invoke().printAllPackages();
+	}
+	
+
+	public static PackageFormat newPackageFormat(String format_name) {
+		return invoke().newPackageFormat(format_name);
+	}
+	
+
+	public static Collection<PackageReader> findPackageReaders(PackageFormat format) {
+		return invoke().findPackageReaders(format);
+	}
+
+	public static void registerPackageReader(PackageReader loader) {
+		invoke().registerPackageReader(loader);
+	}
+
+	public static Collection<PackageFormat> listAcceptablePackageFormats() {
+		return invoke().listAcceptablePackageFormats();
+	}
+
+	public static void printAllPackageReaders() {
+		invoke().printInstalledPackageReaders();
 	}
 
 }

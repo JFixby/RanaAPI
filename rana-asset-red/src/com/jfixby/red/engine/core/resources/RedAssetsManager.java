@@ -21,8 +21,6 @@ import com.jfixby.rana.api.pkg.ResourcesManager;
 
 public class RedAssetsManager implements AssetsManagerComponent, AssetsConsumer {
 
-	final Map<PackageFormat, List<PackageReader>> loaders_by_format = JUtils.newMap();
-	final List<PackageReader> loaders = JUtils.newList();
 	final Map<AssetID, RedAssetAssetHandler> assets = JUtils.newMap();
 	final List<AssetContainer> containers = JUtils.newList();
 
@@ -30,46 +28,10 @@ public class RedAssetsManager implements AssetsManagerComponent, AssetsConsumer 
 	final UserAssets user_assets = new UserAssets();
 
 	@Override
-	public Collection<PackageReader> findPackageReaders(PackageFormat format) {
-		List<PackageReader> list = loaders_by_format.get(format);
-		if (list == null) {
-			// L.d("format", format);
-			// loaders_by_format.print("acceptable formats");
-			return JUtils.newList();
+	public void checkAll() {
+		for (AssetContainer container : containers) {
+			container.checkAll();
 		}
-		return list;
-	}
-
-	@Override
-	public void registerPackageReader(PackageReader loader) {
-		if (loaders.contains(loader)) {
-			L.d("Loader is already registred:" + loader);
-			return;
-		}
-
-		Collection<PackageFormat> can_read = loader.listAcceptablePackageFormats();
-		JUtils.checkNull("PackageReader.listAcceptablePackageFormats()", can_read);
-		loaders.add(loader);
-		for (int i = 0; i < can_read.size(); i++) {
-			PackageFormat format = can_read.getElementAt(i);
-			List<PackageReader> loaders_list = this.loaders_by_format.get(format);
-			if (loaders_list == null) {
-				loaders_list = JUtils.newList();
-				loaders_by_format.put(format, loaders_list);
-			}
-			loaders_list.add(loader);
-		}
-
-	}
-
-	@Override
-	public Collection<PackageFormat> listAcceptablePackageFormats() {
-		return this.loaders_by_format.keys();
-	}
-
-	@Override
-	public void printInstalledPackageReaders() {
-		this.loaders_by_format.print("Installed package readers");
 	}
 
 	@Override
@@ -195,9 +157,9 @@ public class RedAssetsManager implements AssetsManagerComponent, AssetsConsumer 
 		}
 
 		PackageFormat format = package_handler.getFormat();
-		Collection<PackageReader> package_loaders = AssetsManager.findPackageReaders(format);
+		Collection<PackageReader> package_loaders = ResourcesManager.findPackageReaders(format);
 		if (package_loaders.isEmpty()) {
-			AssetsManager.printAllPackageReaders();
+			ResourcesManager.printAllPackageReaders();
 			L.e("Failed to read package", package_handler);
 			throw new Error("No package reader for " + format);
 			//
@@ -223,18 +185,6 @@ public class RedAssetsManager implements AssetsManagerComponent, AssetsConsumer 
 		}
 		ResourcesManager.updateAll();
 		return resolve(dependency);
-	}
-
-	@Override
-	public void checkAll() {
-		for (AssetContainer container : containers) {
-			container.checkAll();
-		}
-	}
-
-	@Override
-	public PackageFormat newPackageFormat(String format_name) {
-		return new PackageFormatImpl(format_name);
 	}
 
 }
