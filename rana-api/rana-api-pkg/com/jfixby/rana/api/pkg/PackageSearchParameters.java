@@ -2,7 +2,6 @@ package com.jfixby.rana.api.pkg;
 
 import com.jfixby.cmns.api.assets.AssetID;
 import com.jfixby.cmns.api.collections.List;
-import com.jfixby.rana.api.pkg.PACKAGE_STATUS;
 
 public interface PackageSearchParameters {
 

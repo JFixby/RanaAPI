@@ -3,7 +3,6 @@ package com.jfixby.rana.api.pkg;
 import java.util.Comparator;
 
 import com.jfixby.cmns.api.collections.Collection;
-import com.jfixby.rana.api.pkg.PackageHandler;
 
 public interface PackageSearchResult {
 
