@@ -137,6 +137,10 @@ public class ResourceIndex {
 
 	public void autoResolveAssets(Collection<AssetID> dependencies) {
 		master.autoResolveAssets(dependencies);
-		
+
+	}
+
+	public boolean autoResolveAssets() {
+		return master.autoResolveAssets();
 	}
 }

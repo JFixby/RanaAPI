@@ -6,11 +6,13 @@ import com.jfixby.cmns.api.collections.JUtils;
 import com.jfixby.cmns.api.collections.List;
 import com.jfixby.cmns.api.collections.Map;
 import com.jfixby.cmns.api.log.L;
+import com.jfixby.cmns.api.sys.Sys;
 import com.jfixby.rana.api.asset.AssetContainer;
 import com.jfixby.rana.api.asset.AssetHandler;
 import com.jfixby.rana.api.asset.AssetsConsumer;
 import com.jfixby.rana.api.asset.AssetsManager;
 import com.jfixby.rana.api.asset.AssetsManagerComponent;
+import com.jfixby.rana.api.asset.AssetsManagerFlags;
 import com.jfixby.rana.api.pkg.PACKAGE_STATUS;
 import com.jfixby.rana.api.pkg.PackageFormat;
 import com.jfixby.rana.api.pkg.PackageHandler;
@@ -185,6 +187,11 @@ public class RedAssetsManager implements AssetsManagerComponent, AssetsConsumer 
 		}
 		ResourcesManager.updateAll();
 		return resolve(dependency);
+	}
+
+	@Override
+	public boolean autoResolveAssets() {
+		return Sys.getFlag(AssetsManagerFlags.AutoresolveDependencies);
 	}
 
 }

@@ -19,7 +19,6 @@ public class AssetsManager {
 	public static final AssetsManagerComponent component() {
 		return componentInstaller.getComponent();
 	}
-	
 
 	public static void registerAsset(AssetID asset_id, AssetContainer container) {
 		invoke().registerAssetContainer(asset_id, container);
@@ -37,8 +36,6 @@ public class AssetsManager {
 		invoke().releaseAllAssets(consumer);
 	}
 
-	
-
 	public static void printAllLoadedAssets() {
 		invoke().printAllLoadedAssets();
 	}
@@ -47,13 +44,16 @@ public class AssetsManager {
 		invoke().checkAll();
 	}
 
-	
 	public static boolean autoResolveAsset(AssetID dependency) {
 		return invoke().autoResolveAsset(dependency);
 	}
 
 	public static void autoResolveAssets(Collection<AssetID> dependencies) {
 		invoke().autoResolveAssets(dependencies);
+	}
+
+	public static boolean autoResolveAssets() {
+		return invoke().autoResolveAssets();
 	}
 
 }

@@ -76,4 +76,8 @@ public class FileSystemBasedResource implements Resource {
 	public void autoResolveAssets(Collection<AssetID> dependencies) {
 		AssetsManager.autoResolveAssets(dependencies);
 	}
+
+	public boolean autoResolveAssets() {
+		return AssetsManager.autoResolveAssets();
+	}
 }

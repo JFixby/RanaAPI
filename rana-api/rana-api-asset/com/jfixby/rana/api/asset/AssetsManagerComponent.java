@@ -21,4 +21,6 @@ public interface AssetsManagerComponent {
 
 	void checkAll();
 
+	boolean autoResolveAssets();
+
 }

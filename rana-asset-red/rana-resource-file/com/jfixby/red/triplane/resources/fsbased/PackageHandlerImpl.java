@@ -25,6 +25,10 @@ public class PackageHandlerImpl implements PackageHandler, PackageVersion {
 		// AssetsManager.autoResolveAssets(dependencies);
 	}
 
+	private boolean auto() {
+		return resourceIndex.autoResolveAssets();
+	}
+
 	List<AssetID> descriptors = JUtils.newList();
 	List<AssetID> dependencies = JUtils.newList();
 
@@ -55,10 +59,6 @@ public class PackageHandlerImpl implements PackageHandler, PackageVersion {
 			}
 		}
 
-		private boolean auto() {
-			L.d("Missing flag");
-			return true;
-		}
 	};
 	private String name;
 	private File root_file;
