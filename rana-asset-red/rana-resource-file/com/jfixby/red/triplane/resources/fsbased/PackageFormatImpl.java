@@ -1,6 +1,6 @@
 package com.jfixby.red.triplane.resources.fsbased;
 
-import com.jfixby.cmns.api.collections.JUtils;
+import com.jfixby.cmns.api.util.JUtils;
 import com.jfixby.rana.api.pkg.PackageFormat;
 
 public class PackageFormatImpl implements PackageFormat {
