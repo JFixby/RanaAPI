@@ -4,6 +4,7 @@ import com.jfixby.cmns.api.assets.AssetID;
 import com.jfixby.cmns.api.collections.Collection;
 import com.jfixby.cmns.api.collections.List;
 import com.jfixby.cmns.api.collections.Map;
+import com.jfixby.cmns.api.err.Err;
 import com.jfixby.cmns.api.log.L;
 import com.jfixby.cmns.api.sys.Sys;
 import com.jfixby.cmns.api.util.JUtils;
@@ -146,7 +147,7 @@ public class RedAssetsManager implements AssetsManagerComponent, AssetsConsumer 
 			String msg = "Asset [" + dependency + "] was not found in any package.";
 			L.d(msg);
 			ResourcesManager.printAllPackages();
-			throw new Error(msg);
+			Err.reportError(msg);
 			//
 		}
 
