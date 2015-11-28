@@ -3,6 +3,7 @@ package com.jfixby.red.triplane.resources.fsbased;
 import com.jfixby.cmns.api.collections.Collection;
 import com.jfixby.cmns.api.collections.List;
 import com.jfixby.cmns.api.collections.Map;
+import com.jfixby.cmns.api.debug.Debug;
 import com.jfixby.cmns.api.log.L;
 import com.jfixby.cmns.api.util.JUtils;
 import com.jfixby.rana.api.pkg.PackageFormat;
@@ -24,7 +25,7 @@ public class RedResourcesManager implements ResourcesManagerComponent {
 	@Override
 	public PackageSearchResult findPackages(PackageSearchParameters search_params) {
 		RedPackageSearchResult result = new RedPackageSearchResult(search_params);
-		JUtils.checkNull("search_params", search_params);
+		Debug.checkNull("search_params", search_params);
 		for (int i = 0; i < resources.size(); i++) {
 			PackageSearchResult result_i = resources.getElementAt(i).findPackages(search_params);
 			result.add(result_i);
@@ -34,7 +35,7 @@ public class RedResourcesManager implements ResourcesManagerComponent {
 	}
 
 	public void installResource(Resource resource_to_install) {
-		JUtils.checkNull("resource_to_install", resource_to_install);
+		Debug.checkNull("resource_to_install", resource_to_install);
 		if (resources.contains(resource_to_install)) {
 			throw new Error("Resource is already installed: " + resource_to_install);
 		}
@@ -81,7 +82,7 @@ public class RedResourcesManager implements ResourcesManagerComponent {
 		}
 
 		Collection<PackageFormat> can_read = loader.listAcceptablePackageFormats();
-		JUtils.checkNull("PackageReader.listAcceptablePackageFormats()", can_read);
+		Debug.checkNull("PackageReader.listAcceptablePackageFormats()", can_read);
 		loaders.add(loader);
 		for (int i = 0; i < can_read.size(); i++) {
 			PackageFormat format = can_read.getElementAt(i);

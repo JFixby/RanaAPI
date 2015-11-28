@@ -5,6 +5,7 @@ import java.io.IOException;
 import com.jfixby.cmns.api.assets.AssetID;
 import com.jfixby.cmns.api.collections.Collection;
 import com.jfixby.cmns.api.collections.List;
+import com.jfixby.cmns.api.debug.Debug;
 import com.jfixby.cmns.api.filesystem.File;
 import com.jfixby.cmns.api.filesystem.FileSystem;
 import com.jfixby.cmns.api.filesystem.FileSystemSandBox;
@@ -147,14 +148,14 @@ public class PackageHandlerImpl implements PackageHandler, PackageVersion {
 	}
 
 	public void setFormat(String format_string) {
-		JUtils.checkNull("format", format_string);
-		JUtils.checkEmpty("format", format_string);
+		Debug.checkNull("format", format_string);
+		Debug.checkEmpty("format", format_string);
 		format = new PackageFormatImpl(format_string);
 	}
 
 	public void setVersion(String version) {
-		JUtils.checkNull("version", version);
-		JUtils.checkEmpty("version", version);
+		Debug.checkNull("version", version);
+		Debug.checkEmpty("version", version);
 		this.version = version;
 	}
 

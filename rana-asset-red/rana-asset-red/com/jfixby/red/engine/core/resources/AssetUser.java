@@ -1,6 +1,6 @@
 package com.jfixby.red.engine.core.resources;
 
-import com.jfixby.cmns.api.util.JUtils;
+import com.jfixby.cmns.api.debug.Debug;
 import com.jfixby.rana.api.asset.AssetsConsumer;
 
 public class AssetUser {
@@ -35,7 +35,7 @@ public class AssetUser {
 	public final AssetsConsumer consumer;
 
 	public AssetUser(AssetsConsumer consumer) {
-		JUtils.checkNull("consumer", consumer);
+		Debug.checkNull("consumer", consumer);
 		this.consumer = consumer;
 	}
 }

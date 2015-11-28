@@ -1,5 +1,6 @@
 package com.jfixby.red.triplane.resources.fsbased;
 
+import com.jfixby.cmns.api.debug.Debug;
 import com.jfixby.cmns.api.util.JUtils;
 import com.jfixby.rana.api.pkg.PackageFormat;
 
@@ -7,8 +8,8 @@ public class PackageFormatImpl implements PackageFormat {
 	String format_name;
 
 	public PackageFormatImpl(String format_name) {
-		JUtils.checkNull("format_name", format_name);
-		JUtils.checkEmpty("format_name", format_name);
+		Debug.checkNull("format_name", format_name);
+		Debug.checkEmpty("format_name", format_name);
 		this.format_name = format_name;
 	}
 

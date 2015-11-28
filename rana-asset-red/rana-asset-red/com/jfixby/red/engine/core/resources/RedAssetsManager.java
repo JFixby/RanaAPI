@@ -4,6 +4,7 @@ import com.jfixby.cmns.api.assets.AssetID;
 import com.jfixby.cmns.api.collections.Collection;
 import com.jfixby.cmns.api.collections.List;
 import com.jfixby.cmns.api.collections.Map;
+import com.jfixby.cmns.api.debug.Debug;
 import com.jfixby.cmns.api.err.Err;
 import com.jfixby.cmns.api.log.L;
 import com.jfixby.cmns.api.sys.Sys;
@@ -39,8 +40,8 @@ public class RedAssetsManager implements AssetsManagerComponent, AssetsConsumer 
 
 	@Override
 	public void registerAssetContainer(AssetID asset_id, AssetContainer container) {
-		JUtils.checkNull("asset_id", asset_id);
-		JUtils.checkNull("container", container);
+		Debug.checkNull("asset_id", asset_id);
+		Debug.checkNull("container", container);
 
 		containers.add(container);
 
@@ -52,8 +53,8 @@ public class RedAssetsManager implements AssetsManagerComponent, AssetsConsumer 
 
 	@Override
 	public AssetHandler obtainAsset(AssetID asset_id, AssetsConsumer consumer) {
-		JUtils.checkNull("asset_id", asset_id);
-		JUtils.checkNull("consumer", consumer);
+		Debug.checkNull("asset_id", asset_id);
+		Debug.checkNull("consumer", consumer);
 		RedAssetAssetHandler asset = assets.get(asset_id);
 		if (asset == null) {
 			// assets.print("available assets");
@@ -71,10 +72,10 @@ public class RedAssetsManager implements AssetsManagerComponent, AssetsConsumer 
 
 	@Override
 	public void releaseAsset(AssetHandler asset_info, AssetsConsumer consumer) {
-		JUtils.checkNull("asset_info", asset_info);
+		Debug.checkNull("asset_info", asset_info);
 		AssetID asset_id = asset_info.ID();
-		JUtils.checkNull("asset_id", asset_id);
-		JUtils.checkNull("consumer", consumer);
+		Debug.checkNull("asset_id", asset_id);
+		Debug.checkNull("consumer", consumer);
 		RedAssetAssetHandler asset = assets.get(asset_id);
 		if (asset == null) {
 			throw new Error("Asset " + asset_id + " is not registred here");
@@ -94,7 +95,7 @@ public class RedAssetsManager implements AssetsManagerComponent, AssetsConsumer 
 
 	@Override
 	public void releaseAllAssets(AssetsConsumer consumer) {
-		JUtils.checkNull("consumer", consumer);
+		Debug.checkNull("consumer", consumer);
 		AssetUser user = new AssetUser(consumer);
 		Collection<AssetID> assets_list = JUtils.newList(user_assets.listAssetsUsedBy(user));
 		if (assets_list == null) {
@@ -117,7 +118,7 @@ public class RedAssetsManager implements AssetsManagerComponent, AssetsConsumer 
 
 	@Override
 	public void autoResolveAssets(Collection<AssetID> dependencies) {
-		JUtils.checkNull("dependencies", dependencies);
+		Debug.checkNull("dependencies", dependencies);
 		boolean updated = false;
 		for (AssetID dependency : dependencies) {
 
