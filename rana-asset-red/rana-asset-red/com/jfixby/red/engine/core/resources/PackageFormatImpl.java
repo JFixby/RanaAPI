@@ -1,7 +1,6 @@
 package com.jfixby.red.engine.core.resources;
 
 import com.jfixby.cmns.api.debug.Debug;
-import com.jfixby.cmns.api.util.JUtils;
 import com.jfixby.rana.api.pkg.PackageFormat;
 
 public class PackageFormatImpl implements PackageFormat {
