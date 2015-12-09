@@ -2,7 +2,7 @@ package com.jfixby.red.engine.core.resources;
 
 import com.jfixby.cmns.api.assets.AssetID;
 import com.jfixby.cmns.api.collections.Collection;
-import com.jfixby.cmns.api.collections.JUtils;
+import com.jfixby.cmns.api.collections.Collections;
 import com.jfixby.cmns.api.collections.List;
 import com.jfixby.cmns.api.collections.Map;
 import com.jfixby.cmns.api.debug.Debug;
@@ -25,8 +25,8 @@ import com.jfixby.rana.api.pkg.ResourcesManager;
 
 public class RedAssetsManager implements AssetsManagerComponent, AssetsConsumer {
 
-	final Map<AssetID, RedAssetAssetHandler> assets = JUtils.newMap();
-	final List<AssetContainer> containers = JUtils.newList();
+	final Map<AssetID, RedAssetAssetHandler> assets = Collections.newMap();
+	final List<AssetContainer> containers = Collections.newList();
 
 	final AssetUsers asset_users = new AssetUsers();
 	final UserAssets user_assets = new UserAssets();
@@ -97,7 +97,7 @@ public class RedAssetsManager implements AssetsManagerComponent, AssetsConsumer 
 	public void releaseAllAssets(AssetsConsumer consumer) {
 		Debug.checkNull("consumer", consumer);
 		AssetUser user = new AssetUser(consumer);
-		Collection<AssetID> assets_list = JUtils.newList(user_assets.listAssetsUsedBy(user));
+		Collection<AssetID> assets_list = Collections.newList(user_assets.listAssetsUsedBy(user));
 		if (assets_list == null) {
 			L.d("AssetsConsumer: " + user.consumer, "is not using any assets");
 			user_assets.print();

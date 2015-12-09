@@ -3,7 +3,7 @@ package com.jfixby.red.triplane.resources.fsbased;
 import com.jfixby.cmns.api.assets.AssetID;
 import com.jfixby.cmns.api.assets.Names;
 import com.jfixby.cmns.api.collections.Collection;
-import com.jfixby.cmns.api.collections.JUtils;
+import com.jfixby.cmns.api.collections.Collections;
 import com.jfixby.cmns.api.collections.List;
 import com.jfixby.cmns.api.collections.Map;
 import com.jfixby.cmns.api.collections.Set;
@@ -15,8 +15,8 @@ import com.jfixby.rana.api.pkg.PackageSearchResult;
 import com.jfixby.rana.api.pkg.fs.PackageDescriptor;
 
 public class ResourceIndex {
-	Set<PackageHandler> all_handlers = JUtils.newSet();
-	Map<AssetID, Set<PackageHandler>> handlers_by_asset_id = JUtils.newMap();
+	Set<PackageHandler> all_handlers = Collections.newSet();
+	Map<AssetID, Set<PackageHandler>> handlers_by_asset_id = Collections.newMap();
 	private FileSystemBasedResource master;
 
 	public void reset() {
@@ -55,7 +55,7 @@ public class ResourceIndex {
 			AssetID key = handler.listPackedAssets().getElementAt(i);
 			Set<PackageHandler> list = handlers_by_asset_id.get(key);
 			if (list == null) {
-				list = JUtils.newSet();
+				list = Collections.newSet();
 				handlers_by_asset_id.put(key, list);
 			}
 			list.add(handler);
@@ -91,7 +91,7 @@ public class ResourceIndex {
 	private Set<PackageHandler> filterHandlers(AssetID asset_id) {
 		Set<PackageHandler> handlers = handlers_by_asset_id.get(asset_id);
 		if (handlers == null) {
-			handlers = JUtils.newSet();
+			handlers = Collections.newSet();
 		}
 		return handlers;
 	}

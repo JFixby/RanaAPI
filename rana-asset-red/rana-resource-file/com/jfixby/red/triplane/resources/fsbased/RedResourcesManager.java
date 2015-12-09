@@ -1,7 +1,7 @@
 package com.jfixby.red.triplane.resources.fsbased;
 
 import com.jfixby.cmns.api.collections.Collection;
-import com.jfixby.cmns.api.collections.JUtils;
+import com.jfixby.cmns.api.collections.Collections;
 import com.jfixby.cmns.api.collections.List;
 import com.jfixby.cmns.api.collections.Map;
 import com.jfixby.cmns.api.debug.Debug;
@@ -15,7 +15,7 @@ import com.jfixby.rana.api.pkg.ResourcesManagerComponent;
 
 public class RedResourcesManager implements ResourcesManagerComponent {
 
-	final List<Resource> resources = JUtils.newList();
+	final List<Resource> resources = Collections.newList();
 
 	@Override
 	public PackageSearchParameters newSearchParameters() {
@@ -69,7 +69,7 @@ public class RedResourcesManager implements ResourcesManagerComponent {
 		if (list == null) {
 			// L.d("format", format);
 			// loaders_by_format.print("acceptable formats");
-			return JUtils.newList();
+			return Collections.newList();
 		}
 		return list;
 	}
@@ -88,7 +88,7 @@ public class RedResourcesManager implements ResourcesManagerComponent {
 			PackageFormat format = can_read.getElementAt(i);
 			List<PackageReader> loaders_list = this.loaders_by_format.get(format);
 			if (loaders_list == null) {
-				loaders_list = JUtils.newList();
+				loaders_list = Collections.newList();
 				loaders_by_format.put(format, loaders_list);
 			}
 			loaders_list.add(loader);
@@ -96,8 +96,8 @@ public class RedResourcesManager implements ResourcesManagerComponent {
 
 	}
 
-	final Map<PackageFormat, List<PackageReader>> loaders_by_format = JUtils.newMap();
-	final List<PackageReader> loaders = JUtils.newList();
+	final Map<PackageFormat, List<PackageReader>> loaders_by_format = Collections.newMap();
+	final List<PackageReader> loaders = Collections.newList();
 
 	@Override
 	public Collection<PackageFormat> listAcceptablePackageFormats() {

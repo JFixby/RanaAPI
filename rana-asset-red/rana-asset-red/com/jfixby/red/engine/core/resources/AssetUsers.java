@@ -1,14 +1,14 @@
 package com.jfixby.red.engine.core.resources;
 
 import com.jfixby.cmns.api.assets.AssetID;
-import com.jfixby.cmns.api.collections.JUtils;
+import com.jfixby.cmns.api.collections.Collections;
 import com.jfixby.cmns.api.collections.List;
 import com.jfixby.cmns.api.collections.Map;
 import com.jfixby.cmns.api.log.L;
 
 public class AssetUsers {
 
-	Map<AssetID, List<AssetUser>> asset_users = JUtils.newMap();
+	Map<AssetID, List<AssetUser>> asset_users = Collections.newMap();
 
 	public void print(String tag) {
 		asset_users.print(tag);
@@ -17,7 +17,7 @@ public class AssetUsers {
 	public void addUser(AssetID asset_id, AssetUser user) {
 		List<AssetUser> users = asset_users.get(asset_id);
 		if (users == null) {
-			users = JUtils.newList();
+			users = Collections.newList();
 			asset_users.put(asset_id, users);
 		}
 		users.add(user);

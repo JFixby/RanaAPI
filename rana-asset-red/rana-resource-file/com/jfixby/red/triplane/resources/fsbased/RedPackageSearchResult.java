@@ -3,7 +3,7 @@ package com.jfixby.red.triplane.resources.fsbased;
 import java.util.Comparator;
 
 import com.jfixby.cmns.api.collections.Collection;
-import com.jfixby.cmns.api.collections.JUtils;
+import com.jfixby.cmns.api.collections.Collections;
 import com.jfixby.cmns.api.collections.List;
 import com.jfixby.cmns.api.log.L;
 import com.jfixby.rana.api.pkg.PackageHandler;
@@ -12,7 +12,7 @@ import com.jfixby.rana.api.pkg.PackageSearchResult;
 
 public class RedPackageSearchResult implements PackageSearchResult {
 
-	final List<PackageHandler> list = JUtils.newList();
+	final List<PackageHandler> list = Collections.newList();
 	boolean is_sorted = false;
 	private Comparator<PackageHandler> default_comparator = new Comparator<PackageHandler>() {
 		@Override

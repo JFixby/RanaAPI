@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import com.jfixby.cmns.api.assets.AssetID;
 import com.jfixby.cmns.api.collections.Collection;
-import com.jfixby.cmns.api.collections.JUtils;
+import com.jfixby.cmns.api.collections.Collections;
 import com.jfixby.cmns.api.collections.List;
 import com.jfixby.cmns.api.debug.Debug;
 import com.jfixby.cmns.api.file.File;
@@ -30,8 +30,8 @@ public class PackageHandlerImpl implements PackageHandler, PackageVersion {
 		return resourceIndex.autoResolveAssets();
 	}
 
-	List<AssetID> descriptors = JUtils.newList();
-	List<AssetID> dependencies = JUtils.newList();
+	List<AssetID> descriptors = Collections.newList();
+	List<AssetID> dependencies = Collections.newList();
 
 	private String version;
 	private long timestamp;

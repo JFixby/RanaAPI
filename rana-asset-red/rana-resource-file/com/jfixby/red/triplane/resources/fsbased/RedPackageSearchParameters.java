@@ -1,7 +1,7 @@
 package com.jfixby.red.triplane.resources.fsbased;
 
 import com.jfixby.cmns.api.assets.AssetID;
-import com.jfixby.cmns.api.collections.JUtils;
+import com.jfixby.cmns.api.collections.Collections;
 import com.jfixby.cmns.api.collections.List;
 import com.jfixby.cmns.api.log.L;
 import com.jfixby.rana.api.pkg.PACKAGE_STATUS;
@@ -9,8 +9,8 @@ import com.jfixby.rana.api.pkg.PackageSearchParameters;
 
 public class RedPackageSearchParameters implements PackageSearchParameters {
 
-	private List<PackageFormatImpl> acceptablePackageFormats = JUtils.newList();
-	private List<PACKAGE_STATUS> acceptablePackageStatuses = JUtils.newList(
+	private List<PackageFormatImpl> acceptablePackageFormats = Collections.newList();
+	private List<PACKAGE_STATUS> acceptablePackageStatuses = Collections.newList(
 			PACKAGE_STATUS.INSTALLED, PACKAGE_STATUS.NOT_INSTALLED);
 	{
 
