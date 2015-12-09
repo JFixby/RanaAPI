@@ -1,7 +1,7 @@
 package com.jfixby.rana.api.pkg;
 
+import com.jfixby.cmns.api.ComponentInstaller;
 import com.jfixby.cmns.api.collections.Collection;
-import com.jfixby.cmns.api.components.ComponentInstaller;
 
 public class ResourcesManager {
 

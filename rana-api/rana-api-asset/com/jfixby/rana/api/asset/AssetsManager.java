@@ -1,8 +1,8 @@
 package com.jfixby.rana.api.asset;
 
+import com.jfixby.cmns.api.ComponentInstaller;
 import com.jfixby.cmns.api.assets.AssetID;
 import com.jfixby.cmns.api.collections.Collection;
-import com.jfixby.cmns.api.components.ComponentInstaller;
 
 public class AssetsManager {
 
