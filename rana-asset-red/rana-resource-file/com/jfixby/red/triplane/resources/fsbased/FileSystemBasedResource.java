@@ -35,6 +35,7 @@ public class FileSystemBasedResource implements Resource {
 
 	@Override
 	public void update() {
+		
 		index.reset();
 		ChildrenList list = bank_folder.listChildren();
 		FileSystem FS = bank_folder.getFileSystem();

@@ -119,7 +119,7 @@ public class RedAssetsManager implements AssetsManagerComponent, AssetsConsumer 
 	@Override
 	public void autoResolveAssets(Collection<AssetID> dependencies) {
 		Debug.checkNull("dependencies", dependencies);
-		boolean updated = false;
+		boolean updated = true;
 		for (AssetID dependency : dependencies) {
 
 			AssetHandler asset_entry = AssetsManager.obtainAsset(dependency, this);
@@ -129,21 +129,25 @@ public class RedAssetsManager implements AssetsManagerComponent, AssetsConsumer 
 				continue;
 			}
 			if (!updated) {
-				ResourcesManager.updateAll();
+				// ResourcesManager.updateAll();
 				updated = true;
 			}
-			this.resolve(dependency);
+			this.resolve(dependency, true);
 		}
 	}
 
-	private boolean resolve(AssetID dependency) {
+	private boolean resolve(AssetID dependency, boolean print_debug_output) {
 		L.d("RESOLVING DEPENDENCY", dependency);
 		PackageSearchParameters search_params = ResourcesManager.newSearchParameters();
 		search_params.setAssetId(dependency);
 
 		PackageSearchResult search_result = ResourcesManager.findPackages(search_params);
+		if (print_debug_output) {
+//			search_result.print();
 
-		// search_result.print();
+//			this.printAllLoadedAssets();
+//			L.d();
+		}
 		if (search_result.isEmpty()) {
 			String msg = "Asset [" + dependency + "] was not found in any package.";
 			L.d(msg);
@@ -187,8 +191,13 @@ public class RedAssetsManager implements AssetsManagerComponent, AssetsConsumer 
 			AssetsManager.releaseAsset(asset_entry, this);
 			return true;
 		}
-		ResourcesManager.updateAll();
-		return resolve(dependency);
+		L.e("Asset[" + dependency + "] delays loading!");
+		// ResourcesManager.updateAll();
+		boolean success = resolve(dependency, true);
+		if (!success) {
+			L.e("Asset[" + dependency + "] was not resolved!");
+		}
+		return success;
 	}
 
 	@Override

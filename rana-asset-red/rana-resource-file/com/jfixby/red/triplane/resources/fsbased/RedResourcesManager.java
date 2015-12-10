@@ -48,8 +48,12 @@ public class RedResourcesManager implements ResourcesManagerComponent {
 
 	@Override
 	public void updateAll() {
+//		Debug.printCallStack();
 		for (int i = 0; i < resources.size(); i++) {
-			resources.getElementAt(i).update();
+			Resource res = resources.getElementAt(i);
+			L.d("updating resource", res);
+			res.update();
+			
 		}
 	}
 
