@@ -70,7 +70,8 @@ public class PackageHandlerImpl implements PackageHandler, PackageVersion {
 		this.resourceIndex = resourceIndex;
 		fs = package_folder.getFileSystem();
 		this.package_folder = package_folder;
-		content_folder = fs.newFile(package_folder.child(PackageDescriptor.PACKAGE_CONTENT_FOLDER).getAbsoluteFilePath());
+		content_folder = fs
+				.newFile(package_folder.child(PackageDescriptor.PACKAGE_CONTENT_FOLDER).getAbsoluteFilePath());
 		if (!content_folder.exists()) {
 			this.status = PACKAGE_STATUS.BROKEN;
 		} else {
@@ -125,7 +126,8 @@ public class PackageHandlerImpl implements PackageHandler, PackageVersion {
 		}
 		FileSystem FS = package_folder.getFileSystem();
 		File sandbox_folder = null;
-		if (FS.isReadOnlyFileSystem()) {
+		boolean use_sandbox = true;
+		if (FS.isReadOnlyFileSystem() || !use_sandbox) {
 			sandbox_folder = content_folder;
 		} else {
 			sandbox_folder = FileSystemSandBox.wrap(package_folder.getName(), content_folder).ROOT();
@@ -139,6 +141,7 @@ public class PackageHandlerImpl implements PackageHandler, PackageVersion {
 
 		try {
 			PackageInputImpl input = new PackageInputImpl(reader_listener, root_file, this);
+			L.d("reading", root_file);
 			reader.doReadPackage(input);
 		} catch (IOException e) {
 			this.status = PACKAGE_STATUS.BROKEN;
