@@ -1,9 +1,10 @@
 package com.jfixby.red.engine.core.resources;
 
+import java.util.ArrayList;
+
 import com.jfixby.cmns.api.assets.AssetID;
 import com.jfixby.cmns.api.collections.Collection;
 import com.jfixby.cmns.api.collections.Collections;
-import com.jfixby.cmns.api.collections.List;
 import com.jfixby.cmns.api.collections.Map;
 import com.jfixby.cmns.api.debug.Debug;
 import com.jfixby.cmns.api.err.Err;
@@ -26,14 +27,16 @@ import com.jfixby.rana.api.pkg.ResourcesManager;
 public class RedAssetsManager implements AssetsManagerComponent, AssetsConsumer {
 
 	final Map<AssetID, RedAssetAssetHandler> assets = Collections.newMap();
-	final List<AssetContainer> containers = Collections.newList();
+	final ArrayList<AssetContainer> containers = new ArrayList<AssetContainer>();;
 
 	final AssetUsers asset_users = new AssetUsers();
 	final UserAssets user_assets = new UserAssets();
+	int i = 0;
 
 	@Override
 	public void checkAll() {
-		for (AssetContainer container : containers) {
+		for (i = 0; i < containers.size(); i++) {
+			final AssetContainer container = containers.get(i);
 			container.checkAll();
 		}
 	}
@@ -143,10 +146,10 @@ public class RedAssetsManager implements AssetsManagerComponent, AssetsConsumer 
 
 		PackageSearchResult search_result = ResourcesManager.findPackages(search_params);
 		if (print_debug_output) {
-//			search_result.print();
+			// search_result.print();
 
-//			this.printAllLoadedAssets();
-//			L.d();
+			// this.printAllLoadedAssets();
+			// L.d();
 		}
 		if (search_result.isEmpty()) {
 			String msg = "Asset [" + dependency + "] was not found in any package.";
