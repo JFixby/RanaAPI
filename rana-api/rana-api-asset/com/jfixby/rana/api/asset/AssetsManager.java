@@ -5,6 +5,8 @@ import com.jfixby.cmns.api.assets.AssetID;
 import com.jfixby.cmns.api.collections.Collection;
 
 public class AssetsManager {
+	
+	public static final String UseAssetSandBox = "UseAssetSandBox";
 
 	static private ComponentInstaller<AssetsManagerComponent> componentInstaller = new ComponentInstaller<AssetsManagerComponent>("AssetsManager");
 
