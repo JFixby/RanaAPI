@@ -9,7 +9,7 @@ import com.jfixby.cmns.api.collections.Map;
 import com.jfixby.cmns.api.debug.Debug;
 import com.jfixby.cmns.api.err.Err;
 import com.jfixby.cmns.api.log.L;
-import com.jfixby.cmns.api.sys.Sys;
+import com.jfixby.cmns.api.sys.settings.SystemSettings;
 import com.jfixby.rana.api.asset.AssetContainer;
 import com.jfixby.rana.api.asset.AssetHandler;
 import com.jfixby.rana.api.asset.AssetsConsumer;
@@ -206,7 +206,7 @@ public class RedAssetsManager implements AssetsManagerComponent, AssetsConsumer 
 
 	@Override
 	public boolean autoResolveAssets() {
-		return Sys.getFlag(AssetsManagerFlags.AutoresolveDependencies);
+		return SystemSettings.getFlag(AssetsManagerFlags.AutoresolveDependencies);
 	}
 
 }

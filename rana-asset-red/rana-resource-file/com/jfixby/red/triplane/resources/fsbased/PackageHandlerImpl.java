@@ -12,6 +12,7 @@ import com.jfixby.cmns.api.file.FileSystem;
 import com.jfixby.cmns.api.file.FileSystemSandBox;
 import com.jfixby.cmns.api.log.L;
 import com.jfixby.cmns.api.sys.Sys;
+import com.jfixby.cmns.api.sys.settings.SystemSettings;
 import com.jfixby.rana.api.asset.AssetsManager;
 import com.jfixby.rana.api.pkg.PACKAGE_STATUS;
 import com.jfixby.rana.api.pkg.PackageHandler;
@@ -128,7 +129,7 @@ public class PackageHandlerImpl implements PackageHandler, PackageVersion {
 		FileSystem FS = package_folder.getFileSystem();
 		File sandbox_folder = null;
 
-		boolean use_sandbox = Sys.getFlag(AssetsManager.UseAssetSandBox);
+		boolean use_sandbox = SystemSettings.getFlag(AssetsManager.UseAssetSandBox);
 		if (FS.isReadOnlyFileSystem() || !use_sandbox) {
 			sandbox_folder = content_folder;
 		} else {
