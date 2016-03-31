@@ -15,107 +15,107 @@ import com.jfixby.rana.api.pkg.ResourcesManagerComponent;
 
 public class RedResourcesManager implements ResourcesManagerComponent {
 
-	final List<Resource> resources = Collections.newList();
+    final List<Resource> resources = Collections.newList();
 
-	@Override
-	public PackageSearchParameters newSearchParameters() {
-		return new RedPackageSearchParameters();
+    @Override
+    public PackageSearchParameters newSearchParameters() {
+	return new RedPackageSearchParameters();
+    }
+
+    @Override
+    public PackageSearchResult findPackages(PackageSearchParameters search_params) {
+	RedPackageSearchResult result = new RedPackageSearchResult(search_params);
+	Debug.checkNull("search_params", search_params);
+	for (int i = 0; i < resources.size(); i++) {
+	    PackageSearchResult result_i = resources.getElementAt(i).findPackages(search_params);
+	    result.add(result_i);
 	}
 
-	@Override
-	public PackageSearchResult findPackages(PackageSearchParameters search_params) {
-		RedPackageSearchResult result = new RedPackageSearchResult(search_params);
-		Debug.checkNull("search_params", search_params);
-		for (int i = 0; i < resources.size(); i++) {
-			PackageSearchResult result_i = resources.getElementAt(i).findPackages(search_params);
-			result.add(result_i);
-		}
+	return result;
+    }
 
-		return result;
+    public void installResource(Resource resource_to_install) {
+	Debug.checkNull("resource_to_install", resource_to_install);
+	if (resources.contains(resource_to_install)) {
+	    throw new Error("Resource is already installed: " + resource_to_install);
 	}
+	this.resources.add(resource_to_install);
+    }
 
-	public void installResource(Resource resource_to_install) {
-		Debug.checkNull("resource_to_install", resource_to_install);
-		if (resources.contains(resource_to_install)) {
-			throw new Error("Resource is already installed: " + resource_to_install);
-		}
-		this.resources.add(resource_to_install);
-	}
+    public void removeResource(Resource resource) {
+	this.resources.remove(resource);
+    }
 
-	public void removeResource(Resource resource) {
-		this.resources.remove(resource);
-	}
-
-	@Override
-	public void updateAll() {
-//		Debug.printCallStack();
-		for (int i = 0; i < resources.size(); i++) {
-			Resource res = resources.getElementAt(i);
-			L.d("updating resource", res);
-			res.update();
-			
-		}
-	}
-
-	@Override
-	public void printAllPackages() {
-		resources.print("All installed resources");
-		PackageSearchParameters search_params = this.newSearchParameters();
-		search_params.setGetAllAssetsFlag(true);
-		PackageSearchResult packages = this.findPackages(search_params);
-		packages.list().print("All available packages");
-		;
-	}
-
-	@Override
-	public Collection<PackageReader> findPackageReaders(PackageFormat format) {
-		List<PackageReader> list = loaders_by_format.get(format);
-		if (list == null) {
-			// L.d("format", format);
-			// loaders_by_format.print("acceptable formats");
-			return Collections.newList();
-		}
-		return list;
-	}
-
-	@Override
-	public void registerPackageReader(PackageReader loader) {
-		if (loaders.contains(loader)) {
-			L.d("Loader is already registred:" + loader);
-			return;
-		}
-
-		Collection<PackageFormat> can_read = loader.listAcceptablePackageFormats();
-		Debug.checkNull("PackageReader.listAcceptablePackageFormats()", can_read);
-		loaders.add(loader);
-		for (int i = 0; i < can_read.size(); i++) {
-			PackageFormat format = can_read.getElementAt(i);
-			List<PackageReader> loaders_list = this.loaders_by_format.get(format);
-			if (loaders_list == null) {
-				loaders_list = Collections.newList();
-				loaders_by_format.put(format, loaders_list);
-			}
-			loaders_list.add(loader);
-		}
+    @Override
+    public void updateAll() {
+	// Debug.printCallStack();
+	for (int i = 0; i < resources.size(); i++) {
+	    Resource res = resources.getElementAt(i);
+	    // L.d("updating resource", res);
+	    res.update();
 
 	}
+    }
 
-	final Map<PackageFormat, List<PackageReader>> loaders_by_format = Collections.newMap();
-	final List<PackageReader> loaders = Collections.newList();
+    @Override
+    public void printAllPackages() {
+	resources.print("All installed resources");
+	PackageSearchParameters search_params = this.newSearchParameters();
+	search_params.setGetAllAssetsFlag(true);
+	PackageSearchResult packages = this.findPackages(search_params);
+	packages.list().print("All available packages");
+	;
+    }
 
-	@Override
-	public Collection<PackageFormat> listAcceptablePackageFormats() {
-		return this.loaders_by_format.keys();
+    @Override
+    public Collection<PackageReader> findPackageReaders(PackageFormat format) {
+	List<PackageReader> list = loaders_by_format.get(format);
+	if (list == null) {
+	    // L.d("format", format);
+	    // loaders_by_format.print("acceptable formats");
+	    return Collections.newList();
+	}
+	return list;
+    }
+
+    @Override
+    public void registerPackageReader(PackageReader loader) {
+	if (loaders.contains(loader)) {
+	    L.d("Loader is already registred:" + loader);
+	    return;
 	}
 
-	@Override
-	public void printInstalledPackageReaders() {
-		this.loaders_by_format.print("Installed package readers");
+	Collection<PackageFormat> can_read = loader.listAcceptablePackageFormats();
+	Debug.checkNull("PackageReader.listAcceptablePackageFormats()", can_read);
+	loaders.add(loader);
+	for (int i = 0; i < can_read.size(); i++) {
+	    PackageFormat format = can_read.getElementAt(i);
+	    List<PackageReader> loaders_list = this.loaders_by_format.get(format);
+	    if (loaders_list == null) {
+		loaders_list = Collections.newList();
+		loaders_by_format.put(format, loaders_list);
+	    }
+	    loaders_list.add(loader);
 	}
 
-	@Override
-	public PackageFormat newPackageFormat(String format_name) {
-		return new PackageFormatImpl(format_name);
-	}
+    }
+
+    final Map<PackageFormat, List<PackageReader>> loaders_by_format = Collections.newMap();
+    final List<PackageReader> loaders = Collections.newList();
+
+    @Override
+    public Collection<PackageFormat> listAcceptablePackageFormats() {
+	return this.loaders_by_format.keys();
+    }
+
+    @Override
+    public void printInstalledPackageReaders() {
+	this.loaders_by_format.print("Installed package readers");
+    }
+
+    @Override
+    public PackageFormat newPackageFormat(String format_name) {
+	return new PackageFormatImpl(format_name);
+    }
 
 }
