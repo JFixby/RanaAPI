@@ -127,7 +127,7 @@ public class RedAssetsManager implements AssetsManagerComponent, AssetsConsumer 
 
 	    AssetHandler asset_entry = AssetsManager.obtainAsset(dependency, this);
 	    if (asset_entry != null) {
-		L.d("Dependency is already loaded", dependency);
+		L.d("already loaded", dependency);
 		AssetsManager.releaseAsset(asset_entry, this);
 		continue;
 	    }
