@@ -1,8 +1,13 @@
 package com.jfixby.rana.api.pkg.fs;
 
+import java.io.Serializable;
 import java.util.Vector;
 
-public class PackageDescriptor {
+public class PackageDescriptor implements Serializable {
+
+    public PackageDescriptor() {
+	super();
+    }
 
 	public static final String PACKAGE_DESCRIPTOR_FILE_NAME = "package.descriptor";
 	public static final String PACKAGE_CONTENT_FOLDER = "content";
