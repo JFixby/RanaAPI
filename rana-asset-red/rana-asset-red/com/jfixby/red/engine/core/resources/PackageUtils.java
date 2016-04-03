@@ -4,9 +4,8 @@ import java.io.IOException;
 
 import com.jfixby.cmns.api.assets.AssetID;
 import com.jfixby.cmns.api.collections.Collection;
+import com.jfixby.cmns.api.debug.Debug;
 import com.jfixby.cmns.api.file.File;
-import com.jfixby.cmns.api.io.IO;
-import com.jfixby.cmns.api.java.ByteArray;
 import com.jfixby.cmns.api.json.Json;
 import com.jfixby.cmns.api.log.L;
 import com.jfixby.cmns.api.sys.Sys;
@@ -49,10 +48,11 @@ public class PackageUtils {
 
 	descriptor.root_file_name = root_file_name;
 	File output_file = output_folder.child(PackageDescriptor.PACKAGE_DESCRIPTOR_FILE_NAME);
-	ByteArray data = IO.serialize(descriptor);
-	output_file.writeBytes(data);
+	output_file.writeData(descriptor);
 
-	 L.d("packing", Json.serializeToString(descriptor));
-
+	PackageDescriptor check = output_file.readData(PackageDescriptor.class);
+	L.d("packing", Json.serializeToString(descriptor));
+	L.d("cheking", Json.serializeToString(check));
+	Debug.checkTrue("IO fine", check.equals(descriptor));
     }
 }

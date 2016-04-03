@@ -8,7 +8,6 @@ import com.jfixby.cmns.api.err.Err;
 import com.jfixby.cmns.api.file.ChildrenList;
 import com.jfixby.cmns.api.file.File;
 import com.jfixby.cmns.api.file.FileSystem;
-import com.jfixby.cmns.api.io.IO;
 import com.jfixby.cmns.api.log.L;
 import com.jfixby.cmns.api.sys.settings.ExecutionMode;
 import com.jfixby.cmns.api.sys.settings.SystemSettings;
@@ -57,24 +56,20 @@ public class FileSystemBasedResource implements Resource {
 	FileSystem FS = package_folder.getFileSystem();
 	File file = package_folder.child(PackageDescriptor.PACKAGE_DESCRIPTOR_FILE_NAME);
 	try {
-	    // file_i.listChildren().print();
-
-	    // AbsolutePath<FileSystem> descriptor_file_path = package_folder
-	    // .getAbsoluteFilePath();
-	    // String data = FS.readFileToString(descriptor_file_path);
-	    PackageDescriptor descriptor = IO.deserialize(PackageDescriptor.class, file.readBytes());
+	    PackageDescriptor descriptor = file.readData(PackageDescriptor.class);
 	    index(descriptor, package_folder);
 	} catch (Exception e) {
-	    L.d("failed to read", package_folder);
 	    L.e(e.toString());
 	    e.printStackTrace();
 	    try {
 		L.d(file.readToString());
 	    } catch (IOException e1) {
-//		e1.printStackTrace();
+		// e1.printStackTrace();
 	    }
+	    L.e("failed to read", file);
+
 	    if (SystemSettings.executionModeCovers(ExecutionMode.EARLY_DEVELOPMENT)) {
-		Err.reportError(e);
+		Err.reportError(file + " " + e);
 	    }
 	}
     }
