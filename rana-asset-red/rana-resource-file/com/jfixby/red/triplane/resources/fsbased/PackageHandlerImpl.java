@@ -7,11 +7,11 @@ import com.jfixby.cmns.api.collections.Collection;
 import com.jfixby.cmns.api.collections.Collections;
 import com.jfixby.cmns.api.collections.List;
 import com.jfixby.cmns.api.debug.Debug;
+import com.jfixby.cmns.api.err.Err;
 import com.jfixby.cmns.api.file.File;
 import com.jfixby.cmns.api.file.FileSystem;
 import com.jfixby.cmns.api.file.FileSystemSandBox;
 import com.jfixby.cmns.api.log.L;
-import com.jfixby.cmns.api.sys.Sys;
 import com.jfixby.cmns.api.sys.settings.SystemSettings;
 import com.jfixby.rana.api.asset.AssetsManager;
 import com.jfixby.rana.api.pkg.PACKAGE_STATUS;
@@ -47,8 +47,8 @@ public class PackageHandlerImpl implements PackageHandler, PackageVersion {
 	@Override
 	public void onError(IOException e) {
 	    e.printStackTrace();
-	    L.e(e);
-	    Sys.exit();
+	    // L.e(e);
+	    Err.reportError(e);
 	}
 
 	@Override
@@ -58,6 +58,7 @@ public class PackageHandlerImpl implements PackageHandler, PackageVersion {
 		dependencies.print("Missing dependencies");
 		throw new Error("RedTriplaneFlags." + auto + " flag is false.");
 	    } else {
+		dependencies.print("RESOLVING");
 		autoResolveAssets(dependencies);
 	    }
 	}

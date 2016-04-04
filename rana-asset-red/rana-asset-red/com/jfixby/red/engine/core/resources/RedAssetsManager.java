@@ -7,6 +7,7 @@ import com.jfixby.cmns.api.collections.Collection;
 import com.jfixby.cmns.api.collections.Collections;
 import com.jfixby.cmns.api.collections.Map;
 import com.jfixby.cmns.api.debug.Debug;
+import com.jfixby.cmns.api.debug.DebugTimer;
 import com.jfixby.cmns.api.err.Err;
 import com.jfixby.cmns.api.log.L;
 import com.jfixby.cmns.api.sys.settings.SystemSettings;
@@ -178,7 +179,10 @@ public class RedAssetsManager implements AssetsManagerComponent, AssetsConsumer 
 	}
 
 	PackageReader package_reader = package_loaders.getLast();
+	DebugTimer debigTimer = Debug.newTimer();
+	debigTimer.reset();
 	package_handler.readPackage(null, package_reader);
+	debigTimer.printTimeAbove(20L, "Asset[" + dependency + "] loaded");
 
 	return true;
     }

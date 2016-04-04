@@ -50,6 +50,9 @@ public class PackageUtils {
 	File output_file = output_folder.child(PackageDescriptor.PACKAGE_DESCRIPTOR_FILE_NAME);
 	output_file.writeData(descriptor);
 
+	File debug_output_file = output_folder.child(PackageDescriptor.PACKAGE_DESCRIPTOR_FILE_NAME + ".json");
+	debug_output_file.writeString(Json.serializeToString(descriptor).toString());
+
 	PackageDescriptor check = output_file.readData(PackageDescriptor.class);
 	L.d("packing", Json.serializeToString(descriptor));
 	L.d("cheking", Json.serializeToString(check));
