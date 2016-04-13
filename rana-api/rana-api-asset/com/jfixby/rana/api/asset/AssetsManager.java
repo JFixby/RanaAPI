@@ -56,8 +56,4 @@ public class AssetsManager {
 		invoke().autoResolveAssets(dependencies);
 	}
 
-	public static boolean autoResolveAssets () {
-		return invoke().autoResolveAssets();
-	}
-
 }

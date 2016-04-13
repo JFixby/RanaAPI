@@ -15,6 +15,7 @@ import com.jfixby.cmns.api.file.FileSystemSandBox;
 import com.jfixby.cmns.api.log.L;
 import com.jfixby.cmns.api.sys.settings.SystemSettings;
 import com.jfixby.rana.api.asset.AssetsManager;
+import com.jfixby.rana.api.asset.AssetsManagerFlags;
 import com.jfixby.rana.api.pkg.PACKAGE_STATUS;
 import com.jfixby.rana.api.pkg.PackageHandler;
 import com.jfixby.rana.api.pkg.PackageReader;
@@ -23,15 +24,6 @@ import com.jfixby.rana.api.pkg.PackageVersion;
 import com.jfixby.rana.api.pkg.fs.PackageDescriptor;
 
 public class PackageHandlerImpl implements PackageHandler, PackageVersion {
-
-	private void autoResolveAssets (final Collection<AssetID> dependencies) {
-		this.resourceIndex.autoResolveAssets(dependencies);
-		// AssetsManager.autoResolveAssets(dependencies);
-	}
-
-	private boolean auto () {
-		return this.resourceIndex.autoResolveAssets();
-	}
 
 	List<AssetID> descriptors = Collections.newList();
 	List<AssetID> dependencies = Collections.newList();
@@ -54,13 +46,14 @@ public class PackageHandlerImpl implements PackageHandler, PackageVersion {
 
 		@Override
 		public void onDependenciesRequired (final Collection<AssetID> dependencies) {
-			final boolean auto = PackageHandlerImpl.this.auto();
+			final boolean auto = SystemSettings.getFlag(AssetsManagerFlags.AutoresolveDependencies);
+
 			if (!auto) {
 				dependencies.print("Missing dependencies");
 				throw new Error("RedTriplaneFlags." + auto + " flag is false.");
 			} else {
 				dependencies.print("RESOLVING");
-				PackageHandlerImpl.this.autoResolveAssets(dependencies);
+				AssetsManager.autoResolveAssets(dependencies);
 			}
 		}
 

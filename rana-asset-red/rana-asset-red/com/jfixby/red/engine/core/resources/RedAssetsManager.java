@@ -10,13 +10,11 @@ import com.jfixby.cmns.api.debug.Debug;
 import com.jfixby.cmns.api.debug.DebugTimer;
 import com.jfixby.cmns.api.err.Err;
 import com.jfixby.cmns.api.log.L;
-import com.jfixby.cmns.api.sys.settings.SystemSettings;
 import com.jfixby.rana.api.asset.AssetContainer;
 import com.jfixby.rana.api.asset.AssetHandler;
 import com.jfixby.rana.api.asset.AssetsConsumer;
 import com.jfixby.rana.api.asset.AssetsManager;
 import com.jfixby.rana.api.asset.AssetsManagerComponent;
-import com.jfixby.rana.api.asset.AssetsManagerFlags;
 import com.jfixby.rana.api.pkg.PACKAGE_STATUS;
 import com.jfixby.rana.api.pkg.PackageFormat;
 import com.jfixby.rana.api.pkg.PackageHandler;
@@ -129,7 +127,6 @@ public class RedAssetsManager implements AssetsManagerComponent, AssetsConsumer 
 		Debug.checkNull("dependencies", dependencies);
 		boolean updated = true;
 		for (final AssetID dependency : dependencies) {
-
 			final AssetHandler asset_entry = AssetsManager.obtainAsset(dependency, this);
 			if (asset_entry != null) {
 				L.d("already loaded", dependency);
@@ -210,11 +207,6 @@ public class RedAssetsManager implements AssetsManagerComponent, AssetsConsumer 
 			L.e("Asset[" + dependency + "] was not resolved!");
 		}
 		return success;
-	}
-
-	@Override
-	public boolean autoResolveAssets () {
-		return SystemSettings.getFlag(AssetsManagerFlags.AutoresolveDependencies);
 	}
 
 }

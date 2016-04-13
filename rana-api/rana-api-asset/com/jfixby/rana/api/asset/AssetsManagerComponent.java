@@ -22,8 +22,6 @@ public interface AssetsManagerComponent {
 
 	void checkAll ();
 
-	boolean autoResolveAssets ();
-
 	AssetHandler useAsset (AssetID spriteAssetID);
 
 }

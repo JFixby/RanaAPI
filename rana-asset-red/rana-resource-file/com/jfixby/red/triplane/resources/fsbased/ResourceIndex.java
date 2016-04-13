@@ -1,3 +1,4 @@
+
 package com.jfixby.red.triplane.resources.fsbased;
 
 import com.jfixby.cmns.api.assets.AssetID;
@@ -17,66 +18,66 @@ import com.jfixby.rana.api.pkg.fs.PackageDescriptor;
 public class ResourceIndex {
 	Set<PackageHandler> all_handlers = Collections.newSet();
 	Map<AssetID, Set<PackageHandler>> handlers_by_asset_id = Collections.newMap();
-	private FileSystemBasedResource master;
+	private final FileSystemBasedResource master;
 
-	public void reset() {
-		handlers_by_asset_id.clear();
-		all_handlers.clear();
+	public void reset () {
+		this.handlers_by_asset_id.clear();
+		this.all_handlers.clear();
 	}
 
-	public void add(PackageDescriptor descriptor, File package_folder) {
+	public void add (final PackageDescriptor descriptor, final File package_folder) {
 
-		PackageHandlerImpl handler = new PackageHandlerImpl(package_folder, this);
-		String format_string = descriptor.format;
+		final PackageHandlerImpl handler = new PackageHandlerImpl(package_folder, this);
+		final String format_string = descriptor.format;
 		handler.setFormat(format_string);
 		handler.setVersion(descriptor.version);
 		handler.setTimestamp(descriptor.timestamp());
 		handler.setRootFileName(descriptor.root_file_name);
 
 		for (int i = 0; i < descriptor.packed_assets.size(); i++) {
-			String name = descriptor.packed_assets.get(i);
-			AssetID element = Names.newAssetID(name);
+			final String name = descriptor.packed_assets.get(i);
+			final AssetID element = Names.newAssetID(name);
 			handler.descriptors.add(element);
 		}
 
 		for (int i = 0; i < descriptor.package_dependencies.size(); i++) {
-			String name = descriptor.package_dependencies.get(i);
-			AssetID element = Names.newAssetID(name);
+			final String name = descriptor.package_dependencies.get(i);
+			final AssetID element = Names.newAssetID(name);
 			handler.dependencies.add(element);
 		}
 
 		// L.d("found package handler: " + handler);
-		addHandler(handler);
+		this.addHandler(handler);
 
 	}
 
-	private void addHandler(PackageHandler handler) {
+	private void addHandler (final PackageHandler handler) {
 		for (int i = 0; i < handler.listPackedAssets().size(); i++) {
-			AssetID key = handler.listPackedAssets().getElementAt(i);
-			Set<PackageHandler> list = handlers_by_asset_id.get(key);
+			final AssetID key = handler.listPackedAssets().getElementAt(i);
+			Set<PackageHandler> list = this.handlers_by_asset_id.get(key);
 			if (list == null) {
 				list = Collections.newSet();
-				handlers_by_asset_id.put(key, list);
+				this.handlers_by_asset_id.put(key, list);
 			}
 			list.add(handler);
-			all_handlers.add(handler);
+			this.all_handlers.add(handler);
 		}
 	}
 
-	public PackageSearchResult findPackages(PackageSearchParameters search_params) {
-		RedPackageSearchResult result = new RedPackageSearchResult(search_params);
+	public PackageSearchResult findPackages (final PackageSearchParameters search_params) {
+		final RedPackageSearchResult result = new RedPackageSearchResult(search_params);
 		Set<PackageHandler> handlers = null;
 		if (search_params.isGetAllAssetsFlagActive()) {
-			handlers = getAllHandlers();
+			handlers = this.getAllHandlers();
 		} else {
-			AssetID asset_id = search_params.getAssetId();
-			handlers = filterHandlers(asset_id);
+			final AssetID asset_id = search_params.getAssetId();
+			handlers = this.filterHandlers(asset_id);
 		}
 
-		int n = handlers.size();
+		final int n = handlers.size();
 		for (int i = 0; i < n; i++) {
-			PackageHandler handler = handlers.getElementAt(i);
-			if (handler_fits(handler, search_params)) {
+			final PackageHandler handler = handlers.getElementAt(i);
+			if (this.handler_fits(handler, search_params)) {
 				result.add(handler);
 			}
 		}
@@ -84,19 +85,19 @@ public class ResourceIndex {
 		return result;
 	}
 
-	private Set<PackageHandler> getAllHandlers() {
+	private Set<PackageHandler> getAllHandlers () {
 		return this.all_handlers;
 	}
 
-	private Set<PackageHandler> filterHandlers(AssetID asset_id) {
-		Set<PackageHandler> handlers = handlers_by_asset_id.get(asset_id);
+	private Set<PackageHandler> filterHandlers (final AssetID asset_id) {
+		Set<PackageHandler> handlers = this.handlers_by_asset_id.get(asset_id);
 		if (handlers == null) {
 			handlers = Collections.newSet();
 		}
 		return handlers;
 	}
 
-	private boolean handler_fits(PackageHandler handler, PackageSearchParameters search_params) {
+	private boolean handler_fits (final PackageHandler handler, final PackageSearchParameters search_params) {
 		if (search_params.isGetAllAssetsFlagActive()) {
 			return true;
 		}
@@ -105,7 +106,7 @@ public class ResourceIndex {
 
 		// List<PackageFormat> accepted_formats = search_params
 		// .acceptPackageFormat();
-		List<PACKAGE_STATUS> acccepted_statuses = search_params.acceptPackageStatus();
+		final List<PACKAGE_STATUS> acccepted_statuses = search_params.acceptPackageStatus();
 
 		if (!acccepted_statuses.contains(handler.getStatus())) {
 			return false;
@@ -113,9 +114,9 @@ public class ResourceIndex {
 		// if (!accepted_formats.contains(handler.getFormat())) {
 		// return false;
 		// }
-		AssetID asset_id = search_params.getAssetId();
-		Collection<AssetID> descriptors = handler.listPackedAssets();
-		boolean contains = descriptors.contains(asset_id);
+		final AssetID asset_id = search_params.getAssetId();
+		final Collection<AssetID> descriptors = handler.listPackedAssets();
+		final boolean contains = descriptors.contains(asset_id);
 		if (!contains) {
 			// L.d("asset_id", asset_id);
 			// descriptors.print("not found");
@@ -125,22 +126,14 @@ public class ResourceIndex {
 		return true;
 	}
 
-	public void print() {
+	public void print () {
 		this.handlers_by_asset_id.print("index");
 	}
 
-	public ResourceIndex(FileSystemBasedResource fileSystemBasedResource) {
+	public ResourceIndex (final FileSystemBasedResource fileSystemBasedResource) {
 		super();
 		this.master = fileSystemBasedResource;
 
 	}
 
-	public void autoResolveAssets(Collection<AssetID> dependencies) {
-		master.autoResolveAssets(dependencies);
-
-	}
-
-	public boolean autoResolveAssets() {
-		return master.autoResolveAssets();
-	}
 }
