@@ -1,13 +1,14 @@
+
 package com.jfixby.rana.api.asset;
 
 import com.jfixby.cmns.api.assets.AssetID;
 
 public interface AssetHandler {
 
-	Asset asset();
+	<T extends Asset> T asset ();
 
-	AssetID ID();
+	AssetID ID ();
 
-	void printAll();
+	void printAll ();
 
 }
