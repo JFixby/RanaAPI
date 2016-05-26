@@ -4,10 +4,12 @@ package com.jfixby.rana.api.asset;
 import com.jfixby.cmns.api.ComponentInstaller;
 import com.jfixby.cmns.api.assets.AssetID;
 import com.jfixby.cmns.api.collections.Collection;
+import com.jfixby.rana.api.pkg.PackageReaderListener;
 
 public class AssetsManager {
 
 	public static final String UseAssetSandBox = "UseAssetSandBox";
+	public static final String ReportUnusedAssets = "ReportUnusedAssets";
 
 	static private ComponentInstaller<AssetsManagerComponent> componentInstaller = new ComponentInstaller<AssetsManagerComponent>(
 		"AssetsManager");
@@ -46,6 +48,14 @@ public class AssetsManager {
 
 	public static void checkAll () {
 		invoke().checkAll();
+	}
+
+	public static boolean autoResolveAsset (final AssetID dependency, final PackageReaderListener listener) {
+		return invoke().autoResolveAsset(dependency, listener);
+	}
+
+	public static void autoResolveAssets (final Collection<AssetID> dependencies, final PackageReaderListener listener) {
+		invoke().autoResolveAssets(dependencies, listener);
 	}
 
 	public static boolean autoResolveAsset (final AssetID dependency) {

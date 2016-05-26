@@ -19,6 +19,7 @@ import com.jfixby.rana.api.pkg.PACKAGE_STATUS;
 import com.jfixby.rana.api.pkg.PackageFormat;
 import com.jfixby.rana.api.pkg.PackageHandler;
 import com.jfixby.rana.api.pkg.PackageReader;
+import com.jfixby.rana.api.pkg.PackageReaderListener;
 import com.jfixby.rana.api.pkg.PackageSearchParameters;
 import com.jfixby.rana.api.pkg.PackageSearchResult;
 import com.jfixby.rana.api.pkg.ResourcesManager;
@@ -123,7 +124,7 @@ public class RedAssetsManager implements AssetsManagerComponent, AssetsConsumer 
 	}
 
 	@Override
-	public void autoResolveAssets (final Collection<AssetID> dependencies) {
+	public void autoResolveAssets (final Collection<AssetID> dependencies, final PackageReaderListener listener) {
 		Debug.checkNull("dependencies", dependencies);
 		boolean updated = true;
 		for (final AssetID dependency : dependencies) {
@@ -137,11 +138,11 @@ public class RedAssetsManager implements AssetsManagerComponent, AssetsConsumer 
 				// ResourcesManager.updateAll();
 				updated = true;
 			}
-			this.resolve(dependency, true);
+			this.resolve(dependency, true, listener);
 		}
 	}
 
-	private boolean resolve (final AssetID dependency, final boolean print_debug_output) {
+	private boolean resolve (final AssetID dependency, final boolean print_debug_output, final PackageReaderListener listener) {
 		L.d("RESOLVING DEPENDENCY", dependency);
 		final PackageSearchParameters search_params = ResourcesManager.newSearchParameters();
 		search_params.setAssetId(dependency);
@@ -182,7 +183,7 @@ public class RedAssetsManager implements AssetsManagerComponent, AssetsConsumer 
 		final PackageReader package_reader = package_loaders.getLast();
 		final DebugTimer debigTimer = Debug.newTimer();
 		debigTimer.reset();
-		package_handler.readPackage(null, package_reader);
+		package_handler.readPackage(listener, package_reader);
 		debigTimer.printTimeAbove(50L, "LOAD-TIME: Asset[" + dependency + "] loaded");
 
 		return true;
@@ -194,7 +195,7 @@ public class RedAssetsManager implements AssetsManagerComponent, AssetsConsumer 
 	}
 
 	@Override
-	public boolean autoResolveAsset (final AssetID dependency) {
+	public boolean autoResolveAsset (final AssetID dependency, final PackageReaderListener listener) {
 		final AssetHandler asset_entry = AssetsManager.obtainAsset(dependency, this);
 		if (asset_entry != null) {
 			AssetsManager.releaseAsset(asset_entry, this);
@@ -202,11 +203,21 @@ public class RedAssetsManager implements AssetsManagerComponent, AssetsConsumer 
 		}
 		L.e("Asset[" + dependency + "] delays loading since it is not pre-loaded.");
 		// ResourcesManager.updateAll();
-		final boolean success = this.resolve(dependency, true);
+		final boolean success = this.resolve(dependency, true, listener);
 		if (!success) {
 			L.e("Asset[" + dependency + "] was not resolved!");
 		}
 		return success;
+	}
+
+	@Override
+	public boolean autoResolveAsset (final AssetID dependency) {
+		return this.autoResolveAsset(dependency, null);
+	}
+
+	@Override
+	public void autoResolveAssets (final Collection<AssetID> dependencies) {
+		this.autoResolveAssets(dependencies, null);
 	}
 
 }

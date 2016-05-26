@@ -45,14 +45,14 @@ public class PackageHandlerImpl implements PackageHandler, PackageVersion {
 		}
 
 		@Override
-		public void onDependenciesRequired (final Collection<AssetID> dependencies) {
+		public void onDependenciesRequired (final PackageHandler handler, final Collection<AssetID> dependencies) {
 			final boolean auto = SystemSettings.getFlag(AssetsManagerFlags.AutoresolveDependencies);
 
 			if (!auto) {
 				dependencies.print("Missing dependencies");
 				throw new Error("RedTriplaneFlags." + auto + " flag is false.");
 			} else {
-				dependencies.print("RESOLVING");
+// dependencies.print("RESOLVING");
 				AssetsManager.autoResolveAssets(dependencies);
 			}
 		}
