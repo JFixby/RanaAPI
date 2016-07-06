@@ -78,6 +78,13 @@ public class RedAssetsManager implements AssetsManagerComponent, AssetsConsumer 
 	}
 
 	@Override
+	public boolean isRegisteredAsset (final AssetID dependency) {
+		Debug.checkNull("asset_id", dependency);
+		final RedAssetAssetHandler asset = this.assets.get(dependency);
+		return asset != null;
+	}
+
+	@Override
 	public void releaseAsset (final AssetHandler asset_info, final AssetsConsumer consumer) {
 		Debug.checkNull("asset_info", asset_info);
 		final AssetID asset_id = asset_info.ID();

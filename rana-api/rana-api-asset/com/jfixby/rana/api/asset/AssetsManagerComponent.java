@@ -29,4 +29,6 @@ public interface AssetsManagerComponent {
 
 	void autoResolveAssets (Collection<AssetID> dependencies);
 
+	boolean isRegisteredAsset (AssetID dependency);
+
 }
