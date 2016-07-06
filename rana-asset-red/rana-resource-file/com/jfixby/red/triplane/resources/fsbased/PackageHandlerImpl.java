@@ -53,7 +53,16 @@ public class PackageHandlerImpl implements PackageHandler, PackageVersion {
 				throw new Error("RedTriplaneFlags." + auto + " flag is false.");
 			} else {
 // dependencies.print("RESOLVING");
-				AssetsManager.autoResolveAssets(dependencies);
+
+				for (int i = 0; i < dependencies.size(); i++) {
+					final AssetID dep = dependencies.getElementAt(i);
+					if (AssetsManager.isRegisteredAsset(dep)) {
+
+					} else {
+						AssetsManager.autoResolveAsset(dep);
+					}
+				}
+
 			}
 		}
 
