@@ -66,7 +66,7 @@ public class GdxAssetsFileSystemPacker {
 	}
 
 	private static void fixTextures (final File output) throws IOException {
-		final ChildrenList children = output.listChildren();
+		final ChildrenList children = output.listDirectChildren();
 		for (int i = 0; i < children.size(); i++) {
 			final File child = children.getElementAt(i);
 			if (child.isFolder()) {
@@ -112,7 +112,7 @@ public class GdxAssetsFileSystemPacker {
 
 		// List<File> children = Collections.filter(root_folder.listChildren(),
 		// file -> !file.getName().startsWith("."));
-		final ChildrenList children = root_folder.listChildren();
+		final ChildrenList children = root_folder.listDirectChildren();
 		for (int i = 0; i < children.size(); i++) {
 			final File child_file = children.getElementAt(i);
 			final String name = child_file.getName();

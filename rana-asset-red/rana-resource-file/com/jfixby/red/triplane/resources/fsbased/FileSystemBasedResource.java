@@ -38,7 +38,7 @@ public class FileSystemBasedResource implements Resource {
 	public void update () {
 
 		this.index.reset();
-		final ChildrenList list = this.bank_folder.listChildren();
+		final ChildrenList list = this.bank_folder.listDirectChildren();
 		final FileSystem FS = this.bank_folder.getFileSystem();
 		for (int i = 0; i < list.size(); i++) {
 			final File file_i = list.getElementAt(i);
