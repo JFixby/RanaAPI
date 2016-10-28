@@ -57,6 +57,8 @@ public class PackageUtils {
 		final PackageDescriptor check = output_file.readData(PackageDescriptor.class);
 		L.d("packing", Json.serializeToString(descriptor));
 		L.d("cheking", Json.serializeToString(check));
+		L.d("packed to", output_folder);
 		Debug.checkTrue("IO fine", check.equals(descriptor));
+
 	}
 }
