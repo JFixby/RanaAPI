@@ -7,6 +7,6 @@ public class ResourcesConfigFile {
 
 	public static final String FILE_NAME = "r3-resources-config.r3-res";
 
-	public ArrayList<LocalBankInfo> local_banks = new ArrayList<LocalBankInfo>();
+	public ArrayList<AssetsFolder> local_assets = new ArrayList<AssetsFolder>();
 
 }
