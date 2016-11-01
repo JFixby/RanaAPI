@@ -222,7 +222,7 @@ public class RedResourcesManager implements ResourcesManagerComponent {
 		final ResourcesConfigFile config = new ResourcesConfigFile();
 
 		final AssetsFolder assets_folder = new AssetsFolder();
-		assets_folder.java_path = "D:\\[DATA]\\[RED-ASSETS]\\Dropbox\\Tinto-Assets\\tinto-assets\\content";
+		assets_folder.java_path = "path?";
 		config.local_assets.add(assets_folder);
 
 		final File resources_config_file = LocalFileSystem.ApplicationHome().child(ResourcesConfigFile.FILE_NAME);
