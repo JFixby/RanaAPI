@@ -130,6 +130,10 @@ public class RedResourcesManager implements ResourcesManagerComponent {
 	}
 
 	public void findAndInstallBanks (final File assets_folder) {
+		if (!assets_folder.exists()) {
+			L.e("bank not found", assets_folder);
+			return;
+		}
 		final ChildrenList children = assets_folder.listDirectChildren();
 		for (final File file : children) {
 			final BankHeader bankHeader = this.findAndLoadBank(file);
