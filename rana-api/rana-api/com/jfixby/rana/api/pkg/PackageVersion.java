@@ -1,9 +1,12 @@
+
 package com.jfixby.rana.api.pkg;
 
 public interface PackageVersion {
 
-	long getTimeStamp();
+	long getTimeStamp ();
 
-	String getVersionName();
+	String getVersionName ();
+
+	long reReadTimeStamp ();
 
 }

@@ -11,4 +11,6 @@ public interface AssetHandler {
 
 	void printAll ();
 
+	long readPackageTimeStamp ();
+
 }

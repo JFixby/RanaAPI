@@ -196,16 +196,13 @@ public class PackageHandlerImpl implements PackageHandler, PackageVersion {
 		return this.dependencies;
 	}
 
-	// public Object requestFeature(String feature_string) {
-	//
-	// if ("com.badlogic.gdx.files.FileHandle".equals(feature_string)) {
-	// String class_name = this.root_file.getClass().toString();
-	//
-	// if (class_name.equals(feature_string)) {
-	//
-	// }
-	// return this.root_file;
-	// }
-	// return null;
-	// }
+	@Override
+	public long reReadTimeStamp () {
+		return this.resourceIndex.reReadTimeStamp(this);
+	}
+
+	public File getPackageFolder () {
+		return this.package_folder;
+	}
+
 }

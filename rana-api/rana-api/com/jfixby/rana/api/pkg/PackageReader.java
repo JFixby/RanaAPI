@@ -3,6 +3,7 @@ package com.jfixby.rana.api.pkg;
 
 import java.io.IOException;
 
+import com.jfixby.cmns.api.assets.AssetID;
 import com.jfixby.cmns.api.collections.Collection;
 
 public interface PackageReader {
@@ -11,4 +12,5 @@ public interface PackageReader {
 
 	void doReadPackage (PackageInput input) throws IOException;
 
+	long readPackageTimeStamp (AssetID assetID);
 }

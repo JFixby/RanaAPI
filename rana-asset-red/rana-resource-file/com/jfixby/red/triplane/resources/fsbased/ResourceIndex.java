@@ -136,4 +136,8 @@ public class ResourceIndex {
 
 	}
 
+	public long reReadTimeStamp (final PackageHandlerImpl packageHandlerImpl) {
+		return this.master.reReadTimeStamp(packageHandlerImpl);
+	}
+
 }

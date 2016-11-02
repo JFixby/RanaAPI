@@ -72,6 +72,27 @@ public class FileSystemBasedResource implements Resource {
 		}
 	}
 
+	public long reReadTimeStamp (final PackageHandlerImpl packageHandlerImpl) {
+		final File package_folder = packageHandlerImpl.getPackageFolder();
+		final File file = package_folder.child(PackageDescriptor.PACKAGE_DESCRIPTOR_FILE_NAME);
+		try {
+			L.d("re-reading", file);
+			final PackageDescriptor descriptor = file.readData(PackageDescriptor.class);
+			return descriptor.timestamp();
+		} catch (final Exception e) {
+			L.e(e.toString());
+			e.printStackTrace();
+			try {
+				L.d(file.readToString());
+			} catch (final IOException e1) {
+				// e1.printStackTrace();
+			}
+			L.e("failed to read", file);
+		}
+
+		return 0;
+	}
+
 	private void index (final PackageDescriptor descriptor, final File package_folder) {
 		this.index.add(descriptor, package_folder);
 	}
