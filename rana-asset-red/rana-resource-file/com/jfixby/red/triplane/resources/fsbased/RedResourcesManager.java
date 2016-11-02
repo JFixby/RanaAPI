@@ -136,6 +136,9 @@ public class RedResourcesManager implements ResourcesManagerComponent {
 		}
 		final ChildrenList children = assets_folder.listDirectChildren();
 		for (final File file : children) {
+			if (file.isFile()) {
+				continue;
+			}
 			final BankHeader bankHeader = this.findAndLoadBank(file);
 			if (bankHeader == null) {
 				L.e("corrupted bank", file);
