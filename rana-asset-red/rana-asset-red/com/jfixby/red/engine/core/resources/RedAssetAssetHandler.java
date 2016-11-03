@@ -3,13 +3,13 @@ package com.jfixby.red.engine.core.resources;
 
 import com.jfixby.cmns.api.assets.AssetID;
 import com.jfixby.rana.api.asset.Asset;
-import com.jfixby.rana.api.asset.AssetContainer;
+import com.jfixby.rana.api.asset.AssetsContainer;
 import com.jfixby.rana.api.asset.AssetHandler;
 
 public class RedAssetAssetHandler implements AssetHandler {
 
 	private final AssetID AssetID;
-	private AssetContainer AssetContainer;
+	private AssetsContainer AssetContainer;
 
 	@Override
 	public String toString () {
@@ -20,7 +20,7 @@ public class RedAssetAssetHandler implements AssetHandler {
 		this.AssetID = asset_id;
 	}
 
-	public void setAssetContainer (final AssetContainer container) {
+	public void setAssetContainer (final AssetsContainer container) {
 		this.AssetContainer = container;
 	}
 
@@ -42,6 +42,10 @@ public class RedAssetAssetHandler implements AssetHandler {
 	@Override
 	public long readPackageTimeStamp () {
 		return this.AssetContainer.readPackageTimeStamp(this.AssetID);
+	}
+
+	public AssetsContainer getContainer () {
+		return this.AssetContainer;
 	}
 
 }

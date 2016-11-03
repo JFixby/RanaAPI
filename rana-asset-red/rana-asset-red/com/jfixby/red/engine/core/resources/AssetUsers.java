@@ -2,6 +2,7 @@
 package com.jfixby.red.engine.core.resources;
 
 import com.jfixby.cmns.api.assets.AssetID;
+import com.jfixby.cmns.api.collections.CollectionFilter;
 import com.jfixby.cmns.api.collections.Collections;
 import com.jfixby.cmns.api.collections.List;
 import com.jfixby.cmns.api.collections.Map;
@@ -13,6 +14,11 @@ import com.jfixby.rana.api.asset.AssetsManager;
 public class AssetUsers {
 
 	final Map<AssetID, List<AssetUser>> asset_users = Collections.newMap();
+	private final RedAssetsManager master;
+
+	public AssetUsers (final RedAssetsManager redAssetsManager) {
+		this.master = redAssetsManager;
+	}
 
 	public void print (final String tag) {
 		this.asset_users.print(tag);
@@ -44,4 +50,21 @@ public class AssetUsers {
 		return true;
 	}
 
+	public void purge () {
+
+		final List<AssetID> assetsToDrop = this.asset_users.keys().filter(new CollectionFilter<AssetID>() {
+			@Override
+			public boolean fits (final AssetID key) {
+				return AssetUsers.this.asset_users.get(key).size() == 0;
+			}
+		});
+
+		this.asset_users.removeAll(assetsToDrop);
+
+		this.master.purgeAssets(assetsToDrop);
+
+// assetsToDrop.print("assetsToDrop");
+// this.asset_users.print("asset_users");
+// Sys.exit();
+	}
 }

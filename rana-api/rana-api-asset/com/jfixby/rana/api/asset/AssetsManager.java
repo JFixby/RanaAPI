@@ -26,8 +26,20 @@ public class AssetsManager {
 		return componentInstaller.getComponent();
 	}
 
-	public static void registerAsset (final AssetID asset_id, final AssetContainer container) {
+	public static void registerAssetContainer (final AssetID asset_id, final AssetsContainer container) {
 		invoke().registerAssetContainer(asset_id, container);
+	}
+
+	public static void registerAssetsContainer (final Collection<AssetID> assets, final AssetsContainer container) {
+		invoke().registerAssetsContainer(assets, container);
+	}
+
+	public static void unRegisterAssetsContainer (final Collection<AssetID> assets, final AssetsContainer container) {
+		invoke().unRegisterAssetsContainer(assets, container);
+	}
+
+	public static void unRegisterAssetContainer (final AssetID asset, final AssetsContainer container) {
+		invoke().unRegisterAssetContainer(asset, container);
 	}
 
 	public static AssetHandler obtainAsset (final AssetID asset_id, final AssetsConsumer consumer) {
@@ -46,9 +58,9 @@ public class AssetsManager {
 		invoke().printAllLoadedAssets();
 	}
 
-	public static void checkAll () {
-		invoke().checkAll();
-	}
+// public static void checkAll () {
+// invoke().checkAll();
+// }
 
 	public static boolean autoResolveAsset (final AssetID dependency, final PackageReaderListener listener) {
 		return invoke().autoResolveAsset(dependency, listener);
@@ -68,6 +80,10 @@ public class AssetsManager {
 
 	public static boolean isRegisteredAsset (final AssetID dependency) {
 		return invoke().isRegisteredAsset(dependency);
+	}
+
+	public static void purge () {
+		invoke().purge();
 	}
 
 }

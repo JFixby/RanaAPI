@@ -1,18 +1,17 @@
 
 package com.jfixby.red.engine.core.resources;
 
-import java.util.ArrayList;
-
 import com.jfixby.cmns.api.assets.AssetID;
 import com.jfixby.cmns.api.collections.Collection;
 import com.jfixby.cmns.api.collections.Collections;
+import com.jfixby.cmns.api.collections.List;
 import com.jfixby.cmns.api.debug.Debug;
 import com.jfixby.cmns.api.debug.DebugTimer;
 import com.jfixby.cmns.api.err.Err;
 import com.jfixby.cmns.api.log.L;
-import com.jfixby.rana.api.asset.AssetContainer;
 import com.jfixby.rana.api.asset.AssetHandler;
 import com.jfixby.rana.api.asset.AssetsConsumer;
+import com.jfixby.rana.api.asset.AssetsContainer;
 import com.jfixby.rana.api.asset.AssetsManager;
 import com.jfixby.rana.api.asset.AssetsManagerComponent;
 import com.jfixby.rana.api.pkg.PACKAGE_STATUS;
@@ -27,31 +26,46 @@ import com.jfixby.rana.api.pkg.ResourcesManager;
 public class RedAssetsManager implements AssetsManagerComponent, AssetsConsumer {
 
 	final Assets assets = new Assets();
-	final ArrayList<AssetContainer> containers = new ArrayList<AssetContainer>();;
+// final Map<AssetsContainer, Set<AssetID>> containers = Collections.newMap();
 
-	final AssetUsers asset_users = new AssetUsers();
+	final AssetUsers asset_users = new AssetUsers(this);
 	final UserAssets user_assets = new UserAssets();
 	int i = 0;
 
-	@Override
-	public void checkAll () {
-		for (this.i = 0; this.i < this.containers.size(); this.i++) {
-			final AssetContainer container = this.containers.get(this.i);
-			container.checkAll();
-		}
-	}
+// @Override
+// public void checkAll () {
+// for (this.i = 0; this.i < this.containers.size(); this.i++) {
+// final AssetsContainer container = this.containers.getKeyAt(this.i);
+// container.checkAll();
+// }
+// }
 
 	@Override
-	public void registerAssetContainer (final AssetID asset_id, final AssetContainer container) {
+	public void registerAssetContainer (final AssetID asset_id, final AssetsContainer container) {
 		Debug.checkNull("asset_id", asset_id);
 		Debug.checkNull("container", container);
 
-		this.containers.add(container);
+// Set<AssetID> set = this.containers.get(asset_id);
+// if (set == null) {
+// set = Collections.newSet();
+// this.containers.put(container, set);
+// }
+// set.add(asset_id);
 
 		final RedAssetAssetHandler info = new RedAssetAssetHandler(asset_id);
 		this.assets.put(asset_id, info);
 		info.setAssetContainer(container);
 
+	}
+
+	@Override
+	public void unRegisterAssetContainer (final AssetID asset, final AssetsContainer container) {
+		this.assets.remove(asset, container);
+	}
+
+	public void purgeAssets (final List<AssetID> assetsToDrop) {
+		assetsToDrop.print("purging assets");
+		this.assets.purgeAssets(assetsToDrop);
 	}
 
 	@Override
@@ -225,6 +239,25 @@ public class RedAssetsManager implements AssetsManagerComponent, AssetsConsumer 
 	@Override
 	public void autoResolveAssets (final Collection<AssetID> dependencies) {
 		this.autoResolveAssets(dependencies, null);
+	}
+
+	@Override
+	public void purge () {
+		this.asset_users.purge();
+	}
+
+	@Override
+	public void registerAssetsContainer (final Collection<AssetID> list, final AssetsContainer container) {
+		for (final AssetID rester_id : list) {
+			this.registerAssetContainer(rester_id, container);
+		}
+	}
+
+	@Override
+	public void unRegisterAssetsContainer (final Collection<AssetID> assets, final AssetsContainer container) {
+		for (final AssetID asset : assets) {
+			this.unRegisterAssetContainer(asset, container);
+		}
 	}
 
 }

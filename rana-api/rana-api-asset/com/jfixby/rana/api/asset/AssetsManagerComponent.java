@@ -13,7 +13,9 @@ public interface AssetsManagerComponent {
 
 	void releaseAllAssets (AssetsConsumer consumer);
 
-	void registerAssetContainer (AssetID asset_id, AssetContainer container);
+	void registerAssetContainer (AssetID asset_id, AssetsContainer container);
+
+	void registerAssetsContainer (Collection<AssetID> list, AssetsContainer container);
 
 	boolean autoResolveAsset (AssetID dependency, PackageReaderListener listener);
 
@@ -21,7 +23,7 @@ public interface AssetsManagerComponent {
 
 	void printAllLoadedAssets ();
 
-	void checkAll ();
+// void checkAll ();
 
 	AssetHandler useAsset (AssetID spriteAssetID);
 
@@ -30,5 +32,11 @@ public interface AssetsManagerComponent {
 	void autoResolveAssets (Collection<AssetID> dependencies);
 
 	boolean isRegisteredAsset (AssetID dependency);
+
+	void purge ();
+
+	void unRegisterAssetsContainer (Collection<AssetID> assets, AssetsContainer container);
+
+	void unRegisterAssetContainer (AssetID asset, AssetsContainer container);
 
 }
