@@ -4,8 +4,8 @@ package com.jfixby.red.engine.core.resources;
 import java.util.HashMap;
 
 import com.jfixby.cmns.api.assets.AssetID;
+import com.jfixby.cmns.api.collections.Collection;
 import com.jfixby.cmns.api.collections.Collections;
-import com.jfixby.cmns.api.collections.List;
 import com.jfixby.cmns.api.collections.Map;
 import com.jfixby.cmns.api.collections.Set;
 import com.jfixby.cmns.api.debug.Debug;
@@ -33,11 +33,11 @@ public class Assets {
 		Collections.newMap(this.main_registry).print(tag);
 	}
 
-	public void purgeAssets (final List<AssetID> assetsToDrop) {
-		final Map<RedAssetAssetHandler, Set<AssetID>> related = Collections.newMap();
+	public void purgeAssets (final Collection<AssetID> assetsToDrop) {
+		final Map<AssetsContainer, Set<AssetID>> related = Collections.newMap();
 		for (int i = 0; i < assetsToDrop.size(); i++) {
 			final AssetID asset = (assetsToDrop.getElementAt(i));
-			final RedAssetAssetHandler handler = this.main_registry.get(asset);
+			final AssetsContainer handler = this.main_registry.get(asset).getContainer();
 			Set<AssetID> set = related.get(handler);
 			if (set == null) {
 				set = Collections.newSet();
@@ -46,10 +46,18 @@ public class Assets {
 			set.add(asset);
 		}
 
+// related.print("related");
+// related.keys().print("keys");
+// final RedAssetAssetHandler key0 = related.keys().getElementAt(0);
+// final RedAssetAssetHandler key1 = related.keys().getElementAt(1);
+// L.d("key0 == key1", key0 == key1);
+// L.d("key0 eq key1", key0.equals(key1));
+
 		for (int i = 0; i < related.size(); i++) {
-			final RedAssetAssetHandler handler = related.getKeyAt(i);
-			final Set<AssetID> relatedAssets = related.get(handler);
-			final AssetsContainer container = handler.getContainer();
+			final AssetsContainer container = related.getKeyAt(i);
+			final Set<AssetID> relatedAssets = related.get(container);
+// final AssetsContainer container = handler.getContainer();
+			relatedAssets.print("purge: " + container);
 			container.purgeAssets(relatedAssets);
 		}
 	}

@@ -39,4 +39,6 @@ public interface AssetsManagerComponent {
 
 	void unRegisterAssetContainer (AssetID asset, AssetsContainer container);
 
+	void printUsages ();
+
 }

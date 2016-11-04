@@ -3,8 +3,8 @@ package com.jfixby.red.engine.core.resources;
 
 import com.jfixby.cmns.api.assets.AssetID;
 import com.jfixby.rana.api.asset.Asset;
-import com.jfixby.rana.api.asset.AssetsContainer;
 import com.jfixby.rana.api.asset.AssetHandler;
+import com.jfixby.rana.api.asset.AssetsContainer;
 
 public class RedAssetAssetHandler implements AssetHandler {
 
@@ -13,7 +13,7 @@ public class RedAssetAssetHandler implements AssetHandler {
 
 	@Override
 	public String toString () {
-		return this.AssetContainer + "";
+		return "RedAssetAssetHandler[" + this.AssetContainer + "]";
 	}
 
 	public RedAssetAssetHandler (final AssetID asset_id) {

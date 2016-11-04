@@ -51,17 +51,17 @@ public class AssetUsers {
 	}
 
 	public void purge () {
-
-		final List<AssetID> assetsToDrop = this.asset_users.keys().filter(new CollectionFilter<AssetID>() {
+// this.asset_users.print("asset_users");
+		final List<AssetID> keys = this.asset_users.keys().filter(new CollectionFilter<AssetID>() {
 			@Override
 			public boolean fits (final AssetID key) {
 				return AssetUsers.this.asset_users.get(key).size() == 0;
 			}
 		});
 
-		this.asset_users.removeAll(assetsToDrop);
+		this.asset_users.removeAll(keys);
 
-		this.master.purgeAssets(assetsToDrop);
+		this.master.purgeAssets(keys);
 
 // assetsToDrop.print("assetsToDrop");
 // this.asset_users.print("asset_users");

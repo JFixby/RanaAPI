@@ -64,7 +64,7 @@ public class RedAssetsManager implements AssetsManagerComponent, AssetsConsumer 
 	}
 
 	public void purgeAssets (final List<AssetID> assetsToDrop) {
-		assetsToDrop.print("purging assets");
+
 		this.assets.purgeAssets(assetsToDrop);
 	}
 
@@ -258,6 +258,12 @@ public class RedAssetsManager implements AssetsManagerComponent, AssetsConsumer 
 		for (final AssetID asset : assets) {
 			this.unRegisterAssetContainer(asset, container);
 		}
+	}
+
+	@Override
+	public void printUsages () {
+		this.asset_users.print("asset_users");
+		this.user_assets.print();
 	}
 
 }

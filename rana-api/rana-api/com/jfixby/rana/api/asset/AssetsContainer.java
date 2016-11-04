@@ -10,8 +10,6 @@ public interface AssetsContainer {
 
 	void printAll ();
 
-	void checkAll ();
-
 	long getPackageTimeStamp (AssetID assetID);
 
 	long readPackageTimeStamp (AssetID assetID);
