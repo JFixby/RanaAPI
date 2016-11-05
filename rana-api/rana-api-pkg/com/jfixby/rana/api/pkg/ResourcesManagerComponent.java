@@ -1,28 +1,28 @@
+
 package com.jfixby.rana.api.pkg;
 
 import com.jfixby.cmns.api.collections.Collection;
 
-
 public interface ResourcesManagerComponent {
 
-	PackageSearchParameters newSearchParameters();
+	PackageSearchParameters newSearchParameters ();
 
-	PackageSearchResult findPackages(PackageSearchParameters search_params);
+	PackageSearchResult findPackages (PackageSearchParameters search_params);
 
-	void updateAll();
+	void updateAll ();
 
-	void printAllPackages();
-	
-	
+	void printAllPackages ();
 
-	PackageFormat newPackageFormat(String format_name);
-	
-	Collection<PackageReader> findPackageReaders(PackageFormat format);
+	PackageFormat newPackageFormat (String format_name);
 
-	void registerPackageReader(PackageReader loader);
+	Collection<PackageReader> findPackageReaders (PackageFormat format);
 
-	Collection<PackageFormat> listAcceptablePackageFormats();
+	void registerPackageReader (PackageReader loader);
 
-	void printInstalledPackageReaders();
+	Collection<PackageFormat> listAcceptablePackageFormats ();
+
+	void printInstalledPackageReaders ();
+
+	void rebuildIndex ();
 
 }

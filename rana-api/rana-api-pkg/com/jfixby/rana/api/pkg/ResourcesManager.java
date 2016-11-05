@@ -3,6 +3,7 @@ package com.jfixby.rana.api.pkg;
 
 import com.jfixby.cmns.api.ComponentInstaller;
 import com.jfixby.cmns.api.collections.Collection;
+import com.jfixby.rana.api.asset.Asset;
 
 public class ResourcesManager {
 
@@ -45,7 +46,7 @@ public class ResourcesManager {
 		return invoke().findPackageReaders(format);
 	}
 
-	public static void registerPackageReader (final PackageReader loader) {
+	public static <T extends Asset> void registerPackageReader (final PackageReader loader) {
 		invoke().registerPackageReader(loader);
 	}
 
@@ -55,6 +56,10 @@ public class ResourcesManager {
 
 	public static void printAllPackageReaders () {
 		invoke().printInstalledPackageReaders();
+	}
+
+	public static void rebuildIndex () {
+		invoke().rebuildIndex();
 	}
 
 }

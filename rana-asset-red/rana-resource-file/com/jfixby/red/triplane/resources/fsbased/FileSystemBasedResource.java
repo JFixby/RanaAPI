@@ -35,7 +35,7 @@ public class FileSystemBasedResource implements Resource {
 	}
 
 	@Override
-	public void update () {
+	public void rebuildIndex () {
 
 		this.index.reset();
 		final ChildrenList list = this.bank_folder.listDirectChildren();

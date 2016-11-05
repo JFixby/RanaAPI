@@ -3,6 +3,7 @@ package com.jfixby.red.engine.core.resources;
 
 import com.jfixby.cmns.api.assets.AssetID;
 import com.jfixby.cmns.api.collections.Collection;
+import com.jfixby.cmns.api.collections.CollectionFilter;
 import com.jfixby.cmns.api.collections.Collections;
 import com.jfixby.cmns.api.collections.List;
 import com.jfixby.cmns.api.debug.Debug;
@@ -11,9 +12,9 @@ import com.jfixby.cmns.api.err.Err;
 import com.jfixby.cmns.api.log.L;
 import com.jfixby.rana.api.asset.AssetHandler;
 import com.jfixby.rana.api.asset.AssetsConsumer;
-import com.jfixby.rana.api.asset.AssetsContainer;
 import com.jfixby.rana.api.asset.AssetsManager;
 import com.jfixby.rana.api.asset.AssetsManagerComponent;
+import com.jfixby.rana.api.asset.SealedAssetsContainer;
 import com.jfixby.rana.api.pkg.PACKAGE_STATUS;
 import com.jfixby.rana.api.pkg.PackageFormat;
 import com.jfixby.rana.api.pkg.PackageHandler;
@@ -23,7 +24,7 @@ import com.jfixby.rana.api.pkg.PackageSearchParameters;
 import com.jfixby.rana.api.pkg.PackageSearchResult;
 import com.jfixby.rana.api.pkg.ResourcesManager;
 
-public class RedAssetsManager implements AssetsManagerComponent, AssetsConsumer {
+public class RedAssetsManager implements AssetsManagerComponent {
 
 	final Assets assets = new Assets();
 // final Map<AssetsContainer, Set<AssetID>> containers = Collections.newMap();
@@ -40,8 +41,7 @@ public class RedAssetsManager implements AssetsManagerComponent, AssetsConsumer 
 // }
 // }
 
-	@Override
-	public void registerAssetContainer (final AssetID asset_id, final AssetsContainer container) {
+	public void registerAssetContainer (final AssetID asset_id, final SealedAssetsContainer container) {
 		Debug.checkNull("asset_id", asset_id);
 		Debug.checkNull("container", container);
 
@@ -52,19 +52,22 @@ public class RedAssetsManager implements AssetsManagerComponent, AssetsConsumer 
 // }
 // set.add(asset_id);
 
-		final RedAssetAssetHandler info = new RedAssetAssetHandler(asset_id);
+		if (this.assets.main_registry.containsKey(asset_id)) {
+			Err.reportError("Asset is already loaded " + asset_id);
+		}
+
+		final RedAssetHandler info = new RedAssetHandler(asset_id);
 		this.assets.put(asset_id, info);
+		this.asset_users.addUser(asset_id);
 		info.setAssetContainer(container);
 
 	}
 
-	@Override
-	public void unRegisterAssetContainer (final AssetID asset, final AssetsContainer container) {
+	public void unRegisterAssetContainer (final AssetID asset, final SealedAssetsContainer container) {
 		this.assets.remove(asset, container);
 	}
 
-	public void purgeAssets (final List<AssetID> assetsToDrop) {
-
+	public void purgeAssets (final Collection<AssetID> assetsToDrop) {
 		this.assets.purgeAssets(assetsToDrop);
 	}
 
@@ -77,7 +80,7 @@ public class RedAssetsManager implements AssetsManagerComponent, AssetsConsumer 
 	public AssetHandler obtainAsset (final AssetID asset_id, final AssetsConsumer consumer) {
 		Debug.checkNull("asset_id", asset_id);
 		Debug.checkNull("consumer", consumer);
-		final RedAssetAssetHandler asset = this.assets.get(asset_id);
+		final RedAssetHandler asset = this.assets.get(asset_id);
 		if (asset == null) {
 			// assets.print("available assets");
 			L.e("Asset not found <" + asset_id + "> (https://github.com/JFixby/RedTriplane/issues/7)");
@@ -94,7 +97,7 @@ public class RedAssetsManager implements AssetsManagerComponent, AssetsConsumer 
 	@Override
 	public boolean isRegisteredAsset (final AssetID dependency) {
 		Debug.checkNull("asset_id", dependency);
-		final RedAssetAssetHandler asset = this.assets.get(dependency);
+		final RedAssetHandler asset = this.assets.get(dependency);
 		return asset != null;
 	}
 
@@ -104,7 +107,7 @@ public class RedAssetsManager implements AssetsManagerComponent, AssetsConsumer 
 		final AssetID asset_id = asset_info.ID();
 		Debug.checkNull("asset_id", asset_id);
 		Debug.checkNull("consumer", consumer);
-		final RedAssetAssetHandler asset = this.assets.get(asset_id);
+		final RedAssetHandler asset = this.assets.get(asset_id);
 		if (asset == null) {
 			throw new Error("Asset " + asset_id + " is not registred here");
 		}
@@ -133,7 +136,7 @@ public class RedAssetsManager implements AssetsManagerComponent, AssetsConsumer 
 			return;
 		}
 		for (final AssetID asset_id : assets_list) {
-			final RedAssetAssetHandler asset_info = this.assets.get(asset_id);
+			final RedAssetHandler asset_info = this.assets.get(asset_id);
 			if (asset_info == null) {
 				this.asset_users.print("on releaseAllAssets");
 				this.user_assets.print();
@@ -144,15 +147,24 @@ public class RedAssetsManager implements AssetsManagerComponent, AssetsConsumer 
 
 	}
 
+	final AssetsConsumer stub_consumer = new AssetsConsumer() {
+		{
+
+			Err.reportWarning("AssetsConsumer leak");
+		}
+	};
+
 	@Override
 	public void autoResolveAssets (final Collection<AssetID> dependencies, final PackageReaderListener listener) {
+		Debug.checkNull(listener);
 		Debug.checkNull("dependencies", dependencies);
 		boolean updated = true;
 		for (final AssetID dependency : dependencies) {
-			final AssetHandler asset_entry = AssetsManager.obtainAsset(dependency, this);
+
+			final AssetHandler asset_entry = AssetsManager.obtainAsset(dependency, this.stub_consumer);
 			if (asset_entry != null) {
 				L.d("already loaded", dependency);
-				AssetsManager.releaseAsset(asset_entry, this);
+				AssetsManager.releaseAsset(asset_entry, this.stub_consumer);
 				continue;
 			}
 			if (!updated) {
@@ -204,7 +216,7 @@ public class RedAssetsManager implements AssetsManagerComponent, AssetsConsumer 
 		final PackageReader package_reader = package_loaders.getLast();
 		final DebugTimer debigTimer = Debug.newTimer();
 		debigTimer.reset();
-		package_handler.readPackage(listener, package_reader);
+		package_handler.doReadPackage(listener, package_reader);
 		debigTimer.printTimeAbove(50L, "LOAD-TIME: Asset[" + dependency + "] loaded");
 
 		return true;
@@ -217,9 +229,11 @@ public class RedAssetsManager implements AssetsManagerComponent, AssetsConsumer 
 
 	@Override
 	public boolean autoResolveAsset (final AssetID dependency, final PackageReaderListener listener) {
-		final AssetHandler asset_entry = AssetsManager.obtainAsset(dependency, this);
+// Debug.checkNull(listener);
+
+		final AssetHandler asset_entry = AssetsManager.obtainAsset(dependency, this.stub_consumer);
 		if (asset_entry != null) {
-			AssetsManager.releaseAsset(asset_entry, this);
+			AssetsManager.releaseAsset(asset_entry, this.stub_consumer);
 			return true;
 		}
 		L.e("Asset[" + dependency + "] delays loading since it is not pre-loaded.");
@@ -243,19 +257,39 @@ public class RedAssetsManager implements AssetsManagerComponent, AssetsConsumer 
 
 	@Override
 	public void purge () {
-		this.asset_users.purge();
+
+// this.asset_users.print("asset_users");
+		final List<AssetID> keys = this.assets.keys().filter(new CollectionFilter<AssetID>() {
+			@Override
+			public boolean fits (final AssetID key) {
+				return RedAssetsManager.this.asset_users.getNumberOfUsers(key) == 0;
+			}
+		});
+// this.asset_users.print("before remove");
+		this.asset_users.removeAll(keys);
+// this.asset_users.print("after remove");
+
+// keys.print("assetsToDrop");
+// this.asset_users.print("asset_users");
+
+		this.purgeAssets(keys);
+
+// Sys.exit();
+
 	}
 
 	@Override
-	public void registerAssetsContainer (final Collection<AssetID> list, final AssetsContainer container) {
+	public void registerAssetsContainer (final SealedAssetsContainer container) {
+		final Collection<AssetID> list = container.listAssets();
 		for (final AssetID rester_id : list) {
 			this.registerAssetContainer(rester_id, container);
 		}
 	}
 
 	@Override
-	public void unRegisterAssetsContainer (final Collection<AssetID> assets, final AssetsContainer container) {
-		for (final AssetID asset : assets) {
+	public void unRegisterAssetsContainer (final SealedAssetsContainer container) {
+		final Collection<AssetID> list = container.listAssets();
+		for (final AssetID asset : list) {
 			this.unRegisterAssetContainer(asset, container);
 		}
 	}

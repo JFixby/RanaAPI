@@ -3,6 +3,7 @@ package com.jfixby.rana.api.pkg;
 
 import com.jfixby.cmns.api.assets.AssetID;
 import com.jfixby.cmns.api.collections.Collection;
+import com.jfixby.rana.api.asset.SealedAssetsContainer;
 
 public interface PackageHandler {
 
@@ -22,6 +23,6 @@ public interface PackageHandler {
 
 	public void install ();
 
-	public void readPackage (PackageReaderListener reader_listener, PackageReader reader);
+	public SealedAssetsContainer doReadPackage (PackageReaderListener reader_listener, PackageReader reader);
 
 }

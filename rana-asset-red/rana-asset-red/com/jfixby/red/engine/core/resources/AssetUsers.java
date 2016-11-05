@@ -2,7 +2,6 @@
 package com.jfixby.red.engine.core.resources;
 
 import com.jfixby.cmns.api.assets.AssetID;
-import com.jfixby.cmns.api.collections.CollectionFilter;
 import com.jfixby.cmns.api.collections.Collections;
 import com.jfixby.cmns.api.collections.List;
 import com.jfixby.cmns.api.collections.Map;
@@ -30,7 +29,17 @@ public class AssetUsers {
 			users = Collections.newList();
 			this.asset_users.put(asset_id, users);
 		}
-		users.add(user);
+		{
+			users.add(user);
+		}
+	}
+
+	public void addUser (final AssetID asset_id) {
+		List<AssetUser> users = this.asset_users.get(asset_id);
+		if (users == null) {
+			users = Collections.newList();
+			this.asset_users.put(asset_id, users);
+		}
 	}
 
 	public boolean removeUser (final AssetID asset_id, final AssetUser user) {
@@ -50,21 +59,17 @@ public class AssetUsers {
 		return true;
 	}
 
-	public void purge () {
-// this.asset_users.print("asset_users");
-		final List<AssetID> keys = this.asset_users.keys().filter(new CollectionFilter<AssetID>() {
-			@Override
-			public boolean fits (final AssetID key) {
-				return AssetUsers.this.asset_users.get(key).size() == 0;
-			}
-		});
-
-		this.asset_users.removeAll(keys);
-
-		this.master.purgeAssets(keys);
-
-// assetsToDrop.print("assetsToDrop");
-// this.asset_users.print("asset_users");
-// Sys.exit();
+	public int getNumberOfUsers (final AssetID key) {
+		final List<AssetUser> users = this.asset_users.get(key);
+		if (users == null) {
+			return 0;
+		} else {
+			return users.size();
+		}
 	}
+
+	public void removeAll (final List<AssetID> keys) {
+		this.asset_users.removeAll(keys);
+	}
+
 }

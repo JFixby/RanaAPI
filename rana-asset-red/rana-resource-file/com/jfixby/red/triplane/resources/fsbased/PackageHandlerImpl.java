@@ -16,6 +16,7 @@ import com.jfixby.cmns.api.log.L;
 import com.jfixby.cmns.api.sys.settings.SystemSettings;
 import com.jfixby.rana.api.asset.AssetsManager;
 import com.jfixby.rana.api.asset.AssetsManagerFlags;
+import com.jfixby.rana.api.asset.SealedAssetsContainer;
 import com.jfixby.rana.api.pkg.PACKAGE_STATUS;
 import com.jfixby.rana.api.pkg.PackageHandler;
 import com.jfixby.rana.api.pkg.PackageReader;
@@ -25,8 +26,8 @@ import com.jfixby.rana.api.pkg.fs.PackageDescriptor;
 
 public class PackageHandlerImpl implements PackageHandler, PackageVersion {
 
-	List<AssetID> descriptors = Collections.newList();
-	List<AssetID> dependencies = Collections.newList();
+	final List<AssetID> descriptors = Collections.newList();
+	final List<AssetID> dependencies = Collections.newList();
 
 	private String version;
 	private long timestamp;
@@ -40,7 +41,6 @@ public class PackageHandlerImpl implements PackageHandler, PackageVersion {
 		@Override
 		public void onError (final IOException e) {
 			e.printStackTrace();
-			// L.e(e);
 			Err.reportError(e);
 		}
 
@@ -52,7 +52,6 @@ public class PackageHandlerImpl implements PackageHandler, PackageVersion {
 				dependencies.print("Missing dependencies");
 				throw new Error("RedTriplaneFlags." + auto + " flag is false.");
 			} else {
-// dependencies.print("RESOLVING");
 
 				for (int i = 0; i < dependencies.size(); i++) {
 					final AssetID dep = dependencies.getElementAt(i);
@@ -66,9 +65,19 @@ public class PackageHandlerImpl implements PackageHandler, PackageVersion {
 			}
 		}
 
+		@Override
+		public void onPackageDataDispose (final SealedAssetsContainer container) {
+			AssetsManager.unRegisterAssetsContainer(container);
+		}
+
+		@Override
+		public void onPackageDataLoaded (final SealedAssetsContainer container) {
+			AssetsManager.registerAssetsContainer(container);
+		}
+
 	};
 	private final String name;
-	private File root_file;
+// private File root_file;
 	private PackageFormatImpl format;
 	private final ResourceIndex resourceIndex;
 
@@ -122,12 +131,12 @@ public class PackageHandlerImpl implements PackageHandler, PackageVersion {
 	}
 
 	@Override
-	public void readPackage (PackageReaderListener reader_listener, final PackageReader reader) {
+	public SealedAssetsContainer doReadPackage (PackageReaderListener reader_listener, final PackageReader reader) {
 		if (this.status == PACKAGE_STATUS.BROKEN) {
-			throw new Error("Package is brocken: " + this);
+			Err.reportError("Package is brocken: " + this);
 		}
 		if (this.status == PACKAGE_STATUS.NOT_INSTALLED) {
-			throw new Error("Package is not installed: " + this);
+			Err.reportError("Package is not installed: " + this);
 		}
 		FileSystem FS = this.package_folder.getFileSystem();
 		File sandbox_folder = null;
@@ -140,20 +149,26 @@ public class PackageHandlerImpl implements PackageHandler, PackageVersion {
 			FS = sandbox_folder.getFileSystem();
 		}
 
-		this.root_file = sandbox_folder.child(this.root_file_name);
+		File root_file = sandbox_folder.child(this.root_file_name);
 		if (reader_listener == null) {
 			reader_listener = this.default_listener;
 		}
 
 		try {
-			final PackageInputImpl input = new PackageInputImpl(reader_listener, this.root_file, this);
+
+			final RedSealedContainer packageData = new RedSealedContainer(this, reader_listener, reader);
+			final PackageInputImpl input = new PackageInputImpl(reader_listener, root_file, packageData, this);
 			// L.d("reading", root_file);
 			reader.doReadPackage(input);
+			packageData.seal();
+
+			return packageData;
 		} catch (final IOException e) {
 			this.status = PACKAGE_STATUS.BROKEN;
 			reader_listener.onError(e);
 		}
-		this.root_file = null;
+		root_file = null;
+		return null;
 	}
 
 	public void setFormat (final String format_string) {

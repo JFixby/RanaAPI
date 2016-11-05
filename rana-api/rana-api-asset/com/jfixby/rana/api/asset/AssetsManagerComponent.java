@@ -13,10 +13,6 @@ public interface AssetsManagerComponent {
 
 	void releaseAllAssets (AssetsConsumer consumer);
 
-	void registerAssetContainer (AssetID asset_id, AssetsContainer container);
-
-	void registerAssetsContainer (Collection<AssetID> list, AssetsContainer container);
-
 	boolean autoResolveAsset (AssetID dependency, PackageReaderListener listener);
 
 	void autoResolveAssets (Collection<AssetID> dependencies, PackageReaderListener listener);
@@ -35,10 +31,10 @@ public interface AssetsManagerComponent {
 
 	void purge ();
 
-	void unRegisterAssetsContainer (Collection<AssetID> assets, AssetsContainer container);
-
-	void unRegisterAssetContainer (AssetID asset, AssetsContainer container);
-
 	void printUsages ();
+
+	void registerAssetsContainer (SealedAssetsContainer container);
+
+	void unRegisterAssetsContainer (SealedAssetsContainer container);
 
 }

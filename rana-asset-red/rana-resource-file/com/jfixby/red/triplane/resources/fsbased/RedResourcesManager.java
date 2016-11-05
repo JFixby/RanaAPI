@@ -63,7 +63,7 @@ public class RedResourcesManager implements ResourcesManagerComponent {
 		for (int i = 0; i < this.resources.size(); i++) {
 			final Resource res = this.resources.getElementAt(i);
 			// L.d("updating resource", res);
-			res.update();
+			res.rebuildIndex();
 
 		}
 	}
@@ -254,6 +254,13 @@ public class RedResourcesManager implements ResourcesManagerComponent {
 	}
 // }
 //
+
+	@Override
+	public void rebuildIndex () {
+		for (final Resource res : this.resources) {
+			res.rebuildIndex();
+		}
+	}
 
 //
 

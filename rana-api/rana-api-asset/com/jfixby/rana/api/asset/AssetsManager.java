@@ -26,20 +26,12 @@ public class AssetsManager {
 		return componentInstaller.getComponent();
 	}
 
-	public static void registerAssetContainer (final AssetID asset_id, final AssetsContainer container) {
-		invoke().registerAssetContainer(asset_id, container);
+	public static void registerAssetsContainer (final SealedAssetsContainer container) {
+		invoke().registerAssetsContainer(container);
 	}
 
-	public static void registerAssetsContainer (final Collection<AssetID> assets, final AssetsContainer container) {
-		invoke().registerAssetsContainer(assets, container);
-	}
-
-	public static void unRegisterAssetsContainer (final Collection<AssetID> assets, final AssetsContainer container) {
-		invoke().unRegisterAssetsContainer(assets, container);
-	}
-
-	public static void unRegisterAssetContainer (final AssetID asset, final AssetsContainer container) {
-		invoke().unRegisterAssetContainer(asset, container);
+	public static void unRegisterAssetsContainer (final SealedAssetsContainer container) {
+		invoke().unRegisterAssetsContainer(container);
 	}
 
 	public static AssetHandler obtainAsset (final AssetID asset_id, final AssetsConsumer consumer) {

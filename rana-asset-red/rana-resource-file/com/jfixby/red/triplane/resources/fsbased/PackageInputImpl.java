@@ -1,37 +1,48 @@
+
 package com.jfixby.red.triplane.resources.fsbased;
 
 import com.jfixby.cmns.api.file.File;
+import com.jfixby.rana.api.asset.AssetsContainer;
 import com.jfixby.rana.api.pkg.PackageHandler;
-import com.jfixby.rana.api.pkg.PackageInput;
+import com.jfixby.rana.api.pkg.PackageReaderInput;
 import com.jfixby.rana.api.pkg.PackageReaderListener;
 
-public class PackageInputImpl implements PackageInput {
+public class PackageInputImpl implements PackageReaderInput {
 
-	private PackageReaderListener reader_listener;
+	private final PackageReaderListener reader_listener;
 
-	private File root_file;
-	private PackageHandlerImpl packageHandlerImpl;
+	private final File root_file;
+	private final PackageHandlerImpl packageHandlerImpl;
 
-	public PackageInputImpl(PackageReaderListener reader_listener, File root_file, PackageHandlerImpl packageHandlerImpl) {
+	private final RedSealedContainer packageData;
+
+	public PackageInputImpl (final PackageReaderListener reader_listener, final File root_file,
+		final RedSealedContainer packageData, final PackageHandlerImpl packageHandlerImpl) {
 		this.reader_listener = reader_listener;
 		this.root_file = root_file;
 		this.packageHandlerImpl = packageHandlerImpl;
+		this.packageData = packageData;
 
 	}
 
 	@Override
-	public PackageReaderListener getPackageReaderListener() {
-		return reader_listener;
+	public PackageReaderListener getPackageReaderListener () {
+		return this.reader_listener;
 	}
 
 	@Override
-	public File getRootFile() {
-		return root_file;
+	public File getRootFile () {
+		return this.root_file;
 	}
 
 	@Override
-	public PackageHandler getPackageHandler() {
-		return packageHandlerImpl;
+	public PackageHandler getPackageHandler () {
+		return this.packageHandlerImpl;
+	}
+
+	@Override
+	public AssetsContainer getStorage () {
+		return this.packageData;
 	}
 
 }
