@@ -7,6 +7,6 @@ public interface Asset {
 
 	public AssetID getAssetID ();
 
-	public void dispose ();
+	public AssetsGroup getGroup ();
 
 }

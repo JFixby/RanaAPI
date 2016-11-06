@@ -89,7 +89,8 @@ public class RedSealedContainer implements SealedAssetsContainer, AssetsContaine
 				this.assets.print("assets");
 				Err.reportError(key + " not found");
 			}
-			asset.dispose();
+			asset.getGroup().dispose();
+			break;
 		}
 
 		this.assets.clear();
