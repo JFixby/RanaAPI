@@ -25,20 +25,22 @@ public class FileSystemBasedResource implements Resource {
 	ResourceIndex index = new ResourceIndex(this);
 	private final File bank_folder;
 
-	public FileSystemBasedResource (final File bank_folder) {
+	public FileSystemBasedResource (final File bank_folder) throws IOException {
 		if (!bank_folder.exists() || !bank_folder.isFolder()) {
 			final String msg = "Resource root folder was not found: " + bank_folder;
 			L.e(msg);
-			throw new Error(msg);
+			throw new IOException(msg);
 		}
 		this.bank_folder = bank_folder;
 	}
 
 	@Override
-	public void rebuildIndex () {
+	public void rebuildIndex () throws IOException {
 
 		this.index.reset();
-		final ChildrenList list = this.bank_folder.listDirectChildren();
+		ChildrenList list;
+		list = this.bank_folder.listDirectChildren();
+
 		final FileSystem FS = this.bank_folder.getFileSystem();
 		for (int i = 0; i < list.size(); i++) {
 			final File file_i = list.getElementAt(i);
@@ -93,7 +95,7 @@ public class FileSystemBasedResource implements Resource {
 		return 0;
 	}
 
-	private void index (final PackageDescriptor descriptor, final File package_folder) {
+	private void index (final PackageDescriptor descriptor, final File package_folder) throws IOException {
 		this.index.add(descriptor, package_folder);
 	}
 

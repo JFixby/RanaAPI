@@ -106,7 +106,7 @@ public class GdxAssetsFileSystemPacker {
 	}
 
 	private static void indexFolder (final GdxAssetsFileSystemIndex index, final File root_folder, final RelativePath path,
-		final File index_file) {
+		final File index_file) throws IOException {
 		// L.d("folder", );
 		index.registerFolder(path);
 

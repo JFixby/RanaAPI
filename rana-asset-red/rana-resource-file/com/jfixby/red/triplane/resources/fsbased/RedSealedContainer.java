@@ -90,6 +90,7 @@ public class RedSealedContainer implements SealedAssetsContainer, AssetsContaine
 				Err.reportError(key + " not found");
 			}
 			asset.getGroup().dispose();
+			this.handler.flagUnload();
 			break;
 		}
 

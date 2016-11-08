@@ -59,7 +59,7 @@ public class ResourcesManager {
 	}
 
 	public static void rebuildIndex () {
-		invoke().rebuildIndex();
+		invoke().updateAll();
 	}
 
 }

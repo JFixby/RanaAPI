@@ -1,6 +1,8 @@
 
 package com.jfixby.red.triplane.resources.fsbased;
 
+import java.io.IOException;
+
 import com.jfixby.cmns.api.assets.AssetID;
 import com.jfixby.cmns.api.assets.Names;
 import com.jfixby.cmns.api.collections.Collection;
@@ -25,7 +27,7 @@ public class ResourceIndex {
 		this.all_handlers.clear();
 	}
 
-	public void add (final PackageDescriptor descriptor, final File package_folder) {
+	public void add (final PackageDescriptor descriptor, final File package_folder) throws IOException {
 
 		final PackageHandlerImpl handler = new PackageHandlerImpl(package_folder, this);
 		final String format_string = descriptor.format;

@@ -1,6 +1,8 @@
 
 package com.jfixby.red.engine.core.resources;
 
+import java.io.IOException;
+
 import com.jfixby.cmns.api.assets.AssetID;
 import com.jfixby.cmns.api.collections.Collection;
 import com.jfixby.cmns.api.collections.CollectionFilter;
@@ -53,6 +55,7 @@ public class RedAssetsManager implements AssetsManagerComponent {
 // set.add(asset_id);
 
 		if (this.assets.main_registry.containsKey(asset_id)) {
+			this.printAllLoadedAssets();
 			Err.reportError("Asset is already loaded " + asset_id);
 		}
 
@@ -216,7 +219,11 @@ public class RedAssetsManager implements AssetsManagerComponent {
 		final PackageReader package_reader = package_loaders.getLast();
 		final DebugTimer debigTimer = Debug.newTimer();
 		debigTimer.reset();
-		package_handler.doReadPackage(listener, package_reader);
+		try {
+			package_handler.doReadPackage(listener, package_reader);
+		} catch (final IOException e) {
+			e.printStackTrace();
+		}
 		debigTimer.printTimeAbove(50L, "LOAD-TIME: Asset[" + dependency + "] loaded");
 
 		return true;

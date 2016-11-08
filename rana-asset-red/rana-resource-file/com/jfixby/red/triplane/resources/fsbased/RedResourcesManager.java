@@ -58,17 +58,6 @@ public class RedResourcesManager implements ResourcesManagerComponent {
 	}
 
 	@Override
-	public void updateAll () {
-		// Debug.printCallStack();
-		for (int i = 0; i < this.resources.size(); i++) {
-			final Resource res = this.resources.getElementAt(i);
-			// L.d("updating resource", res);
-			res.rebuildIndex();
-
-		}
-	}
-
-	@Override
 	public void printAllPackages () {
 		this.resources.print("All installed resources");
 		final PackageSearchParameters search_params = this.newSearchParameters();
@@ -129,12 +118,15 @@ public class RedResourcesManager implements ResourcesManagerComponent {
 		return new PackageFormatImpl(format_name);
 	}
 
-	public void findAndInstallBanks (final File assets_folder) {
+	public void findAndInstallBanks (final File assets_folder) throws IOException {
 		if (!assets_folder.exists()) {
 			L.e("bank not found", assets_folder);
 			return;
 		}
-		final ChildrenList children = assets_folder.listDirectChildren();
+		ChildrenList children;
+
+		children = assets_folder.listDirectChildren();
+
 		for (final File file : children) {
 			if (file.isFile()) {
 				continue;
@@ -148,14 +140,14 @@ public class RedResourcesManager implements ResourcesManagerComponent {
 		}
 	}
 
-	private void mountResourcefolder (final BankHeader bankHeader) {
+	private void mountResourcefolder (final BankHeader bankHeader) throws IOException {
 		L.d("installing bank", bankHeader);
 		final File bank_folder = bankHeader.getRoot();
 		final FileSystemBasedResource resource = new FileSystemBasedResource(bank_folder);
 		this.installResource(resource);
 	}
 
-	private BankHeader findAndLoadBank (final File bank_folder) {
+	private BankHeader findAndLoadBank (final File bank_folder) throws IOException {
 		if (!(bank_folder.exists() && bank_folder.isFolder())) {
 			return null;
 		}
@@ -204,7 +196,7 @@ public class RedResourcesManager implements ResourcesManagerComponent {
 
 	}
 
-	public void tryToLoadConfigFile () {
+	public void tryToLoadConfigFile () throws IOException {
 		ResourcesConfigFile cfg = this.loadConfigFile();
 		if (cfg == null) {
 			cfg = this.tryToMakeConfigFile();
@@ -256,9 +248,13 @@ public class RedResourcesManager implements ResourcesManagerComponent {
 //
 
 	@Override
-	public void rebuildIndex () {
+	public void updateAll () {
 		for (final Resource res : this.resources) {
-			res.rebuildIndex();
+			try {
+				res.rebuildIndex();
+			} catch (final IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

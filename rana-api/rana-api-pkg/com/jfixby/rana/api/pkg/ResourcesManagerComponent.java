@@ -9,8 +9,6 @@ public interface ResourcesManagerComponent {
 
 	PackageSearchResult findPackages (PackageSearchParameters search_params);
 
-	void updateAll ();
-
 	void printAllPackages ();
 
 	PackageFormat newPackageFormat (String format_name);
@@ -23,6 +21,6 @@ public interface ResourcesManagerComponent {
 
 	void printInstalledPackageReaders ();
 
-	void rebuildIndex ();
+	void updateAll ();
 
 }

@@ -81,7 +81,7 @@ public class PackageHandlerImpl implements PackageHandler, PackageVersion {
 	private PackageFormatImpl format;
 	private final ResourceIndex resourceIndex;
 
-	public PackageHandlerImpl (final File package_folder, final ResourceIndex resourceIndex) {
+	public PackageHandlerImpl (final File package_folder, final ResourceIndex resourceIndex) throws IOException {
 		this.resourceIndex = resourceIndex;
 		this.fs = package_folder.getFileSystem();
 		this.package_folder = package_folder;
@@ -131,7 +131,8 @@ public class PackageHandlerImpl implements PackageHandler, PackageVersion {
 	}
 
 	@Override
-	public SealedAssetsContainer doReadPackage (PackageReaderListener reader_listener, final PackageReader reader) {
+	public SealedAssetsContainer doReadPackage (PackageReaderListener reader_listener, final PackageReader reader)
+		throws IOException {
 		if (this.status == PACKAGE_STATUS.BROKEN) {
 			Err.reportError("Package is brocken: " + this);
 		}
@@ -158,10 +159,10 @@ public class PackageHandlerImpl implements PackageHandler, PackageVersion {
 
 			final RedSealedContainer packageData = new RedSealedContainer(this, reader_listener, reader);
 			final PackageInputImpl input = new PackageInputImpl(reader_listener, root_file, packageData, this);
-			// L.d("reading", root_file);
+			L.d("reading", root_file);
 			reader.doReadPackage(input);
 			packageData.seal();
-
+			this.isLoaded = true;
 			return packageData;
 		} catch (final IOException e) {
 			this.status = PACKAGE_STATUS.BROKEN;
@@ -169,6 +170,17 @@ public class PackageHandlerImpl implements PackageHandler, PackageVersion {
 		}
 		root_file = null;
 		return null;
+	}
+
+	public void flagUnload () {
+		this.isLoaded = false;
+	}
+
+	boolean isLoaded = false;
+
+	@Override
+	public boolean isLoaded () {
+		return this.isLoaded;
 	}
 
 	public void setFormat (final String format_string) {
