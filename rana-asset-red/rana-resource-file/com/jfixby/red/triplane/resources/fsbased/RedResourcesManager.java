@@ -123,6 +123,16 @@ public class RedResourcesManager implements ResourcesManagerComponent {
 			L.e("bank not found", assets_folder);
 			return;
 		}
+		{
+			final BankHeader bankHeader = this.findAndLoadBank(assets_folder);
+			if (bankHeader == null) {
+// L.e("corrupted bank", assets_folder);
+			} else {
+				this.mountResourcefolder(bankHeader);
+				return;
+			}
+		}
+
 		ChildrenList children;
 
 		children = assets_folder.listDirectChildren();
