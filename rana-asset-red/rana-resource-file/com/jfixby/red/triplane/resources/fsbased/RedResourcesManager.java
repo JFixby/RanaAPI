@@ -8,6 +8,7 @@ import com.jfixby.cmns.api.collections.Collections;
 import com.jfixby.cmns.api.collections.List;
 import com.jfixby.cmns.api.collections.Map;
 import com.jfixby.cmns.api.debug.Debug;
+import com.jfixby.cmns.api.err.Err;
 import com.jfixby.cmns.api.file.ChildrenList;
 import com.jfixby.cmns.api.file.File;
 import com.jfixby.cmns.api.file.LocalFileSystem;
@@ -16,17 +17,20 @@ import com.jfixby.cmns.api.json.JsonString;
 import com.jfixby.cmns.api.log.L;
 import com.jfixby.rana.api.cfg.AssetsFolder;
 import com.jfixby.rana.api.cfg.ResourcesConfigFile;
+import com.jfixby.rana.api.pkg.CachedResource;
+import com.jfixby.rana.api.pkg.CachedResourceSpecs;
 import com.jfixby.rana.api.pkg.PackageFormat;
 import com.jfixby.rana.api.pkg.PackageReader;
 import com.jfixby.rana.api.pkg.PackageSearchParameters;
 import com.jfixby.rana.api.pkg.PackageSearchResult;
 import com.jfixby.rana.api.pkg.Resource;
+import com.jfixby.rana.api.pkg.ResourceRebuildIndexListener;
 import com.jfixby.rana.api.pkg.ResourcesManagerComponent;
 import com.jfixby.rana.api.pkg.bank.BankHeaderInfo;
 
 public class RedResourcesManager implements ResourcesManagerComponent {
 
-	final List<Resource> resources = Collections.newList();
+	final Map<String, Resource> resources = Collections.newMap();
 
 	@Override
 	public PackageSearchParameters newSearchParameters () {
@@ -38,7 +42,8 @@ public class RedResourcesManager implements ResourcesManagerComponent {
 		final RedPackageSearchResult result = new RedPackageSearchResult(search_params);
 		Debug.checkNull("search_params", search_params);
 		for (int i = 0; i < this.resources.size(); i++) {
-			final PackageSearchResult result_i = this.resources.getElementAt(i).findPackages(search_params);
+			final Resource resource = this.resources.getValueAt(i);
+			final PackageSearchResult result_i = resource.findPackages(search_params);
 			result.add(result_i);
 		}
 
@@ -47,10 +52,11 @@ public class RedResourcesManager implements ResourcesManagerComponent {
 
 	public void installResource (final Resource resource_to_install) {
 		Debug.checkNull("resource_to_install", resource_to_install);
-		if (this.resources.contains(resource_to_install)) {
-			throw new Error("Resource is already installed: " + resource_to_install);
+		final String name = resource_to_install.getName();
+		if (this.resources.containsKey(name)) {
+			Err.reportError("Resource is already installed: " + resource_to_install);
 		}
-		this.resources.add(resource_to_install);
+		this.resources.put(name, resource_to_install);
 	}
 
 	public void removeResource (final Resource resource) {
@@ -258,14 +264,23 @@ public class RedResourcesManager implements ResourcesManagerComponent {
 //
 
 	@Override
-	public void updateAll () {
-		for (final Resource res : this.resources) {
-			try {
-				res.rebuildIndex();
-			} catch (final IOException e) {
-				e.printStackTrace();
-			}
+	public void updateAll (ResourceRebuildIndexListener listener) {
+		if (listener == null) {
+			listener = ResourceRebuildIndexListener.DEFAULT;
 		}
+		for (final Resource res : this.resources.values()) {
+			res.rebuildIndex(listener);
+		}
+	}
+
+	@Override
+	public CachedResourceSpecs newCachedResourceSpecs () {
+		return new RedCachedResourceSpecs();
+	}
+
+	@Override
+	public CachedResource newCachedResource (final CachedResourceSpecs cacherdSpecs) throws IOException {
+		return new RedCachedResource(cacherdSpecs);
 	}
 
 //

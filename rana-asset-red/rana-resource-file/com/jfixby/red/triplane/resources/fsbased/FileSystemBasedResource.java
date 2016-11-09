@@ -13,6 +13,7 @@ import com.jfixby.cmns.api.sys.settings.SystemSettings;
 import com.jfixby.rana.api.pkg.PackageSearchParameters;
 import com.jfixby.rana.api.pkg.PackageSearchResult;
 import com.jfixby.rana.api.pkg.Resource;
+import com.jfixby.rana.api.pkg.ResourceRebuildIndexListener;
 import com.jfixby.rana.api.pkg.fs.PackageDescriptor;
 
 public class FileSystemBasedResource implements Resource {
@@ -24,6 +25,7 @@ public class FileSystemBasedResource implements Resource {
 
 	ResourceIndex index = new ResourceIndex(this);
 	private final File bank_folder;
+	private final String name;
 
 	public FileSystemBasedResource (final File bank_folder) throws IOException {
 		if (!bank_folder.exists() || !bank_folder.isFolder()) {
@@ -32,24 +34,32 @@ public class FileSystemBasedResource implements Resource {
 			throw new IOException(msg);
 		}
 		this.bank_folder = bank_folder;
+		this.name = bank_folder + "";
 	}
 
 	@Override
-	public void rebuildIndex () throws IOException {
+	public String getName () {
+		return this.name;
+	}
 
-		this.index.reset();
-		ChildrenList list;
-		list = this.bank_folder.listDirectChildren();
+	@Override
+	public void rebuildIndex (final ResourceRebuildIndexListener listener) {
+		try {
+			this.index.reset();
+			ChildrenList list;
+			list = this.bank_folder.listDirectChildren();
 
-		final FileSystem FS = this.bank_folder.getFileSystem();
-		for (int i = 0; i < list.size(); i++) {
-			final File file_i = list.getElementAt(i);
-			if (file_i.isFolder()) {
-				this.try_to_index(file_i);
+			final FileSystem FS = this.bank_folder.getFileSystem();
+			for (int i = 0; i < list.size(); i++) {
+				final File file_i = list.getElementAt(i);
+				if (file_i.isFolder()) {
+					this.try_to_index(file_i);
+				}
 			}
+			// index.print();
+		} catch (final Throwable e) {
+			listener.onError(e);
 		}
-		// index.print();
-
 	}
 
 	private void try_to_index (final File package_folder) {

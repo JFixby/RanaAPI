@@ -1,6 +1,8 @@
 
 package com.jfixby.rana.api.pkg;
 
+import java.io.IOException;
+
 import com.jfixby.cmns.api.ComponentInstaller;
 import com.jfixby.cmns.api.collections.Collection;
 import com.jfixby.rana.api.asset.Asset;
@@ -30,8 +32,8 @@ public class ResourcesManager {
 		return invoke().findPackages(search_params);
 	}
 
-	public static void updateAll () {
-		invoke().updateAll();
+	public static void updateAll (final ResourceRebuildIndexListener listener) {
+		invoke().updateAll(listener);
 	}
 
 	public static void printAllPackages () {
@@ -58,8 +60,12 @@ public class ResourcesManager {
 		invoke().printInstalledPackageReaders();
 	}
 
-	public static void rebuildIndex () {
-		invoke().updateAll();
+	public static CachedResourceSpecs newCachedResourceSpecs () {
+		return invoke().newCachedResourceSpecs();
+	}
+
+	public static CachedResource newCachedResource (final CachedResourceSpecs cacherdSpecs) throws IOException {
+		return invoke().newCachedResource(cacherdSpecs);
 	}
 
 }
