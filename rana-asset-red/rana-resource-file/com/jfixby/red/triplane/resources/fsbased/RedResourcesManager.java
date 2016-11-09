@@ -15,6 +15,10 @@ import com.jfixby.cmns.api.file.LocalFileSystem;
 import com.jfixby.cmns.api.json.Json;
 import com.jfixby.cmns.api.json.JsonString;
 import com.jfixby.cmns.api.log.L;
+import com.jfixby.cmns.api.net.http.Http;
+import com.jfixby.cmns.api.net.http.HttpFileSystem;
+import com.jfixby.cmns.api.net.http.HttpFileSystemSpecs;
+import com.jfixby.cmns.api.net.http.HttpURL;
 import com.jfixby.rana.api.cfg.AssetsFolder;
 import com.jfixby.rana.api.cfg.ResourcesConfigFile;
 import com.jfixby.rana.api.pkg.CachedResource;
@@ -25,6 +29,7 @@ import com.jfixby.rana.api.pkg.PackageSearchParameters;
 import com.jfixby.rana.api.pkg.PackageSearchResult;
 import com.jfixby.rana.api.pkg.Resource;
 import com.jfixby.rana.api.pkg.ResourceRebuildIndexListener;
+import com.jfixby.rana.api.pkg.ResourcesManager;
 import com.jfixby.rana.api.pkg.ResourcesManagerComponent;
 import com.jfixby.rana.api.pkg.bank.BankHeaderInfo;
 
@@ -281,6 +286,29 @@ public class RedResourcesManager implements ResourcesManagerComponent {
 	@Override
 	public CachedResource newCachedResource (final CachedResourceSpecs cacherdSpecs) throws IOException {
 		return new RedCachedResource(cacherdSpecs);
+	}
+
+	public void installRemoteBank (final String bankName, final String bankUrl) throws IOException {
+		Debug.checkNull("bankName", bankName);
+		Debug.checkNull("bankUrl", bankUrl);
+		final CachedResourceSpecs cacherdSpecs = ResourcesManager.newCachedResourceSpecs();
+
+		final File assets_cache_folder = LocalFileSystem.ApplicationHome().child("assets-cache");
+		assets_cache_folder.makeFolder();
+
+		final HttpFileSystemSpecs specs = Http.newHttpFileSystemSpecs();
+		final String urlString = bankUrl;
+		final HttpURL url = Http.newURL(urlString);
+		specs.setRootUrl(url);
+		final HttpFileSystem fs = Http.newHttpFileSystem(specs);
+		final File httpRemote = fs.ROOT();
+		cacherdSpecs.setName("" + bankName);
+		cacherdSpecs.setBankRoot(httpRemote);
+		cacherdSpecs.setCacheRoot(assets_cache_folder);
+
+		final CachedResource resource = ResourcesManager.newCachedResource(cacherdSpecs);
+		this.installResource(resource);
+
 	}
 
 //
