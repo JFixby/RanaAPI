@@ -7,6 +7,7 @@ import com.jfixby.cmns.api.debug.Debug;
 import com.jfixby.cmns.api.file.File;
 import com.jfixby.cmns.api.file.FileConflistResolver;
 import com.jfixby.cmns.api.file.FileSystem;
+import com.jfixby.cmns.api.log.L;
 import com.jfixby.rana.api.pkg.CachedResource;
 import com.jfixby.rana.api.pkg.CachedResourceSpecs;
 import com.jfixby.rana.api.pkg.CachedResourceUpdateListener;
@@ -44,7 +45,9 @@ public class RedCachedResource implements CachedResource {
 			final FileConflistResolver policy = FileConflistResolver.OVERWRITE_IF_NEW;
 			FS.copyFolderContentsToFolder(this.bankRoot, this.localFolder, policy);
 		} catch (final IOException e) {
-			e.printStackTrace();
+			L.d("Failed to fetch remote bank", this.bankRoot);
+			listener.onError(e);
+
 		}
 		this.local.rebuildIndex(listener);
 	}
