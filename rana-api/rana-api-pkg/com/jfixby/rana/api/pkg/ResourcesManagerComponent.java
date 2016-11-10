@@ -34,4 +34,10 @@ public interface ResourcesManagerComponent {
 
 	Collection<Resource> findResources (File assets_folder) throws IOException;
 
+	Resource getResource (String name);
+
+	void printAllResources ();
+
+	void printAllIndexes ();
+
 }

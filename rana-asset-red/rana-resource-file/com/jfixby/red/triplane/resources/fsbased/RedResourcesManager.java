@@ -57,7 +57,7 @@ public class RedResourcesManager implements ResourcesManagerComponent {
 		Debug.checkNull("resource_to_install", resource_to_install);
 		final String name = resource_to_install.getName();
 		if (this.resources.containsKey(name)) {
-			Err.reportError("Resource is already installed: " + resource_to_install);
+			Err.reportError("Resource with this name <" + name + "> is already installed: " + this.resources.get(name));
 		}
 		this.resources.put(name, resource_to_install);
 	}
@@ -157,6 +157,8 @@ public class RedResourcesManager implements ResourcesManagerComponent {
 				final ResourceSpecs resSpec = this.newResourceSpecs();
 				resSpec.setBankFolder(bank_folder);
 				resSpec.setCachingRequired(false);
+				final String bankName = bank_folder.getName();
+				resSpec.setName(bankName);
 
 				final Resource resource = this.newResource(resSpec);
 
@@ -179,7 +181,8 @@ public class RedResourcesManager implements ResourcesManagerComponent {
 				final ResourceSpecs resSpec = this.newResourceSpecs();
 				resSpec.setBankFolder(bank_folder);
 				resSpec.setCachingRequired(false);
-
+				final String bankName = bank_folder.getName();
+				resSpec.setName(bankName);
 				final Resource resource = this.newResource(resSpec);
 
 				result.add(resource);
@@ -323,17 +326,37 @@ public class RedResourcesManager implements ResourcesManagerComponent {
 		specs.setCacheSize(200);
 		final HttpFileSystem fs = Http.newHttpFileSystem(specs);
 		final File httpRemote = fs.ROOT();
-		httpRemote.listDirectChildren().print(bankName);
+// httpRemote.listDirectChildren().print(bankName);
 
 		final ResourceSpecs resSpec = this.newResourceSpecs();
 		resSpec.setBankFolder(httpRemote);
 		resSpec.setCachingRequired(true);
 		resSpec.setCacheFolder(assets_cache_folder.child(bankName));
+		resSpec.setName(bankName);
 
 		final Resource resource = this.newResource(resSpec);
 
 		this.installResource(resource);
 
+	}
+
+	@Override
+	public Resource getResource (final String name) {
+		return this.resources.get(name);
+	}
+
+	@Override
+	public void printAllResources () {
+		this.resources.print("resources");
+	}
+
+	@Override
+	public void printAllIndexes () {
+		for (int i = 0; i < this.resources.size(); i++) {
+			final Resource resouce = this.resources.getValueAt(i);
+			L.d("index of ", resouce);
+			resouce.printIndex();
+		}
 	}
 
 //

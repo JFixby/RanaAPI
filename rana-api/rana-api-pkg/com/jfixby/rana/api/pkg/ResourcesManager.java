@@ -68,4 +68,16 @@ public class ResourcesManager {
 		return invoke().newResource(specs);
 	}
 
+	public static Resource getResource (final String name) {
+		return invoke().getResource(name);
+	}
+
+	public static void printAllResources () {
+		invoke().printAllResources();
+	}
+
+	public static void printAllIndexes () {
+		invoke().printAllIndexes();
+	}
+
 }

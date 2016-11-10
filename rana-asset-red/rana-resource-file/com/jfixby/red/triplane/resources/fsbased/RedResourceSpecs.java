@@ -9,6 +9,7 @@ public class RedResourceSpecs implements ResourceSpecs {
 	private File bank;
 	private boolean required;
 	private File bank_cache;
+	private String name;
 
 	@Override
 	public File getBankFolder () {
@@ -38,6 +39,16 @@ public class RedResourceSpecs implements ResourceSpecs {
 	@Override
 	public File getCacheFolder () {
 		return this.bank_cache;
+	}
+
+	@Override
+	public String getName () {
+		return this.name;
+	}
+
+	@Override
+	public void setName (final String bankName) {
+		this.name = bankName;
 	}
 
 }

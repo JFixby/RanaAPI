@@ -9,4 +9,6 @@ public interface Resource {
 
 	public String getName ();
 
+	void printIndex ();
+
 }

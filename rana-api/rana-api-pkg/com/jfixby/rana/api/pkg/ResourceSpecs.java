@@ -17,4 +17,8 @@ public interface ResourceSpecs {
 
 	File getCacheFolder ();
 
+	String getName ();
+
+	void setName (String bankName);
+
 }

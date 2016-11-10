@@ -192,6 +192,7 @@ public class RedAssetsManager implements AssetsManagerComponent {
 
 			ResourcesManager.printAllPackages();
 			L.d(msg);
+			ResourcesManager.printAllIndexes();
 			Err.reportError(msg);
 			//
 		}

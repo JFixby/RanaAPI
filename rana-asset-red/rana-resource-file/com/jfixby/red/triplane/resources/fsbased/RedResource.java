@@ -3,9 +3,11 @@ package com.jfixby.red.triplane.resources.fsbased;
 
 import java.io.IOException;
 
+import com.jfixby.cmns.api.debug.Debug;
 import com.jfixby.cmns.api.err.Err;
 import com.jfixby.cmns.api.file.ChildrenList;
 import com.jfixby.cmns.api.file.File;
+import com.jfixby.cmns.api.file.FileInputStream;
 import com.jfixby.cmns.api.file.FileSystem;
 import com.jfixby.cmns.api.log.L;
 import com.jfixby.cmns.api.sys.settings.ExecutionMode;
@@ -15,13 +17,14 @@ import com.jfixby.rana.api.pkg.PackageSearchResult;
 import com.jfixby.rana.api.pkg.Resource;
 import com.jfixby.rana.api.pkg.ResourceRebuildIndexListener;
 import com.jfixby.rana.api.pkg.ResourceSpecs;
+import com.jfixby.rana.api.pkg.bank.BankIndex;
 import com.jfixby.rana.api.pkg.fs.PackageDescriptor;
 
 public class RedResource implements Resource {
 
 	@Override
 	public String toString () {
-		return "LocalResource[" + this.bank_folder + "]";
+		return "Resource[" + this.name + "] " + this.bank_folder;
 	}
 
 	ResourceIndex index = new ResourceIndex(this);
@@ -34,6 +37,7 @@ public class RedResource implements Resource {
 
 		final File bank_folder = specs.getBankFolder();
 		this.caching_required = specs.isChachingRequired();
+		this.name = Debug.checkNull("name", specs.getName());
 		if (this.caching_required) {
 			this.cache = specs.getCacheFolder();
 			this.cache.makeFolder();
@@ -44,7 +48,7 @@ public class RedResource implements Resource {
 			throw new IOException(msg);
 		}
 		this.bank_folder = bank_folder;
-		this.name = bank_folder + "";
+
 	}
 
 	@Override
@@ -54,20 +58,46 @@ public class RedResource implements Resource {
 
 	@Override
 	public void rebuildIndex (final ResourceRebuildIndexListener listener) {
-		try {
-			this.index.reset();
-			ChildrenList list;
-			list = this.bank_folder.listDirectChildren();
+		this.index.reset();
 
-			final FileSystem FS = this.bank_folder.getFileSystem();
+		if (this.cache == null) {
+			this.rebuildIndexLocal(listener, this.bank_folder);
+			return;
+		}
+		try {
+			final File indexFile = this.bank_folder.child(BankIndex.FILE_NAME);
+			if (indexFile.exists()) {
+				L.d("index found", indexFile);
+			}
+			final FileInputStream is = indexFile.newInputStream();
+			is.open();
+			final BankIndex index = BankIndex.deSerializeGZIPJava(is);
+			is.close();
+
+			for (final String packageName : index.descriptors.keySet()) {
+				final PackageDescriptor descriptor = index.descriptors.get(packageName);
+				final File package_folder = this.bank_folder.child(packageName);
+				this.index(descriptor, package_folder);
+			}
+
+		} catch (final IOException e) {
+// e.printStackTrace();
+			this.rebuildIndexLocal(listener, this.cache);
+			listener.onError(e);
+			return;
+		}
+	}
+
+	private void rebuildIndexLocal (final ResourceRebuildIndexListener listener, final File folder) {
+		try {
+			final ChildrenList list = folder.listDirectChildren();
 			for (int i = 0; i < list.size(); i++) {
 				final File file_i = list.getElementAt(i);
 				if (file_i.isFolder()) {
 					this.try_to_index(file_i);
 				}
 			}
-			// index.print();
-		} catch (final Throwable e) {
+		} catch (final IOException e) {
 			listener.onError(e);
 		}
 	}
@@ -130,6 +160,11 @@ public class RedResource implements Resource {
 
 	public File getCacheFolder () {
 		return this.cache;
+	}
+
+	@Override
+	public void printIndex () {
+		this.index.print();
 	}
 
 }
