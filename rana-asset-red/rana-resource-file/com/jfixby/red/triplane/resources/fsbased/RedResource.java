@@ -14,20 +14,30 @@ import com.jfixby.rana.api.pkg.PackageSearchParameters;
 import com.jfixby.rana.api.pkg.PackageSearchResult;
 import com.jfixby.rana.api.pkg.Resource;
 import com.jfixby.rana.api.pkg.ResourceRebuildIndexListener;
+import com.jfixby.rana.api.pkg.ResourceSpecs;
 import com.jfixby.rana.api.pkg.fs.PackageDescriptor;
 
-public class FileSystemBasedResource implements Resource {
+public class RedResource implements Resource {
 
 	@Override
 	public String toString () {
-		return "FileSystemBasedResource[" + this.bank_folder + "]";
+		return "LocalResource[" + this.bank_folder + "]";
 	}
 
 	ResourceIndex index = new ResourceIndex(this);
 	private final File bank_folder;
 	private final String name;
+	private final boolean caching_required;
+	private File cache;
 
-	public FileSystemBasedResource (final File bank_folder) throws IOException {
+	RedResource (final ResourceSpecs specs) throws IOException {
+
+		final File bank_folder = specs.getBankFolder();
+		this.caching_required = specs.isChachingRequired();
+		if (this.caching_required) {
+			this.cache = specs.getCacheFolder();
+			this.cache.makeFolder();
+		}
 		if (!bank_folder.exists() || !bank_folder.isFolder()) {
 			final String msg = "Resource root folder was not found: " + bank_folder;
 			L.e(msg);
@@ -84,7 +94,7 @@ public class FileSystemBasedResource implements Resource {
 		}
 	}
 
-	public long reReadTimeStamp (final PackageHandlerImpl packageHandlerImpl) {
+	public long reReadTimeStamp (final RedPackageHandler packageHandlerImpl) {
 		final File package_folder = packageHandlerImpl.getPackageFolder();
 		final File file = package_folder.child(PackageDescriptor.PACKAGE_DESCRIPTOR_FILE_NAME);
 		try {
@@ -112,6 +122,14 @@ public class FileSystemBasedResource implements Resource {
 	@Override
 	public PackageSearchResult findPackages (final PackageSearchParameters search_params) {
 		return this.index.findPackages(search_params);
+	}
+
+	public boolean isCachingRequired () {
+		return this.caching_required;
+	}
+
+	public File getCacheFolder () {
+		return this.cache;
 	}
 
 }

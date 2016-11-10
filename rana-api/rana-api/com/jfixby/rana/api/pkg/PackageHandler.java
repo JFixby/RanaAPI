@@ -1,8 +1,6 @@
 
 package com.jfixby.rana.api.pkg;
 
-import java.io.IOException;
-
 import com.jfixby.cmns.api.assets.AssetID;
 import com.jfixby.cmns.api.collections.Collection;
 import com.jfixby.rana.api.asset.SealedAssetsContainer;
@@ -25,7 +23,7 @@ public interface PackageHandler {
 
 	public void install ();
 
-	public SealedAssetsContainer doReadPackage (PackageReaderListener reader_listener, PackageReader reader) throws IOException;
+	public SealedAssetsContainer doReadPackage (PackageReaderListener reader_listener, PackageReader reader);
 
 	public boolean isLoaded ();
 

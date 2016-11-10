@@ -1,8 +1,6 @@
 
 package com.jfixby.red.engine.core.resources;
 
-import java.io.IOException;
-
 import com.jfixby.cmns.api.assets.AssetID;
 import com.jfixby.cmns.api.collections.Collection;
 import com.jfixby.cmns.api.collections.CollectionFilter;
@@ -219,11 +217,7 @@ public class RedAssetsManager implements AssetsManagerComponent {
 		final PackageReader package_reader = package_loaders.getLast();
 		final DebugTimer debigTimer = Debug.newTimer();
 		debigTimer.reset();
-		try {
-			package_handler.doReadPackage(listener, package_reader);
-		} catch (final IOException e) {
-			e.printStackTrace();
-		}
+		package_handler.doReadPackage(listener, package_reader);
 		debigTimer.printTimeAbove(50L, "LOAD-TIME: Asset[" + dependency + "] loaded");
 
 		return true;

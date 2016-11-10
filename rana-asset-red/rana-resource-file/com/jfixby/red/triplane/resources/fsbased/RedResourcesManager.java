@@ -7,9 +7,9 @@ import com.jfixby.cmns.api.collections.Collection;
 import com.jfixby.cmns.api.collections.Collections;
 import com.jfixby.cmns.api.collections.List;
 import com.jfixby.cmns.api.collections.Map;
+import com.jfixby.cmns.api.collections.Set;
 import com.jfixby.cmns.api.debug.Debug;
 import com.jfixby.cmns.api.err.Err;
-import com.jfixby.cmns.api.file.ChildrenList;
 import com.jfixby.cmns.api.file.File;
 import com.jfixby.cmns.api.file.LocalFileSystem;
 import com.jfixby.cmns.api.json.Json;
@@ -21,15 +21,13 @@ import com.jfixby.cmns.api.net.http.HttpFileSystemSpecs;
 import com.jfixby.cmns.api.net.http.HttpURL;
 import com.jfixby.rana.api.cfg.AssetsFolder;
 import com.jfixby.rana.api.cfg.ResourcesConfigFile;
-import com.jfixby.rana.api.pkg.CachedResource;
-import com.jfixby.rana.api.pkg.CachedResourceSpecs;
 import com.jfixby.rana.api.pkg.PackageFormat;
 import com.jfixby.rana.api.pkg.PackageReader;
 import com.jfixby.rana.api.pkg.PackageSearchParameters;
 import com.jfixby.rana.api.pkg.PackageSearchResult;
 import com.jfixby.rana.api.pkg.Resource;
 import com.jfixby.rana.api.pkg.ResourceRebuildIndexListener;
-import com.jfixby.rana.api.pkg.ResourcesManager;
+import com.jfixby.rana.api.pkg.ResourceSpecs;
 import com.jfixby.rana.api.pkg.ResourcesManagerComponent;
 import com.jfixby.rana.api.pkg.bank.BankHeaderInfo;
 
@@ -129,26 +127,45 @@ public class RedResourcesManager implements ResourcesManagerComponent {
 		return new PackageFormatImpl(format_name);
 	}
 
-	public void findAndInstallBanks (final File assets_folder) throws IOException {
+	public void findAndInstallResources (final File assets_folder) throws IOException {
+		final Collection<Resource> resources = this.findResources(assets_folder);
+		this.installResources(resources);
+	}
+
+	@Override
+	public void installResources (final Collection<Resource> resources) {
+		for (final Resource r : resources) {
+			this.installResource(r);
+		}
+	}
+
+	@Override
+	public Collection<Resource> findResources (final File assets_folder) throws IOException {
+		final Set<Resource> result = Collections.newSet();
 		if (!assets_folder.exists()) {
 			L.e("bank not found", assets_folder);
-			return;
+			return result;
 		}
 		{
 			final BankHeader bankHeader = this.findAndLoadBank(assets_folder);
 			if (bankHeader == null) {
 // L.e("corrupted bank", assets_folder);
 			} else {
-				this.mountResourcefolder(bankHeader);
-				return;
+				L.d("found bank", bankHeader);
+				final File bank_folder = bankHeader.getRoot();
+
+				final ResourceSpecs resSpec = this.newResourceSpecs();
+				resSpec.setBankFolder(bank_folder);
+				resSpec.setCachingRequired(false);
+
+				final Resource resource = this.newResource(resSpec);
+
+				result.add(resource);
+				return result;
 			}
 		}
 
-		ChildrenList children;
-
-		children = assets_folder.listDirectChildren();
-
-		for (final File file : children) {
+		for (final File file : assets_folder.listDirectChildren()) {
 			if (file.isFile()) {
 				continue;
 			}
@@ -156,16 +173,30 @@ public class RedResourcesManager implements ResourcesManagerComponent {
 			if (bankHeader == null) {
 				L.e("corrupted bank", file);
 			} else {
-				this.mountResourcefolder(bankHeader);
+				L.d("found bank", bankHeader);
+				final File bank_folder = bankHeader.getRoot();
+
+				final ResourceSpecs resSpec = this.newResourceSpecs();
+				resSpec.setBankFolder(bank_folder);
+				resSpec.setCachingRequired(false);
+
+				final Resource resource = this.newResource(resSpec);
+
+				result.add(resource);
 			}
 		}
+
+		return result;
 	}
 
-	private void mountResourcefolder (final BankHeader bankHeader) throws IOException {
-		L.d("installing bank", bankHeader);
-		final File bank_folder = bankHeader.getRoot();
-		final FileSystemBasedResource resource = new FileSystemBasedResource(bank_folder);
-		this.installResource(resource);
+	@Override
+	public Resource newResource (final ResourceSpecs resSpec) throws IOException {
+		return new RedResource(resSpec);
+	}
+
+	@Override
+	public ResourceSpecs newResourceSpecs () {
+		return new RedResourceSpecs();
 	}
 
 	private BankHeader findAndLoadBank (final File bank_folder) throws IOException {
@@ -229,7 +260,7 @@ public class RedResourcesManager implements ResourcesManagerComponent {
 		for (final AssetsFolder assets : cfg.local_assets) {
 			final String java_path = assets.java_path;
 			final File assets_folder = LocalFileSystem.newFile(java_path);
-			this.findAndInstallBanks(assets_folder);
+			this.findAndInstallResources(assets_folder);
 		}
 
 	}
@@ -278,20 +309,10 @@ public class RedResourcesManager implements ResourcesManagerComponent {
 		}
 	}
 
-	@Override
-	public CachedResourceSpecs newCachedResourceSpecs () {
-		return new RedCachedResourceSpecs();
-	}
-
-	@Override
-	public CachedResource newCachedResource (final CachedResourceSpecs cacherdSpecs) throws IOException {
-		return new RedCachedResource(cacherdSpecs);
-	}
-
 	public void installRemoteBank (final String bankName, final String bankUrl) throws IOException {
 		Debug.checkNull("bankName", bankName);
 		Debug.checkNull("bankUrl", bankUrl);
-		final CachedResourceSpecs cacherdSpecs = ResourcesManager.newCachedResourceSpecs();
+// final CachedResourceSpecs cacherdSpecs = ResourcesManager.newCachedResourceSpecs();
 
 		final File assets_cache_folder = LocalFileSystem.ApplicationHome().child("assets-cache");
 		assets_cache_folder.makeFolder();
@@ -302,11 +323,24 @@ public class RedResourcesManager implements ResourcesManagerComponent {
 		specs.setRootUrl(url);
 		final HttpFileSystem fs = Http.newHttpFileSystem(specs);
 		final File httpRemote = fs.ROOT();
-		cacherdSpecs.setName("" + bankName);
-		cacherdSpecs.setBankRoot(httpRemote);
-		cacherdSpecs.setCacheRoot(assets_cache_folder);
+// cacherdSpecs.setName("" + bankName);
+// cacherdSpecs.setBankRoot(httpRemote);
+// cacherdSpecs.setCacheRoot(assets_cache_folder);
 
-		final CachedResource resource = ResourcesManager.newCachedResource(cacherdSpecs);
+// final CachedResource resource = ResourcesManager.newCachedResource(cacherdSpecs);
+
+// L.d("found bank", bankHeader);
+// final File bank_folder = bankHeader.getRoot();
+
+		final ResourceSpecs resSpec = this.newResourceSpecs();
+		resSpec.setBankFolder(httpRemote);
+		resSpec.setCachingRequired(true);
+		resSpec.setCacheFolder(assets_cache_folder.child(bankName));
+
+		final Resource resource = this.newResource(resSpec);
+
+// result.add(resource);
+
 		this.installResource(resource);
 
 	}

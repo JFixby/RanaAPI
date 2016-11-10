@@ -20,7 +20,7 @@ import com.jfixby.rana.api.pkg.fs.PackageDescriptor;
 public class ResourceIndex {
 	Set<PackageHandler> all_handlers = Collections.newSet();
 	Map<AssetID, Set<PackageHandler>> handlers_by_asset_id = Collections.newMap();
-	private final FileSystemBasedResource master;
+	private final RedResource master;
 
 	public void reset () {
 		this.handlers_by_asset_id.clear();
@@ -29,7 +29,14 @@ public class ResourceIndex {
 
 	public void add (final PackageDescriptor descriptor, final File package_folder) throws IOException {
 
-		final PackageHandlerImpl handler = new PackageHandlerImpl(package_folder, this);
+		final RedPackageHandler handler;
+		if (this.master.isCachingRequired()) {
+			final String package_folder_name = package_folder.getName();
+			final File cache_folder = this.master.getCacheFolder().child(package_folder_name);
+			handler = new RedPackageHandler(package_folder, this, cache_folder);
+		} else {
+			handler = new RedPackageHandler(package_folder, this);
+		}
 		final String format_string = descriptor.format;
 		handler.setFormat(format_string);
 		handler.setVersion(descriptor.version);
@@ -48,7 +55,6 @@ public class ResourceIndex {
 			handler.dependencies.add(element);
 		}
 
-		// L.d("found package handler: " + handler);
 		this.addHandler(handler);
 
 	}
@@ -104,24 +110,15 @@ public class ResourceIndex {
 			return true;
 		}
 
-		// L.d("cheking: " + handler, search_params);
-
-		// List<PackageFormat> accepted_formats = search_params
-		// .acceptPackageFormat();
 		final List<PACKAGE_STATUS> acccepted_statuses = search_params.acceptPackageStatus();
 
 		if (!acccepted_statuses.contains(handler.getStatus())) {
 			return false;
 		}
-		// if (!accepted_formats.contains(handler.getFormat())) {
-		// return false;
-		// }
 		final AssetID asset_id = search_params.getAssetId();
 		final Collection<AssetID> descriptors = handler.listPackedAssets();
 		final boolean contains = descriptors.contains(asset_id);
 		if (!contains) {
-			// L.d("asset_id", asset_id);
-			// descriptors.print("not found");
 			return false;
 		}
 
@@ -132,13 +129,13 @@ public class ResourceIndex {
 		this.handlers_by_asset_id.print("index");
 	}
 
-	public ResourceIndex (final FileSystemBasedResource fileSystemBasedResource) {
+	public ResourceIndex (final RedResource fileSystemBasedResource) {
 		super();
 		this.master = fileSystemBasedResource;
 
 	}
 
-	public long reReadTimeStamp (final PackageHandlerImpl packageHandlerImpl) {
+	public long reReadTimeStamp (final RedPackageHandler packageHandlerImpl) {
 		return this.master.reReadTimeStamp(packageHandlerImpl);
 	}
 

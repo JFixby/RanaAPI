@@ -60,12 +60,12 @@ public class ResourcesManager {
 		invoke().printInstalledPackageReaders();
 	}
 
-	public static CachedResourceSpecs newCachedResourceSpecs () {
-		return invoke().newCachedResourceSpecs();
+	public static ResourceSpecs newResourceSpecs () {
+		return invoke().newResourceSpecs();
 	}
 
-	public static CachedResource newCachedResource (final CachedResourceSpecs cacherdSpecs) throws IOException {
-		return invoke().newCachedResource(cacherdSpecs);
+	public static Resource newResource (final ResourceSpecs specs) throws IOException {
+		return invoke().newResource(specs);
 	}
 
 }

@@ -4,6 +4,7 @@ package com.jfixby.rana.api.pkg;
 import java.io.IOException;
 
 import com.jfixby.cmns.api.collections.Collection;
+import com.jfixby.cmns.api.file.File;
 
 public interface ResourcesManagerComponent {
 
@@ -23,10 +24,14 @@ public interface ResourcesManagerComponent {
 
 	void printInstalledPackageReaders ();
 
-	CachedResourceSpecs newCachedResourceSpecs ();
+	ResourceSpecs newResourceSpecs ();
 
-	CachedResource newCachedResource (CachedResourceSpecs cacherdSpecs) throws IOException;
+	Resource newResource (ResourceSpecs specs) throws IOException;
 
 	void updateAll (ResourceRebuildIndexListener listener);
+
+	void installResources (Collection<Resource> resources);
+
+	Collection<Resource> findResources (File assets_folder) throws IOException;
 
 }

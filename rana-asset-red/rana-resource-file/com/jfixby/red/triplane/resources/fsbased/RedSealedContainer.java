@@ -19,11 +19,11 @@ public class RedSealedContainer implements SealedAssetsContainer, AssetsContaine
 
 	private final PackageReaderListener reader_listener;
 	private final PackageReader reader;
-	private final PackageHandlerImpl handler;
+	private final RedPackageHandler handler;
 
 	boolean sealed = false;
 
-	public RedSealedContainer (final PackageHandlerImpl packageHandlerImpl, final PackageReaderListener reader_listener,
+	public RedSealedContainer (final RedPackageHandler packageHandlerImpl, final PackageReaderListener reader_listener,
 		final PackageReader reader) {
 		this.reader_listener = reader_listener;
 		this.handler = packageHandlerImpl;

@@ -12,12 +12,12 @@ public class PackageInputImpl implements PackageReaderInput {
 	private final PackageReaderListener reader_listener;
 
 	private final File root_file;
-	private final PackageHandlerImpl packageHandlerImpl;
+	private final RedPackageHandler packageHandlerImpl;
 
 	private final RedSealedContainer packageData;
 
 	public PackageInputImpl (final PackageReaderListener reader_listener, final File root_file,
-		final RedSealedContainer packageData, final PackageHandlerImpl packageHandlerImpl) {
+		final RedSealedContainer packageData, final RedPackageHandler packageHandlerImpl) {
 		this.reader_listener = reader_listener;
 		this.root_file = root_file;
 		this.packageHandlerImpl = packageHandlerImpl;

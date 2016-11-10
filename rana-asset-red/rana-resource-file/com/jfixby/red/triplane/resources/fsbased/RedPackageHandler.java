@@ -10,10 +10,13 @@ import com.jfixby.cmns.api.collections.List;
 import com.jfixby.cmns.api.debug.Debug;
 import com.jfixby.cmns.api.err.Err;
 import com.jfixby.cmns.api.file.File;
+import com.jfixby.cmns.api.file.FileConflistResolver;
 import com.jfixby.cmns.api.file.FileSystem;
 import com.jfixby.cmns.api.file.FileSystemSandBox;
 import com.jfixby.cmns.api.log.L;
 import com.jfixby.cmns.api.sys.settings.SystemSettings;
+import com.jfixby.cmns.api.util.JUtils;
+import com.jfixby.cmns.api.util.StateSwitcher;
 import com.jfixby.rana.api.asset.AssetsManager;
 import com.jfixby.rana.api.asset.AssetsManagerFlags;
 import com.jfixby.rana.api.asset.SealedAssetsContainer;
@@ -24,7 +27,7 @@ import com.jfixby.rana.api.pkg.PackageReaderListener;
 import com.jfixby.rana.api.pkg.PackageVersion;
 import com.jfixby.rana.api.pkg.fs.PackageDescriptor;
 
-public class PackageHandlerImpl implements PackageHandler, PackageVersion {
+public class RedPackageHandler implements PackageHandler, PackageVersion {
 
 	final List<AssetID> descriptors = Collections.newList();
 	final List<AssetID> dependencies = Collections.newList();
@@ -32,67 +35,37 @@ public class PackageHandlerImpl implements PackageHandler, PackageVersion {
 	private String version;
 	private long timestamp;
 	private String root_file_name;
-	private final File package_folder;
-	private PACKAGE_STATUS status;
-	private final FileSystem fs;
-	private final File content_folder;
-	private final PackageReaderListener default_listener = new PackageReaderListener() {
 
-		@Override
-		public void onError (final IOException e) {
-			e.printStackTrace();
-			Err.reportError(e);
-		}
-
-		@Override
-		public void onDependenciesRequired (final PackageHandler handler, final Collection<AssetID> dependencies) {
-			final boolean auto = SystemSettings.getFlag(AssetsManagerFlags.AutoresolveDependencies);
-
-			if (!auto) {
-				dependencies.print("Missing dependencies");
-				throw new Error("RedTriplaneFlags." + auto + " flag is false.");
-			} else {
-
-				for (int i = 0; i < dependencies.size(); i++) {
-					final AssetID dep = dependencies.getElementAt(i);
-					if (AssetsManager.isRegisteredAsset(dep)) {
-
-					} else {
-						AssetsManager.autoResolveAsset(dep);
-					}
-				}
-
-			}
-		}
-
-		@Override
-		public void onPackageDataDispose (final SealedAssetsContainer container) {
-			AssetsManager.unRegisterAssetsContainer(container);
-		}
-
-		@Override
-		public void onPackageDataLoaded (final SealedAssetsContainer container) {
-			AssetsManager.registerAssetsContainer(container);
-		}
-
-	};
 	private final String name;
 // private File root_file;
 	private PackageFormatImpl format;
 	private final ResourceIndex resourceIndex;
+	private final File package_folder;
+	private final StateSwitcher<PACKAGE_STATUS> status;
+	private final File package_cache;
 
-	public PackageHandlerImpl (final File package_folder, final ResourceIndex resourceIndex) throws IOException {
+	public RedPackageHandler (final File package_folder, final ResourceIndex resourceIndex) throws IOException {
+		this(package_folder, resourceIndex, null);
+	}
+
+	public RedPackageHandler (final File package_folder, final ResourceIndex resourceIndex, final File package_cache)
+		throws IOException {
 		this.resourceIndex = resourceIndex;
-		this.fs = package_folder.getFileSystem();
 		this.package_folder = package_folder;
-		this.content_folder = this.fs.newFile(package_folder.child(PackageDescriptor.PACKAGE_CONTENT_FOLDER).getAbsoluteFilePath());
-		if (!this.content_folder.exists()) {
-			this.status = PACKAGE_STATUS.BROKEN;
-		} else {
-			this.status = PACKAGE_STATUS.INSTALLED;
+		this.status = JUtils.newStateSwitcher(PACKAGE_STATUS.NOT_INSTALLED);
+		if (package_cache == null) {
+			this.status.switchState(PACKAGE_STATUS.INSTALLED);
 		}
+		final File content_folder = package_folder.child(PackageDescriptor.PACKAGE_CONTENT_FOLDER);
+		if (!content_folder.exists()) {
+			this.status.switchState(PACKAGE_STATUS.BROKEN);
+		}
+		this.package_cache = package_cache;
 		this.name = package_folder.getName();
+	}
 
+	public File getPackageFolder () {
+		return this.package_folder;
 	}
 
 	@Override
@@ -107,7 +80,7 @@ public class PackageHandlerImpl implements PackageHandler, PackageVersion {
 
 	@Override
 	public PACKAGE_STATUS getStatus () {
-		return this.status;
+		return this.status.currentState();
 	}
 
 	@Override
@@ -127,36 +100,52 @@ public class PackageHandlerImpl implements PackageHandler, PackageVersion {
 
 	@Override
 	public void install () {
-		L.d("already installed", this);
+		this.status.expectState(PACKAGE_STATUS.NOT_INSTALLED);
+		final FileSystem fs = this.package_folder.getFileSystem();
+		try {
+			fs.copyFolderContentsToFolder(this.package_folder, this.package_cache, FileConflistResolver.OVERWRITE_IF_NEW);
+			this.status.switchState(PACKAGE_STATUS.INSTALLED);
+		} catch (final IOException e) {
+			this.status.switchState(PACKAGE_STATUS.BROKEN);
+			Err.reportError(e);
+		}
+
 	}
 
 	@Override
-	public SealedAssetsContainer doReadPackage (PackageReaderListener reader_listener, final PackageReader reader)
-		throws IOException {
-		if (this.status == PACKAGE_STATUS.BROKEN) {
-			Err.reportError("Package is brocken: " + this);
-		}
-		if (this.status == PACKAGE_STATUS.NOT_INSTALLED) {
-			Err.reportError("Package is not installed: " + this);
-		}
-		FileSystem FS = this.package_folder.getFileSystem();
-		File sandbox_folder = null;
+	public SealedAssetsContainer doReadPackage (PackageReaderListener reader_listener, final PackageReader reader) {
+		this.status.expectState(PACKAGE_STATUS.INSTALLED);
 
+		File read_folder = null;
+		if (this.package_cache == null) {
+			read_folder = this.package_folder.child(PackageDescriptor.PACKAGE_CONTENT_FOLDER);
+		} else {
+			read_folder = this.package_cache.child(PackageDescriptor.PACKAGE_CONTENT_FOLDER);
+		}
+
+		FileSystem FS = read_folder.getFileSystem();
+
+		File sandbox_folder = null;
 		final boolean use_sandbox = SystemSettings.getFlag(AssetsManager.UseAssetSandBox);
 		if (FS.isReadOnlyFileSystem() || !use_sandbox) {
-			sandbox_folder = this.content_folder;
+			sandbox_folder = read_folder;
 		} else {
-			sandbox_folder = FileSystemSandBox.wrap(this.package_folder.getName(), this.content_folder).ROOT();
+			try {
+				sandbox_folder = FileSystemSandBox.wrap(this.name, read_folder).ROOT();
+			} catch (final IOException e) {
+				this.status.switchState(PACKAGE_STATUS.BROKEN);
+				reader_listener.onError(e);
+				return null;
+			}
 			FS = sandbox_folder.getFileSystem();
 		}
 
-		File root_file = sandbox_folder.child(this.root_file_name);
+		final File root_file = sandbox_folder.child(this.root_file_name);
 		if (reader_listener == null) {
 			reader_listener = this.default_listener;
 		}
 
 		try {
-
 			final RedSealedContainer packageData = new RedSealedContainer(this, reader_listener, reader);
 			final PackageInputImpl input = new PackageInputImpl(reader_listener, root_file, packageData, this);
 			L.d("reading", root_file);
@@ -165,11 +154,11 @@ public class PackageHandlerImpl implements PackageHandler, PackageVersion {
 			this.isLoaded = true;
 			return packageData;
 		} catch (final IOException e) {
-			this.status = PACKAGE_STATUS.BROKEN;
+			this.status.switchState(PACKAGE_STATUS.BROKEN);
 			reader_listener.onError(e);
+			return null;
 		}
-		root_file = null;
-		return null;
+
 	}
 
 	public void flagUnload () {
@@ -228,8 +217,45 @@ public class PackageHandlerImpl implements PackageHandler, PackageVersion {
 		return this.resourceIndex.reReadTimeStamp(this);
 	}
 
-	public File getPackageFolder () {
-		return this.package_folder;
-	}
+	private final PackageReaderListener default_listener = new PackageReaderListener() {
+
+		@Override
+		public void onError (final IOException e) {
+			e.printStackTrace();
+			Err.reportError(e);
+		}
+
+		@Override
+		public void onDependenciesRequired (final PackageHandler handler, final Collection<AssetID> dependencies) {
+			final boolean auto = SystemSettings.getFlag(AssetsManagerFlags.AutoresolveDependencies);
+
+			if (!auto) {
+				dependencies.print("Missing dependencies");
+				throw new Error("RedTriplaneFlags." + auto + " flag is false.");
+			} else {
+
+				for (int i = 0; i < dependencies.size(); i++) {
+					final AssetID dep = dependencies.getElementAt(i);
+					if (AssetsManager.isRegisteredAsset(dep)) {
+
+					} else {
+						AssetsManager.autoResolveAsset(dep);
+					}
+				}
+
+			}
+		}
+
+		@Override
+		public void onPackageDataDispose (final SealedAssetsContainer container) {
+			AssetsManager.unRegisterAssetsContainer(container);
+		}
+
+		@Override
+		public void onPackageDataLoaded (final SealedAssetsContainer container) {
+			AssetsManager.registerAssetsContainer(container);
+		}
+
+	};
 
 }
