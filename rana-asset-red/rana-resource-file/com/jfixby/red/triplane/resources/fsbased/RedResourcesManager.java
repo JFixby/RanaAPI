@@ -312,7 +312,6 @@ public class RedResourcesManager implements ResourcesManagerComponent {
 	public void installRemoteBank (final String bankName, final String bankUrl) throws IOException {
 		Debug.checkNull("bankName", bankName);
 		Debug.checkNull("bankUrl", bankUrl);
-// final CachedResourceSpecs cacherdSpecs = ResourcesManager.newCachedResourceSpecs();
 
 		final File assets_cache_folder = LocalFileSystem.ApplicationHome().child("assets-cache");
 		assets_cache_folder.makeFolder();
@@ -321,16 +320,10 @@ public class RedResourcesManager implements ResourcesManagerComponent {
 		final String urlString = bankUrl;
 		final HttpURL url = Http.newURL(urlString);
 		specs.setRootUrl(url);
+		specs.setCacheSize(200);
 		final HttpFileSystem fs = Http.newHttpFileSystem(specs);
 		final File httpRemote = fs.ROOT();
-// cacherdSpecs.setName("" + bankName);
-// cacherdSpecs.setBankRoot(httpRemote);
-// cacherdSpecs.setCacheRoot(assets_cache_folder);
-
-// final CachedResource resource = ResourcesManager.newCachedResource(cacherdSpecs);
-
-// L.d("found bank", bankHeader);
-// final File bank_folder = bankHeader.getRoot();
+		httpRemote.listDirectChildren().print(bankName);
 
 		final ResourceSpecs resSpec = this.newResourceSpecs();
 		resSpec.setBankFolder(httpRemote);
@@ -338,8 +331,6 @@ public class RedResourcesManager implements ResourcesManagerComponent {
 		resSpec.setCacheFolder(assets_cache_folder.child(bankName));
 
 		final Resource resource = this.newResource(resSpec);
-
-// result.add(resource);
 
 		this.installResource(resource);
 

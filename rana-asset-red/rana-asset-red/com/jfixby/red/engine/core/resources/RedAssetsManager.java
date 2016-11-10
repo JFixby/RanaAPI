@@ -150,7 +150,6 @@ public class RedAssetsManager implements AssetsManagerComponent {
 
 	final AssetsConsumer stub_consumer = new AssetsConsumer() {
 		{
-
 			Err.reportWarning("AssetsConsumer leak");
 		}
 	};
@@ -230,7 +229,7 @@ public class RedAssetsManager implements AssetsManagerComponent {
 
 	@Override
 	public boolean autoResolveAsset (final AssetID dependency, final PackageReaderListener listener) {
-// Debug.checkNull(listener);
+		Debug.checkNull(listener);
 
 		final AssetHandler asset_entry = AssetsManager.obtainAsset(dependency, this.stub_consumer);
 		if (asset_entry != null) {
@@ -244,16 +243,6 @@ public class RedAssetsManager implements AssetsManagerComponent {
 			L.e("Asset[" + dependency + "] was not resolved!");
 		}
 		return success;
-	}
-
-	@Override
-	public boolean autoResolveAsset (final AssetID dependency) {
-		return this.autoResolveAsset(dependency, null);
-	}
-
-	@Override
-	public void autoResolveAssets (final Collection<AssetID> dependencies) {
-		this.autoResolveAssets(dependencies, null);
 	}
 
 	@Override

@@ -62,14 +62,6 @@ public class AssetsManager {
 		invoke().autoResolveAssets(dependencies, listener);
 	}
 
-	public static boolean autoResolveAsset (final AssetID dependency) {
-		return invoke().autoResolveAsset(dependency);
-	}
-
-	public static void autoResolveAssets (final Collection<AssetID> dependencies) {
-		invoke().autoResolveAssets(dependencies);
-	}
-
 	public static boolean isRegisteredAsset (final AssetID dependency) {
 		return invoke().isRegisteredAsset(dependency);
 	}

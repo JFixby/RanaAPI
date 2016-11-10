@@ -23,10 +23,6 @@ public interface AssetsManagerComponent {
 
 	AssetHandler useAsset (AssetID spriteAssetID);
 
-	boolean autoResolveAsset (AssetID dependency);
-
-	void autoResolveAssets (Collection<AssetID> dependencies);
-
 	boolean isRegisteredAsset (AssetID dependency);
 
 	void purge ();

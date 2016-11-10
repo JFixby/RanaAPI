@@ -18,7 +18,6 @@ import com.jfixby.cmns.api.sys.settings.SystemSettings;
 import com.jfixby.cmns.api.util.JUtils;
 import com.jfixby.cmns.api.util.StateSwitcher;
 import com.jfixby.rana.api.asset.AssetsManager;
-import com.jfixby.rana.api.asset.AssetsManagerFlags;
 import com.jfixby.rana.api.asset.SealedAssetsContainer;
 import com.jfixby.rana.api.pkg.PACKAGE_STATUS;
 import com.jfixby.rana.api.pkg.PackageHandler;
@@ -113,7 +112,7 @@ public class RedPackageHandler implements PackageHandler, PackageVersion {
 	}
 
 	@Override
-	public SealedAssetsContainer doReadPackage (PackageReaderListener reader_listener, final PackageReader reader) {
+	public SealedAssetsContainer doReadPackage (final PackageReaderListener reader_listener, final PackageReader reader) {
 		this.status.expectState(PACKAGE_STATUS.INSTALLED);
 
 		File read_folder = null;
@@ -141,9 +140,6 @@ public class RedPackageHandler implements PackageHandler, PackageVersion {
 		}
 
 		final File root_file = sandbox_folder.child(this.root_file_name);
-		if (reader_listener == null) {
-			reader_listener = this.default_listener;
-		}
 
 		try {
 			final RedSealedContainer packageData = new RedSealedContainer(this, reader_listener, reader);
@@ -216,46 +212,5 @@ public class RedPackageHandler implements PackageHandler, PackageVersion {
 	public long reReadTimeStamp () {
 		return this.resourceIndex.reReadTimeStamp(this);
 	}
-
-	private final PackageReaderListener default_listener = new PackageReaderListener() {
-
-		@Override
-		public void onError (final IOException e) {
-			e.printStackTrace();
-			Err.reportError(e);
-		}
-
-		@Override
-		public void onDependenciesRequired (final PackageHandler handler, final Collection<AssetID> dependencies) {
-			final boolean auto = SystemSettings.getFlag(AssetsManagerFlags.AutoresolveDependencies);
-
-			if (!auto) {
-				dependencies.print("Missing dependencies");
-				throw new Error("RedTriplaneFlags." + auto + " flag is false.");
-			} else {
-
-				for (int i = 0; i < dependencies.size(); i++) {
-					final AssetID dep = dependencies.getElementAt(i);
-					if (AssetsManager.isRegisteredAsset(dep)) {
-
-					} else {
-						AssetsManager.autoResolveAsset(dep);
-					}
-				}
-
-			}
-		}
-
-		@Override
-		public void onPackageDataDispose (final SealedAssetsContainer container) {
-			AssetsManager.unRegisterAssetsContainer(container);
-		}
-
-		@Override
-		public void onPackageDataLoaded (final SealedAssetsContainer container) {
-			AssetsManager.registerAssetsContainer(container);
-		}
-
-	};
 
 }
