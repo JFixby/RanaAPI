@@ -230,7 +230,7 @@ public class RedAssetsManager implements AssetsManagerComponent {
 
 	@Override
 	public boolean autoResolveAsset (final AssetID dependency, final PackageReaderListener listener) {
-		Debug.checkNull(listener);
+		Debug.checkNull("PackageReaderListener", listener);
 
 		final AssetHandler asset_entry = AssetsManager.obtainAsset(dependency, this.stub_consumer);
 		if (asset_entry != null) {

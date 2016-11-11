@@ -30,7 +30,6 @@ public class RedSealedContainer implements SealedAssetsContainer, AssetsContaine
 		this.reader = reader;
 	}
 
-	@Override
 	public void seal () {
 		Debug.checkTrue(!this.sealed);
 		this.reader_listener.onPackageDataLoaded(this);

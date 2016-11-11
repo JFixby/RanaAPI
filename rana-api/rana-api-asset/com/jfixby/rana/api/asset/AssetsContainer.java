@@ -5,8 +5,6 @@ import com.jfixby.cmns.api.assets.AssetID;
 
 public interface AssetsContainer extends AbstractAssetsContainer {
 
-	void addAsset (AssetID raster_id, Asset data);
-
-	public void seal ();
+	void addAsset (AssetID assetID, Asset data);
 
 }
