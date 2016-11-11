@@ -312,11 +312,11 @@ public class RedResourcesManager implements ResourcesManagerComponent {
 		}
 	}
 
-	public void installRemoteBank (final String bankName, final String bankUrl) throws IOException {
+	public void installRemoteBank (final String bankName, final String bankUrl, final File assets_cache_folder)
+		throws IOException {
 		Debug.checkNull("bankName", bankName);
 		Debug.checkNull("bankUrl", bankUrl);
 
-		final File assets_cache_folder = LocalFileSystem.ApplicationHome().child("assets-cache");
 		assets_cache_folder.makeFolder();
 
 		final HttpFileSystemSpecs specs = Http.newHttpFileSystemSpecs();
