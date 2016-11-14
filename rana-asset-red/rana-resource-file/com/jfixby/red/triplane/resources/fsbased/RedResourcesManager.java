@@ -229,11 +229,11 @@ public class RedResourcesManager implements ResourcesManagerComponent {
 
 	}
 
-	public ResourcesConfigFile loadConfigFile () {
+	public ResourcesConfigFile loadConfigFile (final File applicationHome) {
 
 		ResourcesConfigFile config = null;
 		try {
-			final File resources_config_file = LocalFileSystem.ApplicationHome().child(ResourcesConfigFile.FILE_NAME);
+			final File resources_config_file = applicationHome.child(ResourcesConfigFile.FILE_NAME);
 			L.d("reading", resources_config_file);
 
 			if (!resources_config_file.exists()) {
@@ -251,10 +251,10 @@ public class RedResourcesManager implements ResourcesManagerComponent {
 
 	}
 
-	public void tryToLoadConfigFile () throws IOException {
-		ResourcesConfigFile cfg = this.loadConfigFile();
+	public void tryToLoadConfigFile (final File applicationHome) throws IOException {
+		ResourcesConfigFile cfg = this.loadConfigFile(applicationHome);
 		if (cfg == null) {
-			cfg = this.tryToMakeConfigFile();
+			cfg = this.tryToMakeConfigFile(applicationHome);
 		}
 
 		if (cfg == null) {
@@ -272,14 +272,14 @@ public class RedResourcesManager implements ResourcesManagerComponent {
 	// LocalFileSystem.newFile(TintoAssetsConfig.PACKED_ASSETS_HOME);
 // final File dev_assets_home = LocalFileSystem.newFile(TintoAssetsConfig.PACKED_ASSETS_HOME);
 
-	private ResourcesConfigFile tryToMakeConfigFile () {
+	private ResourcesConfigFile tryToMakeConfigFile (final File applicationHome) {
 		final ResourcesConfigFile config = new ResourcesConfigFile();
 
 		final AssetsFolder assets_folder = new AssetsFolder();
 		assets_folder.java_path = "path?";
 		config.local_assets.add(assets_folder);
 
-		final File resources_config_file = LocalFileSystem.ApplicationHome().child(ResourcesConfigFile.FILE_NAME);
+		final File resources_config_file = applicationHome.child(ResourcesConfigFile.FILE_NAME);
 		try {
 			if (resources_config_file.exists()) {
 				L.e("file exists", resources_config_file);
