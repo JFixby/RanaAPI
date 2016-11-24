@@ -150,7 +150,7 @@ public class RedAssetsManager implements AssetsManagerComponent {
 
 	final AssetsConsumer stub_consumer = new AssetsConsumer() {
 		{
-			Err.reportWarning("AssetsConsumer leak");
+
 		}
 	};
 
@@ -162,6 +162,8 @@ public class RedAssetsManager implements AssetsManagerComponent {
 		for (final AssetID dependency : dependencies) {
 
 			final AssetHandler asset_entry = AssetsManager.obtainAsset(dependency, this.stub_consumer);
+			Err.reportWarning("AssetsConsumer leak");
+
 			if (asset_entry != null) {
 				L.d("already loaded", dependency);
 				AssetsManager.releaseAsset(asset_entry, this.stub_consumer);
@@ -233,6 +235,8 @@ public class RedAssetsManager implements AssetsManagerComponent {
 		Debug.checkNull("PackageReaderListener", listener);
 
 		final AssetHandler asset_entry = AssetsManager.obtainAsset(dependency, this.stub_consumer);
+		Err.reportWarning("AssetsConsumer leak");
+
 		if (asset_entry != null) {
 			AssetsManager.releaseAsset(asset_entry, this.stub_consumer);
 			return true;
