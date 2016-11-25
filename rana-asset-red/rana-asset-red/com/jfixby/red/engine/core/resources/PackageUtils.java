@@ -3,7 +3,7 @@ package com.jfixby.red.engine.core.resources;
 
 import java.io.IOException;
 
-import com.jfixby.cmns.api.assets.AssetID;
+import com.jfixby.cmns.api.assets.ID;
 import com.jfixby.cmns.api.collections.Collection;
 import com.jfixby.cmns.api.debug.Debug;
 import com.jfixby.cmns.api.file.File;
@@ -22,8 +22,8 @@ public class PackageUtils {
 
 		final String package_format = specs.getPackageFormat();
 		final String version = specs.getVersion();
-		final Collection<AssetID> provisions = specs.getPackedAssets();
-		final Collection<AssetID> dependencies = specs.getRequiredAssets();
+		final Collection<ID> provisions = specs.getPackedAssets();
+		final Collection<ID> dependencies = specs.getRequiredAssets();
 		final String root_file_name = specs.getRootFileName();
 		producePackageDescriptor(package_folder, package_format, version, provisions, dependencies, root_file_name);
 
@@ -33,17 +33,17 @@ public class PackageUtils {
 	}
 
 	static public void producePackageDescriptor (final File output_folder, final String format, final String version,
-		final Collection<AssetID> provisions, final Collection<AssetID> dependencies, final String root_file_name)
+		final Collection<ID> provisions, final Collection<ID> dependencies, final String root_file_name)
 		throws IOException {
 
 		final PackageDescriptor descriptor = new PackageDescriptor();
 		descriptor.format = format;
 		descriptor.timestamp = "" + Sys.SystemTime().currentTimeMillis();
 		descriptor.version = version;
-		for (final AssetID d : provisions) {
+		for (final ID d : provisions) {
 			descriptor.packed_assets.addElement(d.toString());
 		}
-		for (final AssetID d : dependencies) {
+		for (final ID d : dependencies) {
 			descriptor.package_dependencies.addElement(d.toString());
 		}
 

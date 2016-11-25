@@ -1,7 +1,7 @@
 
 package com.jfixby.rana.api.pkg;
 
-import com.jfixby.cmns.api.assets.AssetID;
+import com.jfixby.cmns.api.assets.ID;
 import com.jfixby.cmns.api.collections.Collection;
 import com.jfixby.rana.api.asset.SealedAssetsContainer;
 
@@ -15,9 +15,9 @@ public interface PackageHandler {
 
 	public PACKAGE_STATUS getStatus ();
 
-	public Collection<AssetID> listPackedAssets ();
+	public Collection<ID> listPackedAssets ();
 
-	public Collection<AssetID> listDependencies ();
+	public Collection<ID> listDependencies ();
 
 	public void print ();
 

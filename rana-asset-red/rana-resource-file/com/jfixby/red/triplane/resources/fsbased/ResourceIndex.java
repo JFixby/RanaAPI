@@ -3,7 +3,7 @@ package com.jfixby.red.triplane.resources.fsbased;
 
 import java.io.IOException;
 
-import com.jfixby.cmns.api.assets.AssetID;
+import com.jfixby.cmns.api.assets.ID;
 import com.jfixby.cmns.api.assets.Names;
 import com.jfixby.cmns.api.collections.Collection;
 import com.jfixby.cmns.api.collections.Collections;
@@ -19,7 +19,7 @@ import com.jfixby.rana.api.pkg.fs.PackageDescriptor;
 
 public class ResourceIndex {
 	Set<PackageHandler> all_handlers = Collections.newSet();
-	Map<AssetID, Set<PackageHandler>> handlers_by_asset_id = Collections.newMap();
+	Map<ID, Set<PackageHandler>> handlers_by_asset_id = Collections.newMap();
 	private final RedResource master;
 
 	public void reset () {
@@ -45,13 +45,13 @@ public class ResourceIndex {
 
 		for (int i = 0; i < descriptor.packed_assets.size(); i++) {
 			final String name = descriptor.packed_assets.get(i);
-			final AssetID element = Names.newAssetID(name);
+			final ID element = Names.newAssetID(name);
 			handler.descriptors.add(element);
 		}
 
 		for (int i = 0; i < descriptor.package_dependencies.size(); i++) {
 			final String name = descriptor.package_dependencies.get(i);
-			final AssetID element = Names.newAssetID(name);
+			final ID element = Names.newAssetID(name);
 			handler.dependencies.add(element);
 		}
 
@@ -61,7 +61,7 @@ public class ResourceIndex {
 
 	private void addHandler (final PackageHandler handler) {
 		for (int i = 0; i < handler.listPackedAssets().size(); i++) {
-			final AssetID key = handler.listPackedAssets().getElementAt(i);
+			final ID key = handler.listPackedAssets().getElementAt(i);
 			Set<PackageHandler> list = this.handlers_by_asset_id.get(key);
 			if (list == null) {
 				list = Collections.newSet();
@@ -78,7 +78,7 @@ public class ResourceIndex {
 		if (search_params.isGetAllAssetsFlagActive()) {
 			handlers = this.getAllHandlers();
 		} else {
-			final AssetID asset_id = search_params.getAssetId();
+			final ID asset_id = search_params.getAssetId();
 			handlers = this.filterHandlers(asset_id);
 		}
 
@@ -97,7 +97,7 @@ public class ResourceIndex {
 		return this.all_handlers;
 	}
 
-	private Set<PackageHandler> filterHandlers (final AssetID asset_id) {
+	private Set<PackageHandler> filterHandlers (final ID asset_id) {
 		Set<PackageHandler> handlers = this.handlers_by_asset_id.get(asset_id);
 		if (handlers == null) {
 			handlers = Collections.newSet();
@@ -115,8 +115,8 @@ public class ResourceIndex {
 		if (!acccepted_statuses.contains(handler.getStatus())) {
 			return false;
 		}
-		final AssetID asset_id = search_params.getAssetId();
-		final Collection<AssetID> descriptors = handler.listPackedAssets();
+		final ID asset_id = search_params.getAssetId();
+		final Collection<ID> descriptors = handler.listPackedAssets();
 		final boolean contains = descriptors.contains(asset_id);
 		if (!contains) {
 			return false;

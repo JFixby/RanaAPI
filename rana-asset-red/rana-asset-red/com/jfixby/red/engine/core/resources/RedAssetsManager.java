@@ -1,7 +1,7 @@
 
 package com.jfixby.red.engine.core.resources;
 
-import com.jfixby.cmns.api.assets.AssetID;
+import com.jfixby.cmns.api.assets.ID;
 import com.jfixby.cmns.api.collections.Collection;
 import com.jfixby.cmns.api.collections.CollectionFilter;
 import com.jfixby.cmns.api.collections.Collections;
@@ -41,7 +41,7 @@ public class RedAssetsManager implements AssetsManagerComponent {
 // }
 // }
 
-	public void registerAssetContainer (final AssetID asset_id, final SealedAssetsContainer container) {
+	public void registerAssetContainer (final ID asset_id, final SealedAssetsContainer container) {
 		Debug.checkNull("asset_id", asset_id);
 		Debug.checkNull("container", container);
 
@@ -64,21 +64,21 @@ public class RedAssetsManager implements AssetsManagerComponent {
 
 	}
 
-	public void unRegisterAssetContainer (final AssetID asset, final SealedAssetsContainer container) {
+	public void unRegisterAssetContainer (final ID asset, final SealedAssetsContainer container) {
 		this.assets.remove(asset, container);
 	}
 
-	public void purgeAssets (final Collection<AssetID> assetsToDrop) {
+	public void purgeAssets (final Collection<ID> assetsToDrop) {
 		this.assets.purgeAssets(assetsToDrop);
 	}
 
 	@Override
-	public AssetHandler useAsset (final AssetID asset_id) {
+	public AssetHandler useAsset (final ID asset_id) {
 		return this.assets.get(asset_id);
 	}
 
 	@Override
-	public AssetHandler obtainAsset (final AssetID asset_id, final AssetsConsumer consumer) {
+	public AssetHandler obtainAsset (final ID asset_id, final AssetsConsumer consumer) {
 		Debug.checkNull("asset_id", asset_id);
 		Debug.checkNull("consumer", consumer);
 		final RedAssetHandler asset = this.assets.get(asset_id);
@@ -96,7 +96,7 @@ public class RedAssetsManager implements AssetsManagerComponent {
 	}
 
 	@Override
-	public boolean isRegisteredAsset (final AssetID dependency) {
+	public boolean isRegisteredAsset (final ID dependency) {
 		Debug.checkNull("asset_id", dependency);
 		final RedAssetHandler asset = this.assets.get(dependency);
 		return asset != null;
@@ -105,7 +105,7 @@ public class RedAssetsManager implements AssetsManagerComponent {
 	@Override
 	public void releaseAsset (final AssetHandler asset_info, final AssetsConsumer consumer) {
 		Debug.checkNull("asset_info", asset_info);
-		final AssetID asset_id = asset_info.ID();
+		final ID asset_id = asset_info.ID();
 		Debug.checkNull("asset_id", asset_id);
 		Debug.checkNull("consumer", consumer);
 		final RedAssetHandler asset = this.assets.get(asset_id);
@@ -129,14 +129,14 @@ public class RedAssetsManager implements AssetsManagerComponent {
 	public void releaseAllAssets (final AssetsConsumer consumer) {
 		Debug.checkNull("consumer", consumer);
 		final AssetUser user = new AssetUser(consumer);
-		final Collection<AssetID> assets_list = Collections.newList(this.user_assets.listAssetsUsedBy(user));
+		final Collection<ID> assets_list = Collections.newList(this.user_assets.listAssetsUsedBy(user));
 		if (assets_list == null) {
 			L.d("AssetsConsumer: " + user.consumer, "is not using any assets");
 			this.user_assets.print();
 			this.asset_users.print("on releaseAllAssets");
 			return;
 		}
-		for (final AssetID asset_id : assets_list) {
+		for (final ID asset_id : assets_list) {
 			final RedAssetHandler asset_info = this.assets.get(asset_id);
 			if (asset_info == null) {
 				this.asset_users.print("on releaseAllAssets");
@@ -155,14 +155,15 @@ public class RedAssetsManager implements AssetsManagerComponent {
 	};
 
 	@Override
-	public void autoResolveAssets (final Collection<AssetID> dependencies, final PackageReaderListener listener) {
+	public void autoResolveAssets (final Collection<ID> dependencies, final PackageReaderListener listener) {
 		Debug.checkNull(listener);
 		Debug.checkNull("dependencies", dependencies);
 		boolean updated = true;
-		for (final AssetID dependency : dependencies) {
+		for (final ID dependency : dependencies) {
 
 			final AssetHandler asset_entry = AssetsManager.obtainAsset(dependency, this.stub_consumer);
-			Err.reportWarning("AssetsConsumer leak");
+			Err.reportWarning(
+				"AssetsConsumer leak public void autoResolveAssets (final Collection<ID> dependencies, final PackageReaderListener listener)");
 
 			if (asset_entry != null) {
 				L.d("already loaded", dependency);
@@ -177,7 +178,7 @@ public class RedAssetsManager implements AssetsManagerComponent {
 		}
 	}
 
-	private boolean resolve (final AssetID dependency, final boolean print_debug_output, final PackageReaderListener listener) {
+	private boolean resolve (final ID dependency, final boolean print_debug_output, final PackageReaderListener listener) {
 		L.d("RESOLVING DEPENDENCY", dependency);
 		final PackageSearchParameters search_params = ResourcesManager.newSearchParameters();
 		search_params.setAssetId(dependency);
@@ -231,11 +232,12 @@ public class RedAssetsManager implements AssetsManagerComponent {
 	}
 
 	@Override
-	public boolean autoResolveAsset (final AssetID dependency, final PackageReaderListener listener) {
+	public boolean autoResolveAsset (final ID dependency, final PackageReaderListener listener) {
 		Debug.checkNull("PackageReaderListener", listener);
 
 		final AssetHandler asset_entry = AssetsManager.obtainAsset(dependency, this.stub_consumer);
-		Err.reportWarning("AssetsConsumer leak");
+		Err.reportWarning(
+			"AssetsConsumer leak public boolean autoResolveAsset (final ID dependency, final PackageReaderListener listener)");
 
 		if (asset_entry != null) {
 			AssetsManager.releaseAsset(asset_entry, this.stub_consumer);
@@ -254,9 +256,9 @@ public class RedAssetsManager implements AssetsManagerComponent {
 	public void purge () {
 
 // this.asset_users.print("asset_users");
-		final List<AssetID> keys = this.assets.keys().filter(new CollectionFilter<AssetID>() {
+		final List<ID> keys = this.assets.keys().filter(new CollectionFilter<ID>() {
 			@Override
-			public boolean fits (final AssetID key) {
+			public boolean fits (final ID key) {
 				return RedAssetsManager.this.asset_users.getNumberOfUsers(key) == 0;
 			}
 		});
@@ -275,16 +277,16 @@ public class RedAssetsManager implements AssetsManagerComponent {
 
 	@Override
 	public void registerAssetsContainer (final SealedAssetsContainer container) {
-		final Collection<AssetID> list = container.listAssets();
-		for (final AssetID rester_id : list) {
+		final Collection<ID> list = container.listAssets();
+		for (final ID rester_id : list) {
 			this.registerAssetContainer(rester_id, container);
 		}
 	}
 
 	@Override
 	public void unRegisterAssetsContainer (final SealedAssetsContainer container) {
-		final Collection<AssetID> list = container.listAssets();
-		for (final AssetID asset : list) {
+		final Collection<ID> list = container.listAssets();
+		for (final ID asset : list) {
 			this.unRegisterAssetContainer(asset, container);
 		}
 	}

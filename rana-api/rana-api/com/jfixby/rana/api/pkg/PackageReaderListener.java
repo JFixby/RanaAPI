@@ -3,7 +3,7 @@ package com.jfixby.rana.api.pkg;
 
 import java.io.IOException;
 
-import com.jfixby.cmns.api.assets.AssetID;
+import com.jfixby.cmns.api.assets.ID;
 import com.jfixby.cmns.api.collections.Collection;
 import com.jfixby.cmns.api.err.Err;
 import com.jfixby.cmns.api.sys.settings.SystemSettings;
@@ -22,7 +22,7 @@ public interface PackageReaderListener {
 		}
 
 		@Override
-		public void onDependenciesRequired (final PackageHandler handler, final Collection<AssetID> dependencies) {
+		public void onDependenciesRequired (final PackageHandler handler, final Collection<ID> dependencies) {
 			final boolean auto = SystemSettings.getFlag(AssetsManagerFlags.AutoresolveDependencies);
 
 			if (!auto) {
@@ -31,7 +31,7 @@ public interface PackageReaderListener {
 			} else {
 
 				for (int i = 0; i < dependencies.size(); i++) {
-					final AssetID dep = dependencies.getElementAt(i);
+					final ID dep = dependencies.getElementAt(i);
 					if (AssetsManager.isRegisteredAsset(dep)) {
 
 					} else {
@@ -56,7 +56,7 @@ public interface PackageReaderListener {
 
 	void onError (IOException e);
 
-	void onDependenciesRequired (PackageHandler requiredBy, Collection<AssetID> dependencies);
+	void onDependenciesRequired (PackageHandler requiredBy, Collection<ID> dependencies);
 
 	void onPackageDataDispose (final SealedAssetsContainer data);
 

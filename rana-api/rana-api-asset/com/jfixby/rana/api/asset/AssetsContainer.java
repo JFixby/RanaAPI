@@ -1,10 +1,10 @@
 
 package com.jfixby.rana.api.asset;
 
-import com.jfixby.cmns.api.assets.AssetID;
+import com.jfixby.cmns.api.assets.ID;
 
 public interface AssetsContainer extends AbstractAssetsContainer {
 
-	void addAsset (AssetID assetID, Asset data);
+	void addAsset (ID assetID, Asset data);
 
 }

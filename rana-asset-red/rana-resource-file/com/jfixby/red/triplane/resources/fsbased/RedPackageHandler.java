@@ -3,7 +3,7 @@ package com.jfixby.red.triplane.resources.fsbased;
 
 import java.io.IOException;
 
-import com.jfixby.cmns.api.assets.AssetID;
+import com.jfixby.cmns.api.assets.ID;
 import com.jfixby.cmns.api.collections.Collection;
 import com.jfixby.cmns.api.collections.Collections;
 import com.jfixby.cmns.api.collections.List;
@@ -28,8 +28,8 @@ import com.jfixby.rana.api.pkg.fs.PackageDescriptor;
 
 public class RedPackageHandler implements PackageHandler, PackageVersion {
 
-	final List<AssetID> descriptors = Collections.newList();
-	final List<AssetID> dependencies = Collections.newList();
+	final List<ID> descriptors = Collections.newList();
+	final List<ID> dependencies = Collections.newList();
 
 	private String version;
 	private long timestamp;
@@ -83,7 +83,7 @@ public class RedPackageHandler implements PackageHandler, PackageVersion {
 	}
 
 	@Override
-	public Collection<AssetID> listPackedAssets () {
+	public Collection<ID> listPackedAssets () {
 		return this.descriptors;
 	}
 
@@ -204,7 +204,7 @@ public class RedPackageHandler implements PackageHandler, PackageVersion {
 	}
 
 	@Override
-	public Collection<AssetID> listDependencies () {
+	public Collection<ID> listDependencies () {
 		return this.dependencies;
 	}
 

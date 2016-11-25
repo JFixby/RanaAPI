@@ -1,14 +1,14 @@
 
 package com.jfixby.rana.api.asset;
 
-import com.jfixby.cmns.api.assets.AssetID;
+import com.jfixby.cmns.api.assets.ID;
 import com.jfixby.cmns.api.collections.Collection;
 
 public interface AbstractAssetsContainer {
 
-	Collection<AssetID> listAssets ();
+	Collection<ID> listAssets ();
 
-	Asset getAsset (AssetID asset_id);
+	Asset getAsset (ID asset_id);
 
 	void printAll ();
 
@@ -16,6 +16,6 @@ public interface AbstractAssetsContainer {
 
 	long readPackageTimeStamp ();
 
-	boolean purgeAssets (Collection<AssetID> relatedAssets);
+	boolean purgeAssets (Collection<ID> relatedAssets);
 
 }

@@ -1,7 +1,7 @@
 
 package com.jfixby.red.engine.core.resources;
 
-import com.jfixby.cmns.api.assets.AssetID;
+import com.jfixby.cmns.api.assets.ID;
 import com.jfixby.cmns.api.collections.Collections;
 import com.jfixby.cmns.api.collections.List;
 import com.jfixby.cmns.api.collections.Map;
@@ -12,7 +12,7 @@ import com.jfixby.rana.api.asset.AssetsManager;
 
 public class AssetUsers {
 
-	final Map<AssetID, List<AssetUser>> asset_users = Collections.newMap();
+	final Map<ID, List<AssetUser>> asset_users = Collections.newMap();
 	private final RedAssetsManager master;
 
 	public AssetUsers (final RedAssetsManager redAssetsManager) {
@@ -23,7 +23,7 @@ public class AssetUsers {
 		this.asset_users.print(tag);
 	}
 
-	public void addUser (final AssetID asset_id, final AssetUser user) {
+	public void addUser (final ID asset_id, final AssetUser user) {
 		List<AssetUser> users = this.asset_users.get(asset_id);
 		if (users == null) {
 			users = Collections.newList();
@@ -34,7 +34,7 @@ public class AssetUsers {
 		}
 	}
 
-	public void addUser (final AssetID asset_id) {
+	public void addUser (final ID asset_id) {
 		List<AssetUser> users = this.asset_users.get(asset_id);
 		if (users == null) {
 			users = Collections.newList();
@@ -42,7 +42,7 @@ public class AssetUsers {
 		}
 	}
 
-	public boolean removeUser (final AssetID asset_id, final AssetUser user) {
+	public boolean removeUser (final ID asset_id, final AssetUser user) {
 		final List<AssetUser> users = this.asset_users.get(asset_id);
 		if (users == null) {
 			L.e("There is no information about this asset usage", asset_id);
@@ -59,7 +59,7 @@ public class AssetUsers {
 		return true;
 	}
 
-	public int getNumberOfUsers (final AssetID key) {
+	public int getNumberOfUsers (final ID key) {
 		final List<AssetUser> users = this.asset_users.get(key);
 		if (users == null) {
 			return 0;
@@ -68,7 +68,7 @@ public class AssetUsers {
 		}
 	}
 
-	public void removeAll (final List<AssetID> keys) {
+	public void removeAll (final List<ID> keys) {
 		this.asset_users.removeAll(keys);
 	}
 

@@ -1,14 +1,14 @@
 
 package com.jfixby.red.engine.core.resources;
 
-import com.jfixby.cmns.api.assets.AssetID;
+import com.jfixby.cmns.api.assets.ID;
 import com.jfixby.rana.api.asset.Asset;
 import com.jfixby.rana.api.asset.AssetHandler;
 import com.jfixby.rana.api.asset.SealedAssetsContainer;
 
 public class RedAssetHandler implements AssetHandler {
 
-	private final AssetID id;
+	private final ID id;
 	private SealedAssetsContainer assetsContainer;
 
 	@Override
@@ -16,7 +16,7 @@ public class RedAssetHandler implements AssetHandler {
 		return "#[" + this.assetsContainer + "]";
 	}
 
-	public RedAssetHandler (final AssetID asset_id) {
+	public RedAssetHandler (final ID asset_id) {
 		this.id = asset_id;
 	}
 
@@ -25,7 +25,7 @@ public class RedAssetHandler implements AssetHandler {
 	}
 
 	@Override
-	public AssetID ID () {
+	public ID ID () {
 		return this.id;
 	}
 

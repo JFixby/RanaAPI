@@ -2,7 +2,7 @@
 package com.jfixby.rana.api.asset;
 
 import com.jfixby.cmns.api.ComponentInstaller;
-import com.jfixby.cmns.api.assets.AssetID;
+import com.jfixby.cmns.api.assets.ID;
 import com.jfixby.cmns.api.collections.Collection;
 import com.jfixby.rana.api.pkg.PackageReaderListener;
 
@@ -34,7 +34,7 @@ public class AssetsManager {
 		invoke().unRegisterAssetsContainer(container);
 	}
 
-	public static AssetHandler obtainAsset (final AssetID asset_id, final AssetsConsumer consumer) {
+	public static AssetHandler obtainAsset (final ID asset_id, final AssetsConsumer consumer) {
 		return invoke().obtainAsset(asset_id, consumer);
 	}
 
@@ -54,15 +54,15 @@ public class AssetsManager {
 // invoke().checkAll();
 // }
 
-	public static boolean autoResolveAsset (final AssetID dependency, final PackageReaderListener listener) {
+	public static boolean autoResolveAsset (final ID dependency, final PackageReaderListener listener) {
 		return invoke().autoResolveAsset(dependency, listener);
 	}
 
-	public static void autoResolveAssets (final Collection<AssetID> dependencies, final PackageReaderListener listener) {
+	public static void autoResolveAssets (final Collection<ID> dependencies, final PackageReaderListener listener) {
 		invoke().autoResolveAssets(dependencies, listener);
 	}
 
-	public static boolean isRegisteredAsset (final AssetID dependency) {
+	public static boolean isRegisteredAsset (final ID dependency) {
 		return invoke().isRegisteredAsset(dependency);
 	}
 

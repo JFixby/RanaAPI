@@ -1,6 +1,6 @@
 package com.jfixby.red.triplane.resources.fsbased;
 
-import com.jfixby.cmns.api.assets.AssetID;
+import com.jfixby.cmns.api.assets.ID;
 import com.jfixby.cmns.api.collections.Collections;
 import com.jfixby.cmns.api.collections.List;
 import com.jfixby.cmns.api.log.L;
@@ -16,16 +16,16 @@ public class RedPackageSearchParameters implements PackageSearchParameters {
 
 	}
 
-	private AssetID asset_to_find;
+	private ID asset_to_find;
 	private boolean GET_ALL = false;
 
 	@Override
-	public void setAssetId(AssetID asset_to_find) {
+	public void setAssetId(ID asset_to_find) {
 		this.asset_to_find = asset_to_find;
 	}
 
 	@Override
-	public AssetID getAssetId() {
+	public ID getAssetId() {
 		return asset_to_find;
 	}
 

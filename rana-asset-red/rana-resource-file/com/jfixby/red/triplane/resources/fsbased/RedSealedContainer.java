@@ -1,7 +1,7 @@
 
 package com.jfixby.red.triplane.resources.fsbased;
 
-import com.jfixby.cmns.api.assets.AssetID;
+import com.jfixby.cmns.api.assets.ID;
 import com.jfixby.cmns.api.collections.Collection;
 import com.jfixby.cmns.api.collections.Collections;
 import com.jfixby.cmns.api.collections.Map;
@@ -15,7 +15,7 @@ import com.jfixby.rana.api.pkg.PackageReaderListener;
 
 public class RedSealedContainer implements SealedAssetsContainer, AssetsContainer {
 
-	final Map<AssetID, Asset> assets = Collections.newMap();
+	final Map<ID, Asset> assets = Collections.newMap();
 
 	private final PackageReaderListener reader_listener;
 	private final PackageReader reader;
@@ -46,7 +46,7 @@ public class RedSealedContainer implements SealedAssetsContainer, AssetsContaine
 	}
 
 	@Override
-	public Asset getAsset (final AssetID asset_id) {
+	public Asset getAsset (final ID asset_id) {
 		return this.assets.get(asset_id);
 	}
 
@@ -56,7 +56,7 @@ public class RedSealedContainer implements SealedAssetsContainer, AssetsContaine
 	}
 
 	@Override
-	public boolean purgeAssets (final Collection<AssetID> assetsToPurge) {
+	public boolean purgeAssets (final Collection<ID> assetsToPurge) {
 		if (!assetsToPurge.containsAll(this.assets.keys())) {
 // Err.reportWarning("Unable to purge");
 // assetsToPurge.print("assets");
@@ -81,8 +81,8 @@ public class RedSealedContainer implements SealedAssetsContainer, AssetsContaine
 		this.assets.print("dispose");
 
 		this.reader_listener.onPackageDataDispose(this);
-		final Collection<AssetID> disposalList = assetsToPurge;
-		for (final AssetID key : disposalList) {
+		final Collection<ID> disposalList = assetsToPurge;
+		for (final ID key : disposalList) {
 			final Asset asset = this.assets.get(key);
 			if (asset == null) {
 				this.assets.print("assets");
@@ -98,12 +98,12 @@ public class RedSealedContainer implements SealedAssetsContainer, AssetsContaine
 	}
 
 	@Override
-	public Collection<AssetID> listAssets () {
+	public Collection<ID> listAssets () {
 		return this.assets.keys();
 	}
 
 	@Override
-	public void addAsset (final AssetID raster_id, final Asset data) {
+	public void addAsset (final ID raster_id, final Asset data) {
 		Debug.checkTrue(!this.sealed);
 		Debug.checkNull("raster_id", raster_id);
 		Debug.checkNull("data", data);

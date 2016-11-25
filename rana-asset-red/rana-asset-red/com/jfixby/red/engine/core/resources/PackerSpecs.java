@@ -1,6 +1,6 @@
 package com.jfixby.red.engine.core.resources;
 
-import com.jfixby.cmns.api.assets.AssetID;
+import com.jfixby.cmns.api.assets.ID;
 import com.jfixby.cmns.api.collections.Collection;
 import com.jfixby.cmns.api.collections.Collections;
 import com.jfixby.cmns.api.collections.List;
@@ -11,8 +11,8 @@ public class PackerSpecs {
 
 	private File PackageFolder;
 	final Set<File> PackedFiles = Collections.newSet();
-	final Set<AssetID> PackedAssets = Collections.newSet();
-	final Set<AssetID> RequiredAssets = Collections.newSet();
+	final Set<ID> PackedAssets = Collections.newSet();
+	final Set<ID> RequiredAssets = Collections.newSet();
 	private String rootFileName;
 	String PackageFormat;
 	String Version;
@@ -25,11 +25,11 @@ public class PackerSpecs {
 		return PackedFiles;
 	}
 
-	public Set<AssetID> getPackedAssets() {
+	public Set<ID> getPackedAssets() {
 		return PackedAssets;
 	}
 
-	public Set<AssetID> getRequiredAssets() {
+	public Set<ID> getRequiredAssets() {
 		return RequiredAssets;
 	}
 
@@ -49,11 +49,11 @@ public class PackerSpecs {
 		this.rootFileName = rootFileName;
 	}
 
-	public void setPackedAssets(List<AssetID> packed) {
+	public void setPackedAssets(List<ID> packed) {
 		this.PackedAssets.addAll(packed);
 	}
 
-	public void setRequiredAssets(List<AssetID> required) {
+	public void setRequiredAssets(List<ID> required) {
 		this.RequiredAssets.addAll(required);
 	}
 
