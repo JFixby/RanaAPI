@@ -45,13 +45,13 @@ public class ResourceIndex {
 
 		for (int i = 0; i < descriptor.packed_assets.size(); i++) {
 			final String name = descriptor.packed_assets.get(i);
-			final ID element = Names.newAssetID(name);
+			final ID element = Names.newID(name);
 			handler.descriptors.add(element);
 		}
 
 		for (int i = 0; i < descriptor.package_dependencies.size(); i++) {
 			final String name = descriptor.package_dependencies.get(i);
-			final ID element = Names.newAssetID(name);
+			final ID element = Names.newID(name);
 			handler.dependencies.add(element);
 		}
 
