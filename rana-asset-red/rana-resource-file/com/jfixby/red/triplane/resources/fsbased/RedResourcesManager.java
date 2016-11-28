@@ -3,15 +3,16 @@ package com.jfixby.red.triplane.resources.fsbased;
 
 import java.io.IOException;
 
+import com.jfixby.cmns.api.assets.ID;
+import com.jfixby.cmns.api.assets.Names;
 import com.jfixby.cmns.api.collections.Collection;
 import com.jfixby.cmns.api.collections.Collections;
 import com.jfixby.cmns.api.collections.List;
 import com.jfixby.cmns.api.collections.Map;
-import com.jfixby.cmns.api.collections.Set;
 import com.jfixby.cmns.api.debug.Debug;
 import com.jfixby.cmns.api.err.Err;
+import com.jfixby.cmns.api.file.ChildrenList;
 import com.jfixby.cmns.api.file.File;
-import com.jfixby.cmns.api.file.LocalFileSystem;
 import com.jfixby.cmns.api.json.Json;
 import com.jfixby.cmns.api.json.JsonString;
 import com.jfixby.cmns.api.log.L;
@@ -26,14 +27,15 @@ import com.jfixby.rana.api.pkg.PackageReader;
 import com.jfixby.rana.api.pkg.PackageSearchParameters;
 import com.jfixby.rana.api.pkg.PackageSearchResult;
 import com.jfixby.rana.api.pkg.Resource;
-import com.jfixby.rana.api.pkg.ResourceRebuildIndexListener;
 import com.jfixby.rana.api.pkg.ResourceSpecs;
+import com.jfixby.rana.api.pkg.ResourcesGroup;
 import com.jfixby.rana.api.pkg.ResourcesManagerComponent;
 import com.jfixby.rana.api.pkg.bank.BankHeaderInfo;
 
 public class RedResourcesManager implements ResourcesManagerComponent {
 
-	final Map<String, Resource> resources = Collections.newMap();
+	private static final boolean COLLECT_TANKS = true;
+	final Map<ID, ResourcesGroup> resources = Collections.newMap();
 
 	@Override
 	public PackageSearchParameters newSearchParameters () {
@@ -45,26 +47,27 @@ public class RedResourcesManager implements ResourcesManagerComponent {
 		final RedPackageSearchResult result = new RedPackageSearchResult(search_params);
 		Debug.checkNull("search_params", search_params);
 		for (int i = 0; i < this.resources.size(); i++) {
-			final Resource resource = this.resources.getValueAt(i);
-			final PackageSearchResult result_i = resource.findPackages(search_params);
+			final PackageSearchResult result_i = this.resources.getValueAt(i).findPackages(search_params);
 			result.add(result_i);
 		}
 
 		return result;
 	}
 
-	public void installResource (final Resource resource_to_install) {
-		Debug.checkNull("resource_to_install", resource_to_install);
-		final String name = resource_to_install.getName();
+	private void installBank (final ResourcesGroup group) {
+		Debug.checkNull("resource_to_install", group);
+		final ID name = group.getName();
+
 		if (this.resources.containsKey(name)) {
 			Err.reportError("Resource with this name <" + name + "> is already installed: " + this.resources.get(name));
 		}
-		this.resources.put(name, resource_to_install);
+
+		this.resources.put(name, group);
 	}
 
-	public void removeResource (final Resource resource) {
-		this.resources.remove(resource);
-	}
+// public void removeResource (final Resource resource) {
+// this.resources.remove(resource);
+// }
 
 	@Override
 	public void printAllPackages () {
@@ -127,42 +130,27 @@ public class RedResourcesManager implements ResourcesManagerComponent {
 		return new PackageFormatImpl(format_name);
 	}
 
-	public void findAndInstallResources (final File assets_folder) throws IOException {
-		final Collection<Resource> resources = this.findResources(assets_folder);
-		this.installResources(resources);
+	public Collection<ResourcesGroup> findAndInstallResources (final File assets_folder) throws IOException {
+		final List<ResourcesGroup> resources = this.findBanks(assets_folder);
+		this.installBanks(resources);
+		return resources;
 	}
 
 	@Override
-	public void installResources (final Collection<Resource> resources) {
-		for (final Resource r : resources) {
-			this.installResource(r);
+	public void installBanks (final Collection<ResourcesGroup> resources) {
+		for (final ResourcesGroup r : resources) {
+			this.installBank(r);
 		}
 	}
 
 	@Override
-	public Collection<Resource> findResources (final File assets_folder) throws IOException {
-		final Set<Resource> result = Collections.newSet();
-		if (!assets_folder.exists()) {
-			L.e("bank not found", assets_folder);
-			return result;
-		}
+	public List<ResourcesGroup> findBanks (final File assets_folder) throws IOException {
+		final List<ResourcesGroup> result = Collections.newList();
+
 		{
-			final BankHeader bankHeader = this.findAndLoadBank(assets_folder);
-			if (bankHeader == null) {
-// L.e("corrupted bank", assets_folder);
-			} else {
-				L.d("found bank", bankHeader);
-				final File bank_folder = bankHeader.getRoot();
-
-				final ResourceSpecs resSpec = this.newResourceSpecs();
-				resSpec.setBankFolder(bank_folder);
-				resSpec.setCachingRequired(false);
-				final String bankName = bank_folder.getName();
-				resSpec.setName(bankName);
-
-				final Resource resource = this.newResource(resSpec);
-
-				result.add(resource);
+			final RedBank bank = this.findBank(assets_folder, COLLECT_TANKS);
+			if (bank != null) {
+				result.add(bank);
 				return result;
 			}
 		}
@@ -171,25 +159,47 @@ public class RedResourcesManager implements ResourcesManagerComponent {
 			if (file.isFile()) {
 				continue;
 			}
-			final BankHeader bankHeader = this.findAndLoadBank(file);
-			if (bankHeader == null) {
-				L.e("corrupted bank", file);
-			} else {
-				L.d("found bank", bankHeader);
-				final File bank_folder = bankHeader.getRoot();
-
-				final ResourceSpecs resSpec = this.newResourceSpecs();
-				resSpec.setBankFolder(bank_folder);
-				resSpec.setCachingRequired(false);
-				final String bankName = bank_folder.getName();
-				resSpec.setName(bankName);
-				final Resource resource = this.newResource(resSpec);
-
-				result.add(resource);
+			final RedBank bank = this.findBank(file, COLLECT_TANKS);
+			if (bank != null) {
+				result.add(bank);
 			}
 		}
 
 		return result;
+	}
+
+	private RedBank findBank (final File bankFolder, final boolean collect_tanks) throws IOException {
+		if (!bankFolder.exists()) {
+			L.e("bank not found", bankFolder);
+			return null;
+		}
+
+		final BankHeader bankHeader = this.findAndLoadBankHeader(bankFolder);
+
+		if (bankHeader == null) {
+			return null;
+		}
+
+		L.d("found bank", bankHeader);
+
+		final ID bank_name = Names.newID(bankHeader.getName());
+		final RedBank bank = new RedBank(bank_name);
+		if (!collect_tanks) {
+			return bank;
+		}
+
+		final File bank_root = bankHeader.getRoot();
+		final ChildrenList tanks = bank_root.listSubFolders();
+		for (final File tank : tanks) {
+			final ResourceSpecs resSpec = this.newResourceSpecs();
+			resSpec.setFolder(tank);
+			resSpec.setCachingRequired(false);
+			final String tankName = tank.getName();
+			resSpec.setName(tankName);
+			final Resource resource = this.newResource(resSpec);
+			bank.addResource(resource);
+		}
+		return bank;
 	}
 
 	@Override
@@ -202,7 +212,7 @@ public class RedResourcesManager implements ResourcesManagerComponent {
 		return new RedResourceSpecs();
 	}
 
-	private BankHeader findAndLoadBank (final File bank_folder) throws IOException {
+	private BankHeader findAndLoadBankHeader (final File bank_folder) throws IOException {
 		if (!(bank_folder.exists() && bank_folder.isFolder())) {
 			return null;
 		}
@@ -251,22 +261,22 @@ public class RedResourcesManager implements ResourcesManagerComponent {
 
 	}
 
-	public void tryToLoadConfigFile (final File applicationHome) throws IOException {
-		ResourcesConfigFile cfg = this.loadConfigFile(applicationHome);
-		if (cfg == null) {
-			cfg = this.tryToMakeConfigFile(applicationHome);
-		}
-
-		if (cfg == null) {
-			return;
-		}
-		for (final AssetsFolder assets : cfg.local_assets) {
-			final String java_path = assets.java_path;
-			final File assets_folder = LocalFileSystem.newFile(java_path);
-			this.findAndInstallResources(assets_folder);
-		}
-
-	}
+// public void tryToLoadConfigFile (final File applicationHome) throws IOException {
+// ResourcesConfigFile cfg = this.loadConfigFile(applicationHome);
+// if (cfg == null) {
+// cfg = this.tryToMakeConfigFile(applicationHome);
+// }
+//
+// if (cfg == null) {
+// return;
+// }
+// for (final AssetsFolder assets : cfg.local_assets) {
+// final String java_path = assets.java_path;
+// final File assets_folder = LocalFileSystem.newFile(java_path);
+// this.findAndInstallResources(assets_folder);
+// }
+//
+// }
 
 	// File dev_assets_home =
 	// LocalFileSystem.newFile(TintoAssetsConfig.PACKED_ASSETS_HOME);
@@ -302,48 +312,56 @@ public class RedResourcesManager implements ResourcesManagerComponent {
 // }
 //
 
-	@Override
-	public void updateAll (ResourceRebuildIndexListener listener) {
-		if (listener == null) {
-			listener = ResourceRebuildIndexListener.DEFAULT;
-		}
-		for (final Resource res : this.resources.values()) {
-			res.rebuildIndex(listener);
-		}
-	}
+// @Override
+// public void updateAll (ResourceRebuildIndexListener listener) {
+// if (listener == null) {
+// listener = ResourceRebuildIndexListener.DEFAULT;
+// }
+// for (final Resource res : this.resources.values()) {
+// res.rebuildIndex(listener);
+// }
+// }
 
-	public void installRemoteBank (final String bankName, final String bankUrl, final File assets_cache_folder)
+	public ResourcesGroup installRemoteBank (final HttpURL bankUrl, final File assets_cache_folder, final Collection<String> tanks)
 		throws IOException {
-		Debug.checkNull("bankName", bankName);
 		Debug.checkNull("bankUrl", bankUrl);
-
-		assets_cache_folder.makeFolder();
+		Debug.checkNull("tanks", tanks);
 
 		final HttpFileSystemSpecs specs = Http.newHttpFileSystemSpecs();
-		final String urlString = bankUrl;
-		final HttpURL url = Http.newURL(urlString);
+		final HttpURL url = bankUrl;
 		specs.setRootUrl(url);
 		specs.setCacheSize(200);
 		final HttpFileSystem fs = Http.newHttpFileSystem(specs);
 		final File httpRemote = fs.ROOT();
-// httpRemote.listDirectChildren().print(bankName);
+		final RedBank bank = this.findBank(httpRemote, !COLLECT_TANKS);
+		if (bank == null) {
+			throw new Error("Bank not found at " + httpRemote);
+		}
+		final File bank_cache_folder = assets_cache_folder.child(bank.getName() + "");
+		for (final String tank : tanks) {
+			final ResourceSpecs resSpec = this.newResourceSpecs();
+			final File tankFolder = httpRemote.child(tank);
+			resSpec.setFolder(tankFolder);
+			resSpec.setCachingRequired(true);
 
-		final ResourceSpecs resSpec = this.newResourceSpecs();
-		resSpec.setBankFolder(httpRemote);
-		resSpec.setCachingRequired(true);
-		resSpec.setCacheFolder(assets_cache_folder.child(bankName));
-		resSpec.setName(bankName);
+			final File tankCache = bank_cache_folder.child(tank);
+			tankCache.makeFolder();
+			resSpec.setCacheFolder(tankCache);
+			resSpec.setName(tank);
 
-		final Resource resource = this.newResource(resSpec);
+			final Resource resource = this.newResource(resSpec);
 
-		this.installResource(resource);
+			bank.addResource(resource);
 
+		}
+		this.installBank(bank);
+		return bank;
 	}
 
-	@Override
-	public Resource getResource (final String name) {
-		return this.resources.get(name);
-	}
+// @Override
+// public Resource getResource (final String name) {
+// return this.resources.get(name);
+// }
 
 	@Override
 	public void printAllResources () {
@@ -353,10 +371,14 @@ public class RedResourcesManager implements ResourcesManagerComponent {
 	@Override
 	public void printAllIndexes () {
 		for (int i = 0; i < this.resources.size(); i++) {
-			final Resource resouce = this.resources.getValueAt(i);
-			L.d("index of ", resouce);
-			resouce.printIndex();
+			this.resources.getValueAt(i).printAllIndexes();
+
 		}
+	}
+
+	@Override
+	public ResourcesGroup getResourcesGroup (final ID name) {
+		return this.resources.get(name);
 	}
 
 //

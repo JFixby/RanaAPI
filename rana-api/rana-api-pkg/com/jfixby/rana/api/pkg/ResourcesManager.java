@@ -4,6 +4,7 @@ package com.jfixby.rana.api.pkg;
 import java.io.IOException;
 
 import com.jfixby.cmns.api.ComponentInstaller;
+import com.jfixby.cmns.api.assets.ID;
 import com.jfixby.cmns.api.collections.Collection;
 import com.jfixby.rana.api.asset.Asset;
 
@@ -32,9 +33,9 @@ public class ResourcesManager {
 		return invoke().findPackages(search_params);
 	}
 
-	public static void updateAll (final ResourceRebuildIndexListener listener) {
-		invoke().updateAll(listener);
-	}
+// public static void updateAll (final ResourceRebuildIndexListener listener) {
+// invoke().updateAll(listener);
+// }
 
 	public static void printAllPackages () {
 		invoke().printAllPackages();
@@ -68,9 +69,9 @@ public class ResourcesManager {
 		return invoke().newResource(specs);
 	}
 
-	public static Resource getResource (final String name) {
-		return invoke().getResource(name);
-	}
+// public static Resource getResource (final String name) {
+// return invoke().getResource(name);
+// }
 
 	public static void printAllResources () {
 		invoke().printAllResources();
@@ -78,6 +79,10 @@ public class ResourcesManager {
 
 	public static void printAllIndexes () {
 		invoke().printAllIndexes();
+	}
+
+	public static ResourcesGroup getResourcesGroup (final ID name) {
+		return invoke().getResourcesGroup(name);
 	}
 
 }

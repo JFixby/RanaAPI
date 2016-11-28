@@ -35,7 +35,7 @@ public class RedResource implements Resource {
 
 	RedResource (final ResourceSpecs specs) throws IOException {
 
-		final File bank_folder = specs.getBankFolder();
+		final File bank_folder = specs.getFolder();
 		this.caching_required = specs.isChachingRequired();
 		this.name = Debug.checkNull("name", specs.getName());
 		if (this.caching_required) {
@@ -68,6 +68,7 @@ public class RedResource implements Resource {
 
 	@Override
 	public void rebuildIndex (final ResourceRebuildIndexListener listener) {
+		L.d("rebuilding index", this);
 		this.index.reset();
 // this.indexNeverTouched = false;
 		if (this.cache == null) {

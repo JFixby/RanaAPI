@@ -5,9 +5,9 @@ import com.jfixby.cmns.api.file.File;
 
 public interface ResourceSpecs {
 
-	File getBankFolder ();
+	File getFolder ();
 
-	void setBankFolder (File bank);
+	void setFolder (File bank);
 
 	boolean isChachingRequired ();
 

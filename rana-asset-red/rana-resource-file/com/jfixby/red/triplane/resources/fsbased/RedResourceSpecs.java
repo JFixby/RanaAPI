@@ -12,12 +12,12 @@ public class RedResourceSpecs implements ResourceSpecs {
 	private String name;
 
 	@Override
-	public File getBankFolder () {
+	public File getFolder () {
 		return this.bank;
 	}
 
 	@Override
-	public void setBankFolder (final File bank) {
+	public void setFolder (final File bank) {
 		this.bank = bank;
 	}
 
