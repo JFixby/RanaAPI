@@ -2,12 +2,13 @@
 package com.jfixby.rana.api.pkg.fs;
 
 import java.io.Serializable;
+import java.util.LinkedHashMap;
 import java.util.Vector;
 
 public class PackageDescriptor implements Serializable {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 940908719512054127L;
 
@@ -24,6 +25,7 @@ public class PackageDescriptor implements Serializable {
 	public String root_file_name;
 	public Vector<String> packed_assets = new Vector<String>();
 	public Vector<String> package_dependencies = new Vector<String>();
+	public LinkedHashMap<String, String> package_parameters = null;
 
 	public long timestamp () {
 		return Long.parseLong(this.timestamp);

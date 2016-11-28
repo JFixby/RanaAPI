@@ -20,23 +20,25 @@ import com.jfixby.rana.api.pkg.fs.PackageDescriptor;
 public class IndexRebuilder {
 
 	public static void rebuild (final IndexRebuilderParams rebuilderParams) throws IOException {
-		final File bankFolder = rebuilderParams.getBankFolder();
-		Debug.checkNull("bankFolder", bankFolder);
-		Debug.checkTrue("bankFolder is folder", bankFolder.isFolder());
-		if (!(bankFolder.isFolder() && bankFolder.child(BankHeaderInfo.FILE_NAME).exists())) {
-			Err.reportError("is not bank: " + bankFolder + " bank header is missing: " + BankHeaderInfo.FILE_NAME);
+		final File target = rebuilderParams.getBankFolder();
+		L.d("target", target + " " + target.isFolder());
+		Debug.checkNull("target", target);
+		Debug.checkTrue("target not found", target.exists());
+		Debug.checkTrue("target is folder", target.isFolder());
+		if (!(target.isFolder() && target.child(BankHeaderInfo.FILE_NAME).exists())) {
+			Err.reportError("is not bank: " + target + " bank header is missing: " + BankHeaderInfo.FILE_NAME);
 		}
-		L.d("bank folder", bankFolder);
 
 		final Collection<String> tanks = rebuilderParams.listTanks();
 		for (final String tankName : tanks) {
-			final File tankFolder = bankFolder.child(tankName);
+			Debug.checkNull("tankName", tankName);
+			final File tankFolder = target.child(tankName);
 			L.d("   indexing", tankName);
+			indexTank(tankFolder);
 		}
 	}
 
 	private static void indexTank (final File tank) throws IOException {
-		final File headerFile = tank.child(BankHeaderInfo.FILE_NAME);
 		final File indexFile = tank.child(BankIndex.FILE_NAME);
 		final File indexDebugFile = tank.child(BankIndex.FILE_NAME_DEBUG);
 		final BankIndex index = new BankIndex();

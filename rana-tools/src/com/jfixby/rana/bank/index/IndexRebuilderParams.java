@@ -29,4 +29,8 @@ public class IndexRebuilderParams {
 		return this.tanks;
 	}
 
+	public void addTanksToIndex (final Collection<String> tanksList) {
+		this.tanks.addAll(tanksList);
+	}
+
 }
