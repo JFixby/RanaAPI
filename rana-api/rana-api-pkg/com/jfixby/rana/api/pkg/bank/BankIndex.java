@@ -18,9 +18,6 @@ import com.jfixby.rana.api.pkg.fs.PackageDescriptor;
 
 public class BankIndex implements Serializable {
 
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = -1093587103868366257L;
 	public static final String FILE_NAME = "index.r3-bank";
 	public static final String FILE_NAME_DEBUG = "index.r3-bank.json";

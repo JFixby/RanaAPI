@@ -56,10 +56,20 @@ public class RedResource implements Resource {
 		return this.name;
 	}
 
+// boolean indexNeverTouched = true;
+
+	@Override
+	public PackageSearchResult findPackages (final PackageSearchParameters search_params) {
+// if (this.indexNeverTouched) {
+// this.rebuildIndex(null);
+// }
+		return this.index.findPackages(search_params);
+	}
+
 	@Override
 	public void rebuildIndex (final ResourceRebuildIndexListener listener) {
 		this.index.reset();
-
+// this.indexNeverTouched = false;
 		if (this.cache == null) {
 			this.rebuildIndexLocal(listener, this.bank_folder);
 			return;
@@ -81,7 +91,7 @@ public class RedResource implements Resource {
 			}
 
 		} catch (final IOException e) {
-// e.printStackTrace();
+			e.printStackTrace();
 			this.rebuildIndexLocal(listener, this.cache);
 			listener.onError(e);
 			return;
@@ -147,11 +157,6 @@ public class RedResource implements Resource {
 
 	private void index (final PackageDescriptor descriptor, final File package_folder) throws IOException {
 		this.index.add(descriptor, package_folder);
-	}
-
-	@Override
-	public PackageSearchResult findPackages (final PackageSearchParameters search_params) {
-		return this.index.findPackages(search_params);
 	}
 
 	public boolean isCachingRequired () {
