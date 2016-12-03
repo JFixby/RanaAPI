@@ -335,7 +335,7 @@ public class RedResourcesManager implements ResourcesManagerComponent {
 		final File httpRemote = fs.ROOT();
 		final RedBank bank = this.findBank(httpRemote, !COLLECT_TANKS);
 		if (bank == null) {
-			throw new Error("Bank not found at " + httpRemote);
+			Err.reportError("Bank not found at " + httpRemote);
 		}
 		final File bank_cache_folder = assets_cache_folder.child(bank.getName() + "");
 		for (final String tank : tanks) {

@@ -110,7 +110,7 @@ public class RedAssetsManager implements AssetsManagerComponent {
 		Debug.checkNull("consumer", consumer);
 		final RedAssetHandler asset = this.assets.get(asset_id);
 		if (asset == null) {
-			throw new Error("Asset " + asset_id + " is not registred here");
+			Err.reportError("Asset " + asset_id + " is not registred here");
 		}
 
 		final AssetUser user = new AssetUser(consumer);
@@ -119,7 +119,7 @@ public class RedAssetsManager implements AssetsManagerComponent {
 		if (succ_a != succ_u) {
 			this.asset_users.print("on releaseAsset");
 			this.user_assets.print();
-			throw new Error("Assets usage register is corrupted");
+			Err.reportError("Assets usage register is corrupted");
 		}
 		// asset_users.print("on releaseAsset");
 
@@ -141,7 +141,7 @@ public class RedAssetsManager implements AssetsManagerComponent {
 			if (asset_info == null) {
 				this.asset_users.print("on releaseAllAssets");
 				this.user_assets.print();
-				throw new Error("Assets usage register is corrupted. Asset <" + asset_id + "> not found.");
+				Err.reportError("Assets usage register is corrupted. Asset <" + asset_id + "> not found.");
 			}
 			this.releaseAsset(asset_info, consumer);
 		}
@@ -162,7 +162,7 @@ public class RedAssetsManager implements AssetsManagerComponent {
 		for (final ID dependency : dependencies) {
 
 			final AssetHandler asset_entry = AssetsManager.obtainAsset(dependency, this.stub_consumer);
-			Err.reportWarning(
+			L.e(
 				"AssetsConsumer leak public void autoResolveAssets (final Collection<ID> dependencies, final PackageReaderListener listener)");
 
 			if (asset_entry != null) {
@@ -213,7 +213,7 @@ public class RedAssetsManager implements AssetsManagerComponent {
 		if (package_loaders.isEmpty()) {
 			ResourcesManager.printAllPackageReaders();
 			L.e("Failed to read package", package_handler);
-			throw new Error("No package reader for " + format);
+			Err.reportError("No package reader for " + format);
 			//
 		}
 
@@ -236,8 +236,7 @@ public class RedAssetsManager implements AssetsManagerComponent {
 		Debug.checkNull("PackageReaderListener", listener);
 
 		final AssetHandler asset_entry = AssetsManager.obtainAsset(dependency, this.stub_consumer);
-		Err.reportWarning(
-			"AssetsConsumer leak public boolean autoResolveAsset (final ID dependency, final PackageReaderListener listener)");
+		L.e("AssetsConsumer leak public boolean autoResolveAsset (final ID dependency, final PackageReaderListener listener)");
 
 		if (asset_entry != null) {
 			AssetsManager.releaseAsset(asset_entry, this.stub_consumer);

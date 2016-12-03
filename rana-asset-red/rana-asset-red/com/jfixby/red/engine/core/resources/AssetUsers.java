@@ -5,7 +5,6 @@ import com.jfixby.cmns.api.assets.ID;
 import com.jfixby.cmns.api.collections.Collections;
 import com.jfixby.cmns.api.collections.List;
 import com.jfixby.cmns.api.collections.Map;
-import com.jfixby.cmns.api.err.Err;
 import com.jfixby.cmns.api.log.L;
 import com.jfixby.cmns.api.sys.settings.SystemSettings;
 import com.jfixby.rana.api.asset.AssetsManager;
@@ -53,7 +52,7 @@ public class AssetUsers {
 		if (users.size() == 0) {
 			final boolean reportUnused = SystemSettings.getFlag(AssetsManager.ReportUnusedAssets);
 			if (reportUnused) {
-				Err.reportWarning("Unused asset: " + asset_id);
+				L.e("Unused asset", asset_id);
 			}
 		}
 		return true;

@@ -6,6 +6,7 @@ import java.util.Comparator;
 import com.jfixby.cmns.api.collections.Collection;
 import com.jfixby.cmns.api.collections.Collections;
 import com.jfixby.cmns.api.collections.List;
+import com.jfixby.cmns.api.err.Err;
 import com.jfixby.cmns.api.log.L;
 import com.jfixby.cmns.api.math.IntegerMath;
 import com.jfixby.rana.api.pkg.PackageHandler;
@@ -33,7 +34,7 @@ public class RedPackageSearchResult implements PackageSearchResult {
 	@Override
 	public PackageHandler getBest () {
 		if (this.size() == 0) {
-			throw new Error("PackageSearchResult is empty");
+			Err.reportError("PackageSearchResult is empty");
 		}
 		if (!this.is_sorted) {
 			this.sort(this.default_comparator);

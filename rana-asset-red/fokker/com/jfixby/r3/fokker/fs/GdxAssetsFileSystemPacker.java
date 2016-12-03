@@ -6,6 +6,7 @@ import java.io.IOException;
 import com.jfixby.cmns.api.base64.Base64;
 import com.jfixby.cmns.api.collections.Collections;
 import com.jfixby.cmns.api.collections.List;
+import com.jfixby.cmns.api.err.Err;
 import com.jfixby.cmns.api.file.ChildrenList;
 import com.jfixby.cmns.api.file.File;
 import com.jfixby.cmns.api.java.ByteArray;
@@ -41,7 +42,7 @@ public class GdxAssetsFileSystemPacker {
 				final RelativePath relative = JUtils.newRelativePath(entry_i.path);
 				final File file_i = input.proceed(relative);
 				if (!file_i.exists()) {
-					throw new Error("Index is corrupted: " + file_i);
+					Err.reportError("Index is corrupted: " + file_i);
 				}
 				if (file_i.isFile()) {
 					if (index_file.equals(file_i)) {
