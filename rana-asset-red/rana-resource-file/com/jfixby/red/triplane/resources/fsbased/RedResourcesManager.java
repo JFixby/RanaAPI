@@ -130,6 +130,7 @@ public class RedResourcesManager implements ResourcesManagerComponent {
 		return new PackageFormatImpl(format_name);
 	}
 
+	@Override
 	public Collection<ResourcesGroup> findAndInstallResources (final File assets_folder) throws IOException {
 		final List<ResourcesGroup> resources = this.findBanks(assets_folder);
 		this.installBanks(resources);
@@ -322,6 +323,7 @@ public class RedResourcesManager implements ResourcesManagerComponent {
 // }
 // }
 
+	@Override
 	public ResourcesGroup installRemoteBank (final HttpURL bankUrl, final File assets_cache_folder, final Collection<String> tanks)
 		throws IOException {
 		Debug.checkNull("bankUrl", bankUrl);

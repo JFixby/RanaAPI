@@ -27,7 +27,7 @@ public interface PackageReaderListener {
 
 			if (!auto) {
 				dependencies.print("Missing dependencies");
-				Err.reportError("RedTriplaneFlags." + auto + " flag is false.");
+				Err.reportError("AssetsManagerFlags.AutoresolveDependencies flag is false.");
 			} else {
 
 				for (int i = 0; i < dependencies.size(); i++) {

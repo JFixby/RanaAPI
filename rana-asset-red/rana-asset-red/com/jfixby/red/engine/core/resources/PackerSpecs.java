@@ -1,9 +1,9 @@
+
 package com.jfixby.red.engine.core.resources;
 
 import com.jfixby.cmns.api.assets.ID;
 import com.jfixby.cmns.api.collections.Collection;
 import com.jfixby.cmns.api.collections.Collections;
-import com.jfixby.cmns.api.collections.List;
 import com.jfixby.cmns.api.collections.Set;
 import com.jfixby.cmns.api.file.File;
 
@@ -17,60 +17,64 @@ public class PackerSpecs {
 	String PackageFormat;
 	String Version;
 
-	public File getPackageFolder() {
-		return PackageFolder;
+	public File getPackageFolder () {
+		return this.PackageFolder;
 	}
 
-	public Set<File> getPackedFiles() {
-		return PackedFiles;
+	public Set<File> getPackedFiles () {
+		return this.PackedFiles;
 	}
 
-	public Set<ID> getPackedAssets() {
-		return PackedAssets;
+	public Set<ID> getPackedAssets () {
+		return this.PackedAssets;
 	}
 
-	public Set<ID> getRequiredAssets() {
-		return RequiredAssets;
+	public Set<ID> getRequiredAssets () {
+		return this.RequiredAssets;
 	}
 
-	public String getRootFileName() {
-		return rootFileName;
+	public String getRootFileName () {
+		return this.rootFileName;
 	}
 
-	public void setPackageFolder(File package_folder) {
+	public void setPackageFolder (final File package_folder) {
 		this.PackageFolder = package_folder;
 	}
 
-	public void addPackedFiles(Collection<File> files) {
-		PackedFiles.addAll(files);
+	public void addPackedFiles (final Collection<File> files) {
+		this.PackedFiles.addAll(files);
 	}
 
-	public void setRootFileName(String rootFileName) {
+	public void addPackedFile (final File file) {
+		this.PackedFiles.add(file);
+	}
+
+	public void setRootFileName (final String rootFileName) {
 		this.rootFileName = rootFileName;
 	}
 
-	public void setPackedAssets(List<ID> packed) {
+	public void setPackedAssets (final Collection<ID> packed) {
 		this.PackedAssets.addAll(packed);
 	}
 
-	public void setRequiredAssets(List<ID> required) {
+	public void setRequiredAssets (final Collection<ID> required) {
 		this.RequiredAssets.addAll(required);
 	}
 
-	public String getPackageFormat() {
-		return PackageFormat;
+	public String getPackageFormat () {
+		return this.PackageFormat;
 	}
 
-	public void setPackageFormat(String packageFormat) {
-		PackageFormat = packageFormat;
+	public void setPackageFormat (final String packageFormat) {
+		this.PackageFormat = packageFormat;
 	}
 
-	public String getVersion() {
-		return Version;
+	public String getVersion () {
+		return this.Version;
 	}
 
-	public void setVersion(String version) {
-		Version = version;
+	public void setVersion (final String version) {
+		this.Version = version;
 	}
 
 }

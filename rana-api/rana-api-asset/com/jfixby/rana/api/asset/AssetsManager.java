@@ -18,6 +18,10 @@ public class AssetsManager {
 		componentInstaller.installComponent(component_to_install);
 	}
 
+	public static void installComponent (final String className) {
+		componentInstaller.installComponent(className);
+	}
+
 	public static final AssetsManagerComponent invoke () {
 		return componentInstaller.invokeComponent();
 	}

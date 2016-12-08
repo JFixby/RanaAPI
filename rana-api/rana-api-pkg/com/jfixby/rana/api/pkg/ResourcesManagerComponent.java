@@ -6,6 +6,7 @@ import java.io.IOException;
 import com.jfixby.cmns.api.assets.ID;
 import com.jfixby.cmns.api.collections.Collection;
 import com.jfixby.cmns.api.file.File;
+import com.jfixby.cmns.api.net.http.HttpURL;
 
 public interface ResourcesManagerComponent {
 
@@ -40,5 +41,10 @@ public interface ResourcesManagerComponent {
 	ResourcesGroup getResourcesGroup (ID name);
 
 	void installBanks (Collection<ResourcesGroup> resources);
+
+	Collection<ResourcesGroup> findAndInstallResources (File assets_folder) throws IOException;
+
+	ResourcesGroup installRemoteBank (final HttpURL bankUrl, final File assets_cache_folder, final Collection<String> tanks)
+		throws IOException;
 
 }
