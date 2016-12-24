@@ -3,14 +3,14 @@ package com.jfixby.red.engine.core.resources;
 
 import java.io.IOException;
 
-import com.jfixby.cmns.api.assets.ID;
-import com.jfixby.cmns.api.collections.Collection;
-import com.jfixby.cmns.api.debug.Debug;
-import com.jfixby.cmns.api.file.File;
-import com.jfixby.cmns.api.json.Json;
-import com.jfixby.cmns.api.log.L;
-import com.jfixby.cmns.api.sys.Sys;
 import com.jfixby.rana.api.pkg.fs.PackageDescriptor;
+import com.jfixby.scarabei.api.assets.ID;
+import com.jfixby.scarabei.api.collections.Collection;
+import com.jfixby.scarabei.api.debug.Debug;
+import com.jfixby.scarabei.api.file.File;
+import com.jfixby.scarabei.api.json.Json;
+import com.jfixby.scarabei.api.log.L;
+import com.jfixby.scarabei.api.sys.Sys;
 
 public class PackageUtils {
 	public static void pack (final PackerSpecs specs) throws IOException {

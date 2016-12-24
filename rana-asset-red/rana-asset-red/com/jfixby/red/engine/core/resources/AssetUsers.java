@@ -1,13 +1,13 @@
 
 package com.jfixby.red.engine.core.resources;
 
-import com.jfixby.cmns.api.assets.ID;
-import com.jfixby.cmns.api.collections.Collections;
-import com.jfixby.cmns.api.collections.List;
-import com.jfixby.cmns.api.collections.Map;
-import com.jfixby.cmns.api.log.L;
-import com.jfixby.cmns.api.sys.settings.SystemSettings;
 import com.jfixby.rana.api.asset.AssetsManager;
+import com.jfixby.scarabei.api.assets.ID;
+import com.jfixby.scarabei.api.collections.Collections;
+import com.jfixby.scarabei.api.collections.List;
+import com.jfixby.scarabei.api.collections.Map;
+import com.jfixby.scarabei.api.log.L;
+import com.jfixby.scarabei.api.sys.settings.SystemSettings;
 
 public class AssetUsers {
 

@@ -1,7 +1,7 @@
 package com.jfixby.red.engine.core.resources;
 
-import com.jfixby.cmns.api.debug.Debug;
 import com.jfixby.rana.api.pkg.PackageFormat;
+import com.jfixby.scarabei.api.debug.Debug;
 
 public class PackageFormatImpl implements PackageFormat {
 	String format_name;

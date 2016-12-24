@@ -3,13 +3,13 @@ package com.jfixby.rana.api.pkg;
 
 import java.io.IOException;
 
-import com.jfixby.cmns.api.assets.ID;
-import com.jfixby.cmns.api.collections.Collection;
-import com.jfixby.cmns.api.err.Err;
-import com.jfixby.cmns.api.sys.settings.SystemSettings;
 import com.jfixby.rana.api.asset.AssetsManager;
 import com.jfixby.rana.api.asset.AssetsManagerFlags;
 import com.jfixby.rana.api.asset.SealedAssetsContainer;
+import com.jfixby.scarabei.api.assets.ID;
+import com.jfixby.scarabei.api.collections.Collection;
+import com.jfixby.scarabei.api.err.Err;
+import com.jfixby.scarabei.api.sys.settings.SystemSettings;
 
 public interface PackageReaderListener {
 

@@ -3,10 +3,10 @@ package com.jfixby.rana.api.pkg;
 
 import java.io.IOException;
 
-import com.jfixby.cmns.api.ComponentInstaller;
-import com.jfixby.cmns.api.assets.ID;
-import com.jfixby.cmns.api.collections.Collection;
 import com.jfixby.rana.api.asset.Asset;
+import com.jfixby.scarabei.api.ComponentInstaller;
+import com.jfixby.scarabei.api.assets.ID;
+import com.jfixby.scarabei.api.collections.Collection;
 
 public class ResourcesManager {
 

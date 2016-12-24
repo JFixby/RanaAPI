@@ -1,10 +1,10 @@
 
 package com.jfixby.rana.api.asset;
 
-import com.jfixby.cmns.api.ComponentInstaller;
-import com.jfixby.cmns.api.assets.ID;
-import com.jfixby.cmns.api.collections.Collection;
 import com.jfixby.rana.api.pkg.PackageReaderListener;
+import com.jfixby.scarabei.api.ComponentInstaller;
+import com.jfixby.scarabei.api.assets.ID;
+import com.jfixby.scarabei.api.collections.Collection;
 
 public class AssetsManager {
 

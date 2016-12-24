@@ -2,7 +2,7 @@ package com.jfixby.rana.api.pkg;
 
 import java.util.Comparator;
 
-import com.jfixby.cmns.api.collections.Collection;
+import com.jfixby.scarabei.api.collections.Collection;
 
 public interface PackageSearchResult {
 

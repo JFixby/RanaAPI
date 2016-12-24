@@ -3,16 +3,16 @@ package com.jfixby.r3.fokker.fs;
 
 import java.io.IOException;
 
-import com.jfixby.cmns.api.base64.Base64;
-import com.jfixby.cmns.api.collections.Collections;
-import com.jfixby.cmns.api.collections.List;
-import com.jfixby.cmns.api.err.Err;
-import com.jfixby.cmns.api.file.ChildrenList;
-import com.jfixby.cmns.api.file.File;
-import com.jfixby.cmns.api.java.ByteArray;
-import com.jfixby.cmns.api.util.JUtils;
-import com.jfixby.cmns.api.util.path.RelativePath;
 import com.jfixby.rana.api.pkg.fs.PackageDescriptor;
+import com.jfixby.scarabei.api.base64.Base64;
+import com.jfixby.scarabei.api.collections.Collections;
+import com.jfixby.scarabei.api.collections.List;
+import com.jfixby.scarabei.api.err.Err;
+import com.jfixby.scarabei.api.file.ChildrenList;
+import com.jfixby.scarabei.api.file.File;
+import com.jfixby.scarabei.api.java.ByteArray;
+import com.jfixby.scarabei.api.util.JUtils;
+import com.jfixby.scarabei.api.util.path.RelativePath;
 
 public class GdxAssetsFileSystemPacker {
 

@@ -4,8 +4,8 @@ package com.jfixby.r3.fokker.fs;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import com.jfixby.cmns.api.collections.Collections;
-import com.jfixby.cmns.api.util.path.RelativePath;
+import com.jfixby.scarabei.api.collections.Collections;
+import com.jfixby.scarabei.api.util.path.RelativePath;
 
 public class GdxAssetsFileSystemIndex implements Serializable {
 

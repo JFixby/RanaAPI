@@ -1,11 +1,11 @@
 
 package com.jfixby.red.engine.core.resources;
 
-import com.jfixby.cmns.api.assets.ID;
-import com.jfixby.cmns.api.collections.Collection;
-import com.jfixby.cmns.api.collections.Collections;
-import com.jfixby.cmns.api.collections.Set;
-import com.jfixby.cmns.api.file.File;
+import com.jfixby.scarabei.api.assets.ID;
+import com.jfixby.scarabei.api.collections.Collection;
+import com.jfixby.scarabei.api.collections.Collections;
+import com.jfixby.scarabei.api.collections.Set;
+import com.jfixby.scarabei.api.file.File;
 
 public class PackerSpecs {
 

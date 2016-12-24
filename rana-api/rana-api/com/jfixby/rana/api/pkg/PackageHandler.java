@@ -1,9 +1,9 @@
 
 package com.jfixby.rana.api.pkg;
 
-import com.jfixby.cmns.api.assets.ID;
-import com.jfixby.cmns.api.collections.Collection;
 import com.jfixby.rana.api.asset.SealedAssetsContainer;
+import com.jfixby.scarabei.api.assets.ID;
+import com.jfixby.scarabei.api.collections.Collection;
 
 public interface PackageHandler {
 

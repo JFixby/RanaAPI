@@ -1,17 +1,17 @@
 
 package com.jfixby.red.triplane.resources.fsbased;
 
-import com.jfixby.cmns.api.assets.ID;
-import com.jfixby.cmns.api.collections.Collection;
-import com.jfixby.cmns.api.collections.Collections;
-import com.jfixby.cmns.api.collections.Map;
-import com.jfixby.cmns.api.debug.Debug;
-import com.jfixby.cmns.api.err.Err;
 import com.jfixby.rana.api.asset.Asset;
 import com.jfixby.rana.api.asset.AssetsContainer;
 import com.jfixby.rana.api.asset.SealedAssetsContainer;
 import com.jfixby.rana.api.pkg.PackageReader;
 import com.jfixby.rana.api.pkg.PackageReaderListener;
+import com.jfixby.scarabei.api.assets.ID;
+import com.jfixby.scarabei.api.collections.Collection;
+import com.jfixby.scarabei.api.collections.Collections;
+import com.jfixby.scarabei.api.collections.Map;
+import com.jfixby.scarabei.api.debug.Debug;
+import com.jfixby.scarabei.api.err.Err;
 
 public class RedSealedContainer implements SealedAssetsContainer, AssetsContainer {
 

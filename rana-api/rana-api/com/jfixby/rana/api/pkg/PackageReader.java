@@ -3,7 +3,7 @@ package com.jfixby.rana.api.pkg;
 
 import java.io.IOException;
 
-import com.jfixby.cmns.api.collections.Collection;
+import com.jfixby.scarabei.api.collections.Collection;
 
 public interface PackageReader {
 

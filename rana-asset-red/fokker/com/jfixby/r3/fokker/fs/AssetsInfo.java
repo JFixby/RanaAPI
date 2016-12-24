@@ -4,7 +4,7 @@ package com.jfixby.r3.fokker.fs;
 import java.io.Serializable;
 import java.util.Date;
 
-import com.jfixby.cmns.api.log.L;
+import com.jfixby.scarabei.api.log.L;
 
 public class AssetsInfo implements Serializable {
 

@@ -5,16 +5,16 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.LinkedHashMap;
 
-import com.jfixby.cmns.api.io.GZipInputStream;
-import com.jfixby.cmns.api.io.GZipOutputStream;
-import com.jfixby.cmns.api.io.IO;
-import com.jfixby.cmns.api.io.InputStream;
-import com.jfixby.cmns.api.io.OutputStream;
-import com.jfixby.cmns.api.java.ByteArray;
-import com.jfixby.cmns.api.json.Json;
-import com.jfixby.cmns.api.json.JsonString;
-import com.jfixby.cmns.api.util.JUtils;
 import com.jfixby.rana.api.pkg.fs.PackageDescriptor;
+import com.jfixby.scarabei.api.io.GZipInputStream;
+import com.jfixby.scarabei.api.io.GZipOutputStream;
+import com.jfixby.scarabei.api.io.IO;
+import com.jfixby.scarabei.api.io.InputStream;
+import com.jfixby.scarabei.api.io.OutputStream;
+import com.jfixby.scarabei.api.java.ByteArray;
+import com.jfixby.scarabei.api.json.Json;
+import com.jfixby.scarabei.api.json.JsonString;
+import com.jfixby.scarabei.api.util.JUtils;
 
 public class BankIndex implements Serializable {
 

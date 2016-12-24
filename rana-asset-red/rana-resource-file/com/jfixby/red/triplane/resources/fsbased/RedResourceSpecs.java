@@ -1,8 +1,8 @@
 
 package com.jfixby.red.triplane.resources.fsbased;
 
-import com.jfixby.cmns.api.file.File;
 import com.jfixby.rana.api.pkg.ResourceSpecs;
+import com.jfixby.scarabei.api.file.File;
 
 public class RedResourceSpecs implements ResourceSpecs {
 

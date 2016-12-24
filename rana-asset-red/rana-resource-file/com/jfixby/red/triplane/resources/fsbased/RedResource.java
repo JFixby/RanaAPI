@@ -3,15 +3,6 @@ package com.jfixby.red.triplane.resources.fsbased;
 
 import java.io.IOException;
 
-import com.jfixby.cmns.api.debug.Debug;
-import com.jfixby.cmns.api.err.Err;
-import com.jfixby.cmns.api.file.ChildrenList;
-import com.jfixby.cmns.api.file.File;
-import com.jfixby.cmns.api.file.FileInputStream;
-import com.jfixby.cmns.api.file.FileSystem;
-import com.jfixby.cmns.api.log.L;
-import com.jfixby.cmns.api.sys.settings.ExecutionMode;
-import com.jfixby.cmns.api.sys.settings.SystemSettings;
 import com.jfixby.rana.api.pkg.PackageSearchParameters;
 import com.jfixby.rana.api.pkg.PackageSearchResult;
 import com.jfixby.rana.api.pkg.Resource;
@@ -19,6 +10,15 @@ import com.jfixby.rana.api.pkg.ResourceRebuildIndexListener;
 import com.jfixby.rana.api.pkg.ResourceSpecs;
 import com.jfixby.rana.api.pkg.bank.BankIndex;
 import com.jfixby.rana.api.pkg.fs.PackageDescriptor;
+import com.jfixby.scarabei.api.debug.Debug;
+import com.jfixby.scarabei.api.err.Err;
+import com.jfixby.scarabei.api.file.ChildrenList;
+import com.jfixby.scarabei.api.file.File;
+import com.jfixby.scarabei.api.file.FileInputStream;
+import com.jfixby.scarabei.api.file.FileSystem;
+import com.jfixby.scarabei.api.log.L;
+import com.jfixby.scarabei.api.sys.settings.ExecutionMode;
+import com.jfixby.scarabei.api.sys.settings.SystemSettings;
 
 public class RedResource implements Resource {
 

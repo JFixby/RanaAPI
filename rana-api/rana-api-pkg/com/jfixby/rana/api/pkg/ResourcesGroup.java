@@ -1,7 +1,7 @@
 
 package com.jfixby.rana.api.pkg;
 
-import com.jfixby.cmns.api.assets.ID;
+import com.jfixby.scarabei.api.assets.ID;
 
 public interface ResourcesGroup {
 

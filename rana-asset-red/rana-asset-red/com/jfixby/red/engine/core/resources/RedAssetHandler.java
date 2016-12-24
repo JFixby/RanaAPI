@@ -1,10 +1,10 @@
 
 package com.jfixby.red.engine.core.resources;
 
-import com.jfixby.cmns.api.assets.ID;
 import com.jfixby.rana.api.asset.Asset;
 import com.jfixby.rana.api.asset.AssetHandler;
 import com.jfixby.rana.api.asset.SealedAssetsContainer;
+import com.jfixby.scarabei.api.assets.ID;
 
 public class RedAssetHandler implements AssetHandler {
 

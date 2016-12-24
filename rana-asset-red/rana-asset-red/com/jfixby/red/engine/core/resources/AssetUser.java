@@ -1,8 +1,8 @@
 
 package com.jfixby.red.engine.core.resources;
 
-import com.jfixby.cmns.api.debug.Debug;
 import com.jfixby.rana.api.asset.AssetsConsumer;
+import com.jfixby.scarabei.api.debug.Debug;
 
 public class AssetUser {
 

@@ -1,9 +1,9 @@
 
 package com.jfixby.red.triplane.resources.fsbased;
 
-import com.jfixby.cmns.api.debug.Debug;
-import com.jfixby.cmns.api.file.File;
 import com.jfixby.rana.api.pkg.bank.BankHeaderInfo;
+import com.jfixby.scarabei.api.debug.Debug;
+import com.jfixby.scarabei.api.file.File;
 
 public class BankHeader {
 
