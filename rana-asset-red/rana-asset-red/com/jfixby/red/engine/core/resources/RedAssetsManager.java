@@ -23,6 +23,8 @@ import com.jfixby.scarabei.api.debug.Debug;
 import com.jfixby.scarabei.api.debug.DebugTimer;
 import com.jfixby.scarabei.api.err.Err;
 import com.jfixby.scarabei.api.log.L;
+import com.jfixby.scarabei.api.sys.settings.ExecutionMode;
+import com.jfixby.scarabei.api.sys.settings.SystemSettings;
 
 public class RedAssetsManager implements AssetsManagerComponent {
 
@@ -193,9 +195,13 @@ public class RedAssetsManager implements AssetsManagerComponent {
 		if (search_result.isEmpty()) {
 			final String msg = "Asset [" + dependency + "] was not found in any package.";
 
-			ResourcesManager.printAllPackages();
+			if (SystemSettings.executionModeCovers(ExecutionMode.EARLY_DEVELOPMENT)) {
+				ResourcesManager.printAllPackages();
+			}
 			L.d(msg);
-			ResourcesManager.printAllIndexes();
+			if (SystemSettings.executionModeCovers(ExecutionMode.EARLY_DEVELOPMENT)) {
+				ResourcesManager.printAllIndexes();
+			}
 			Err.reportError(msg);
 			//
 		}
