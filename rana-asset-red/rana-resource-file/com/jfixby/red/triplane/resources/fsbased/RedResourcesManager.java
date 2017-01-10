@@ -330,9 +330,11 @@ public class RedResourcesManager implements ResourcesManagerComponent {
 		Debug.checkNull("tanks", tanks);
 
 		final HttpFileSystemSpecs specs = Http.newHttpFileSystemSpecs();
+
 		final HttpURL url = bankUrl;
 		specs.setRootUrl(url);
 		specs.setCacheSize(200);
+
 		final HttpFileSystem fs = Http.newHttpFileSystem(specs);
 		final File httpRemote = fs.ROOT();
 		final RedBank bank = this.findBank(httpRemote, !COLLECT_TANKS);
