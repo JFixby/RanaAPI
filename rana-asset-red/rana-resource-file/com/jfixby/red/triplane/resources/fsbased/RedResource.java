@@ -12,7 +12,7 @@ import com.jfixby.rana.api.pkg.bank.BankIndex;
 import com.jfixby.rana.api.pkg.fs.PackageDescriptor;
 import com.jfixby.scarabei.api.debug.Debug;
 import com.jfixby.scarabei.api.err.Err;
-import com.jfixby.scarabei.api.file.ChildrenList;
+import com.jfixby.scarabei.api.file.FilesList;
 import com.jfixby.scarabei.api.file.File;
 import com.jfixby.scarabei.api.file.FileInputStream;
 import com.jfixby.scarabei.api.file.FileSystem;
@@ -101,7 +101,7 @@ public class RedResource implements Resource {
 
 	private void rebuildIndexLocal (final ResourceRebuildIndexListener listener, final File folder) {
 		try {
-			final ChildrenList list = folder.listDirectChildren();
+			final FilesList list = folder.listDirectChildren();
 			for (int i = 0; i < list.size(); i++) {
 				final File file_i = list.getElementAt(i);
 				if (file_i.isFolder()) {

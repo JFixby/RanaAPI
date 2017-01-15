@@ -22,7 +22,7 @@ import com.jfixby.scarabei.api.collections.List;
 import com.jfixby.scarabei.api.collections.Map;
 import com.jfixby.scarabei.api.debug.Debug;
 import com.jfixby.scarabei.api.err.Err;
-import com.jfixby.scarabei.api.file.ChildrenList;
+import com.jfixby.scarabei.api.file.FilesList;
 import com.jfixby.scarabei.api.file.File;
 import com.jfixby.scarabei.api.json.Json;
 import com.jfixby.scarabei.api.json.JsonString;
@@ -190,7 +190,7 @@ public class RedResourcesManager implements ResourcesManagerComponent {
 		}
 
 		final File bank_root = bankHeader.getRoot();
-		final ChildrenList tanks = bank_root.listSubFolders();
+		final FilesList tanks = bank_root.listSubFolders();
 		for (final File tank : tanks) {
 			final ResourceSpecs resSpec = this.newResourceSpecs();
 			resSpec.setFolder(tank);

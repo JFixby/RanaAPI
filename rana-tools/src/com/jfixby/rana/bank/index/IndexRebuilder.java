@@ -9,7 +9,7 @@ import com.jfixby.rana.api.pkg.fs.PackageDescriptor;
 import com.jfixby.scarabei.api.collections.Collection;
 import com.jfixby.scarabei.api.debug.Debug;
 import com.jfixby.scarabei.api.err.Err;
-import com.jfixby.scarabei.api.file.ChildrenList;
+import com.jfixby.scarabei.api.file.FilesList;
 import com.jfixby.scarabei.api.file.File;
 import com.jfixby.scarabei.api.file.FileInputStream;
 import com.jfixby.scarabei.api.file.FileOutputStream;
@@ -42,7 +42,7 @@ public class IndexRebuilder {
 		final File indexFile = tank.child(BankIndex.FILE_NAME);
 		final File indexDebugFile = tank.child(BankIndex.FILE_NAME_DEBUG);
 		final BankIndex index = new BankIndex();
-		final ChildrenList folders = tank.listDirectChildren(file -> {
+		final FilesList folders = tank.listDirectChildren(file -> {
 			try {
 				if (file.isFile()) {
 					return false;

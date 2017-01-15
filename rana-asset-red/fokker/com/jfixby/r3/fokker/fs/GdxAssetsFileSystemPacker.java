@@ -8,7 +8,7 @@ import com.jfixby.scarabei.api.base64.Base64;
 import com.jfixby.scarabei.api.collections.Collections;
 import com.jfixby.scarabei.api.collections.List;
 import com.jfixby.scarabei.api.err.Err;
-import com.jfixby.scarabei.api.file.ChildrenList;
+import com.jfixby.scarabei.api.file.FilesList;
 import com.jfixby.scarabei.api.file.File;
 import com.jfixby.scarabei.api.java.ByteArray;
 import com.jfixby.scarabei.api.util.JUtils;
@@ -67,7 +67,7 @@ public class GdxAssetsFileSystemPacker {
 	}
 
 	private static void fixTextures (final File output) throws IOException {
-		final ChildrenList children = output.listDirectChildren();
+		final FilesList children = output.listDirectChildren();
 		for (int i = 0; i < children.size(); i++) {
 			final File child = children.getElementAt(i);
 			if (child.isFolder()) {
@@ -113,7 +113,7 @@ public class GdxAssetsFileSystemPacker {
 
 		// List<File> children = Collections.filter(root_folder.listChildren(),
 		// file -> !file.getName().startsWith("."));
-		final ChildrenList children = root_folder.listDirectChildren();
+		final FilesList children = root_folder.listDirectChildren();
 		for (int i = 0; i < children.size(); i++) {
 			final File child_file = children.getElementAt(i);
 			final String name = child_file.getName();

@@ -40,6 +40,10 @@ public class UserAssets {
 	}
 
 	public Collection<ID> listAssetsUsedBy (final AssetUser consumer) {
-		return this.reg.get(consumer);
+		final List<ID> result = this.reg.get(consumer);
+		if (result == null) {
+			return Collections.newList();
+		}
+		return result;
 	}
 }
