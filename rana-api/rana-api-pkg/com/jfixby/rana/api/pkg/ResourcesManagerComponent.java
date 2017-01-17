@@ -44,7 +44,7 @@ public interface ResourcesManagerComponent {
 
 	Collection<ResourcesGroup> findAndInstallResources (File assets_folder) throws IOException;
 
-	ResourcesGroup installRemoteBank (final HttpURL bankUrl, final File assets_cache_folder, final Collection<String> tanks)
+	ResourcesGroup installRemoteBank (final HttpURL bankUrl, final File assets_cache_folder, final Iterable<String> tanks)
 		throws IOException;
 
 }

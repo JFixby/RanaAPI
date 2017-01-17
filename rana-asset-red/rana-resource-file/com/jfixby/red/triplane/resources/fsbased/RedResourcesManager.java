@@ -10,6 +10,7 @@ import com.jfixby.rana.api.pkg.PackageReader;
 import com.jfixby.rana.api.pkg.PackageSearchParameters;
 import com.jfixby.rana.api.pkg.PackageSearchResult;
 import com.jfixby.rana.api.pkg.Resource;
+import com.jfixby.rana.api.pkg.ResourceRebuildIndexListener;
 import com.jfixby.rana.api.pkg.ResourceSpecs;
 import com.jfixby.rana.api.pkg.ResourcesGroup;
 import com.jfixby.rana.api.pkg.ResourcesManagerComponent;
@@ -22,8 +23,8 @@ import com.jfixby.scarabei.api.collections.List;
 import com.jfixby.scarabei.api.collections.Map;
 import com.jfixby.scarabei.api.debug.Debug;
 import com.jfixby.scarabei.api.err.Err;
-import com.jfixby.scarabei.api.file.FilesList;
 import com.jfixby.scarabei.api.file.File;
+import com.jfixby.scarabei.api.file.FilesList;
 import com.jfixby.scarabei.api.json.Json;
 import com.jfixby.scarabei.api.json.JsonString;
 import com.jfixby.scarabei.api.log.L;
@@ -33,6 +34,26 @@ import com.jfixby.scarabei.api.net.http.HttpFileSystemSpecs;
 import com.jfixby.scarabei.api.net.http.HttpURL;
 
 public class RedResourcesManager implements ResourcesManagerComponent {
+
+	public RedResourcesManager (final RedResourcesManagerSpecs specs) {
+
+	}
+
+	void loadAssetsFolder (final File assets_folder, final ResourceRebuildIndexListener listener) throws IOException {
+		if (assets_folder.exists() && assets_folder.isFolder()) {
+			final Collection<ResourcesGroup> locals = this.findAndInstallResources(assets_folder);
+			locals.print("locals");
+			for (final ResourcesGroup local : locals) {
+				local.rebuildAllIndexes(listener);
+			}
+		}
+	}
+
+	void loadRemoteBank (final HttpURL bankURL, final Iterable<String> tanks, final File assets_cache_folder,
+		final ResourceRebuildIndexListener listener) throws IOException {
+		final ResourcesGroup bank = this.installRemoteBank(bankURL, assets_cache_folder, tanks);
+		bank.rebuildAllIndexes(listener);
+	}
 
 	private static final boolean COLLECT_TANKS = true;
 	final Map<ID, ResourcesGroup> resources = Collections.newMap();
@@ -324,7 +345,7 @@ public class RedResourcesManager implements ResourcesManagerComponent {
 // }
 
 	@Override
-	public ResourcesGroup installRemoteBank (final HttpURL bankUrl, final File assets_cache_folder, final Collection<String> tanks)
+	public ResourcesGroup installRemoteBank (final HttpURL bankUrl, final File assets_cache_folder, final Iterable<String> tanks)
 		throws IOException {
 		Debug.checkNull("bankUrl", bankUrl);
 		Debug.checkNull("tanks", tanks);
