@@ -1,6 +1,7 @@
 
 package com.jfixby.red.triplane.resources.fsbased;
 
+import com.jfixby.scarabei.api.collections.Collection;
 import com.jfixby.scarabei.api.collections.Collections;
 import com.jfixby.scarabei.api.collections.Set;
 import com.jfixby.scarabei.api.file.File;
@@ -34,6 +35,10 @@ public class RedResourcesManagerSpecs {
 
 	public void addRemoteBank (final RemoteBankSpecs remote) {
 		this.remotebanks.add(remote);
+	}
+
+	public Collection<RemoteBankSpecs> listRemoteBanks () {
+		return this.remotebanks;
 	}
 
 }

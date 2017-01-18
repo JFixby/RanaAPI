@@ -35,8 +35,23 @@ import com.jfixby.scarabei.api.net.http.HttpURL;
 
 public class RedResourcesManager implements ResourcesManagerComponent {
 
-	public RedResourcesManager (final RedResourcesManagerSpecs specs) {
+	private final File assets_folder;
+	private final File assets_cache_folder;
+	private final List<RemoteBankSettings> remoteBanksToDepoloy = Collections.newList();
+	Map<ID, ResourcesGroup> resources = null;
+	boolean deployed = false;
 
+	public RedResourcesManager (final RedResourcesManagerSpecs specs) {
+		this.deployed = false;
+		this.assets_folder = specs.getAssetFolder();
+		this.assets_cache_folder = specs.getAssetCacheFolder();
+		final Collection<RemoteBankSpecs> remotebanks = specs.listRemoteBanks();
+		for (final RemoteBankSpecs rbank : remotebanks) {
+			final RemoteBankSettings element = new RemoteBankSettings();
+			element.bankURL = Debug.checkNull("remote bank url", rbank.getUrl());
+			element.tanks.addAll(rbank.listTanks());
+			this.remoteBanksToDepoloy.add(element);
+		}
 	}
 
 	void loadAssetsFolder (final File assets_folder, final ResourceRebuildIndexListener listener) throws IOException {
@@ -56,7 +71,6 @@ public class RedResourcesManager implements ResourcesManagerComponent {
 	}
 
 	private static final boolean COLLECT_TANKS = true;
-	final Map<ID, ResourcesGroup> resources = Collections.newMap();
 
 	@Override
 	public PackageSearchParameters newSearchParameters () {
@@ -397,7 +411,6 @@ public class RedResourcesManager implements ResourcesManagerComponent {
 	public void printAllIndexes () {
 		for (int i = 0; i < this.resources.size(); i++) {
 			this.resources.getValueAt(i).printAllIndexes();
-
 		}
 	}
 

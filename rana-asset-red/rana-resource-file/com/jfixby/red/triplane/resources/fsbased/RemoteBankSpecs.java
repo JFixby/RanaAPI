@@ -18,4 +18,12 @@ public class RemoteBankSpecs {
 		this.tanks.addAll(tanks);
 	}
 
+	public Iterable<String> listTanks () {
+		return this.tanks;
+	}
+
+	public HttpURL getUrl () {
+		return this.bankURL;
+	}
+
 }
