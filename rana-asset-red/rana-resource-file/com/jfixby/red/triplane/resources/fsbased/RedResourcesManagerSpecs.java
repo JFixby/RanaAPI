@@ -1,6 +1,7 @@
 
 package com.jfixby.red.triplane.resources.fsbased;
 
+import com.jfixby.rana.api.pkg.ResourceRebuildIndexListener;
 import com.jfixby.scarabei.api.collections.Collection;
 import com.jfixby.scarabei.api.collections.Collections;
 import com.jfixby.scarabei.api.collections.Set;
@@ -39,6 +40,10 @@ public class RedResourcesManagerSpecs {
 
 	public Collection<RemoteBankSpecs> listRemoteBanks () {
 		return this.remotebanks;
+	}
+
+	public ResourceRebuildIndexListener getListener () {
+		return ResourceRebuildIndexListener.DEFAULT;
 	}
 
 }

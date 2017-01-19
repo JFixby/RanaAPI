@@ -89,4 +89,8 @@ public class ResourcesManager {
 		return invoke().getResourcesGroup(name);
 	}
 
+	public static DeployRemoteBanksTask prepareDeployRemoteBanksTask () {
+		return invoke().prepareDeployRemoteBanksTask();
+	}
+
 }

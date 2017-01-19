@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import com.jfixby.rana.api.cfg.AssetsFolder;
 import com.jfixby.rana.api.cfg.ResourcesConfigFile;
+import com.jfixby.rana.api.pkg.DeployRemoteBanksTask;
 import com.jfixby.rana.api.pkg.PackageFormat;
 import com.jfixby.rana.api.pkg.PackageReader;
 import com.jfixby.rana.api.pkg.PackageSearchParameters;
@@ -38,13 +39,21 @@ public class RedResourcesManager implements ResourcesManagerComponent {
 	private final File assets_folder;
 	private final File assets_cache_folder;
 	private final List<RemoteBankSettings> remoteBanksToDepoloy = Collections.newList();
-	Map<ID, ResourcesGroup> resources = null;
+	Map<ID, ResourcesGroup> resources = Collections.newMap();
 	boolean deployed = false;
 
 	public RedResourcesManager (final RedResourcesManagerSpecs specs) {
 		this.deployed = false;
 		this.assets_folder = specs.getAssetFolder();
 		this.assets_cache_folder = specs.getAssetCacheFolder();
+		final ResourceRebuildIndexListener listener = specs.getListener();
+		try {
+			final Collection<ResourcesGroup> locals = this.loadAssetsFolder(this.assets_folder, listener);
+
+		} catch (final IOException e) {
+			e.printStackTrace();
+		}
+
 		final Collection<RemoteBankSpecs> remotebanks = specs.listRemoteBanks();
 		for (final RemoteBankSpecs rbank : remotebanks) {
 			final RemoteBankSettings element = new RemoteBankSettings();
@@ -54,14 +63,17 @@ public class RedResourcesManager implements ResourcesManagerComponent {
 		}
 	}
 
-	void loadAssetsFolder (final File assets_folder, final ResourceRebuildIndexListener listener) throws IOException {
+	Collection<ResourcesGroup> loadAssetsFolder (final File assets_folder, final ResourceRebuildIndexListener listener)
+		throws IOException {
 		if (assets_folder.exists() && assets_folder.isFolder()) {
 			final Collection<ResourcesGroup> locals = this.findAndInstallResources(assets_folder);
 			locals.print("locals");
 			for (final ResourcesGroup local : locals) {
 				local.rebuildAllIndexes(listener);
 			}
+			return locals;
 		}
+		return null;
 	}
 
 	void loadRemoteBank (final HttpURL bankURL, final Iterable<String> tanks, final File assets_cache_folder,
@@ -417,6 +429,19 @@ public class RedResourcesManager implements ResourcesManagerComponent {
 	@Override
 	public ResourcesGroup getResourcesGroup (final ID name) {
 		return this.resources.get(name);
+	}
+
+	@Override
+	public DeployRemoteBanksTask prepareDeployRemoteBanksTask () {
+		return new RedDeployRemoteBanksTask(this);
+	}
+
+	List<RemoteBankSettings> getRemoteBanksToDeploy () {
+		return this.remoteBanksToDepoloy;
+	}
+
+	public File getAssetsCache () {
+		return this.assets_cache_folder;
 	}
 
 //

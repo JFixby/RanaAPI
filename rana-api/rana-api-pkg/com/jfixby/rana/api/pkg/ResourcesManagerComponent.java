@@ -47,4 +47,6 @@ public interface ResourcesManagerComponent {
 	ResourcesGroup installRemoteBank (final HttpURL bankUrl, final File assets_cache_folder, final Iterable<String> tanks)
 		throws IOException;
 
+	DeployRemoteBanksTask prepareDeployRemoteBanksTask ();
+
 }

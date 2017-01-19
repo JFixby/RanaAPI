@@ -181,6 +181,7 @@ public class RedAssetsManager implements AssetsManagerComponent {
 	}
 
 	private boolean resolve (final ID dependency, final boolean print_debug_output, final PackageReaderListener listener) {
+
 		L.d("RESOLVING DEPENDENCY", dependency);
 		final PackageSearchParameters search_params = ResourcesManager.newSearchParameters();
 		search_params.setAssetId(dependency);
