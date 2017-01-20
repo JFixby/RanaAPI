@@ -212,7 +212,7 @@ public class RedAssetsManager implements AssetsManagerComponent {
 
 		final PACKAGE_STATUS package_status = package_handler.getStatus();
 		if (PACKAGE_STATUS.NOT_INSTALLED == package_status) {
-			package_handler.install();
+			package_handler.install(listener);
 		}
 
 		final PackageFormat format = package_handler.getFormat();

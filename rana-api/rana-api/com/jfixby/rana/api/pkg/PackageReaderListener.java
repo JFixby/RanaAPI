@@ -17,7 +17,11 @@ public interface PackageReaderListener {
 
 		@Override
 		public void onError (final IOException e) {
-			e.printStackTrace();
+			Err.reportError(e);
+		}
+
+		@Override
+		public void onFailedToInstall (final IOException e) {
 			Err.reportError(e);
 		}
 
@@ -61,5 +65,7 @@ public interface PackageReaderListener {
 	void onPackageDataDispose (final SealedAssetsContainer data);
 
 	void onPackageDataLoaded (final SealedAssetsContainer data);
+
+	void onFailedToInstall (IOException e);
 
 }

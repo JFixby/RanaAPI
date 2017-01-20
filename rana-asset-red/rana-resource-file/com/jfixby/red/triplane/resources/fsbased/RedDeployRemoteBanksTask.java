@@ -6,6 +6,8 @@ import com.jfixby.rana.api.pkg.ResourceRebuildIndexListener;
 import com.jfixby.scarabei.api.collections.List;
 import com.jfixby.scarabei.api.err.Err;
 import com.jfixby.scarabei.api.file.File;
+import com.jfixby.scarabei.api.log.L;
+import com.jfixby.scarabei.api.sys.Sys;
 import com.jfixby.scarabei.api.taskman.Job;
 import com.jfixby.scarabei.api.taskman.SimpleProgress;
 import com.jfixby.scarabei.api.taskman.TaskManager;
@@ -15,6 +17,7 @@ public class RedDeployRemoteBanksTask implements DeployRemoteBanksTask, Job, Res
 	SimpleProgress progress;
 	private final List<RemoteBankSettings> toDeploy;
 	private final RedResourcesManager redResourcesManager;
+	final ResourceRebuildIndexListener listener = this;
 
 	public RedDeployRemoteBanksTask (final RedResourcesManager redResourcesManager) {
 		this.redResourcesManager = redResourcesManager;
@@ -23,7 +26,7 @@ public class RedDeployRemoteBanksTask implements DeployRemoteBanksTask, Job, Res
 		this.progress.setTotal(this.toDeploy.size());
 	}
 
-	long processed = 0;
+	int actuallyProcessed = 0;
 
 	@Override
 	public TaskProgress getProgress () {
@@ -37,7 +40,7 @@ public class RedDeployRemoteBanksTask implements DeployRemoteBanksTask, Job, Res
 
 	@Override
 	public void doStart () throws Throwable {
-		this.progress.updateProcessed(this.processed);
+		this.progress.updateProcessed(this.actuallyProcessed);
 	}
 
 	@Override
@@ -47,10 +50,17 @@ public class RedDeployRemoteBanksTask implements DeployRemoteBanksTask, Job, Res
 		}
 		final RemoteBankSettings e = this.toDeploy.getElementAt(0);
 		final File cache = this.redResourcesManager.getAssetsCache();
-		this.redResourcesManager.loadRemoteBank(e.bankURL, e.tanks, cache, this);
+		try {
+			this.redResourcesManager.loadRemoteBank(e.bankURL, e.tanks, cache, this.listener);
+		} catch (final Throwable err) {
+			Sys.sleep(1000);
+			this.progress.updateProcessed(-1);
+			L.e(err + "");
+			return;
+		}
 		this.toDeploy.removeElementAt(0);
-		this.processed++;
-		this.progress.updateProcessed(this.processed);
+		this.actuallyProcessed++;
+		this.progress.updateProcessed(this.actuallyProcessed);
 	}
 
 	@Override

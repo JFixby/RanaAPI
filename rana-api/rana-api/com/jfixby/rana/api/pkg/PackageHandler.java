@@ -21,7 +21,7 @@ public interface PackageHandler {
 
 	public void print ();
 
-	public void install ();
+	public void install (PackageReaderListener reader_listener);
 
 	public SealedAssetsContainer doReadPackage (PackageReaderListener reader_listener, PackageReader reader);
 

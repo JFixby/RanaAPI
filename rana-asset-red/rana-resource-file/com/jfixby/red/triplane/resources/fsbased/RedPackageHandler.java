@@ -16,7 +16,6 @@ import com.jfixby.scarabei.api.collections.Collection;
 import com.jfixby.scarabei.api.collections.Collections;
 import com.jfixby.scarabei.api.collections.List;
 import com.jfixby.scarabei.api.debug.Debug;
-import com.jfixby.scarabei.api.err.Err;
 import com.jfixby.scarabei.api.file.File;
 import com.jfixby.scarabei.api.file.FileConflistResolver;
 import com.jfixby.scarabei.api.file.FileSystem;
@@ -98,15 +97,20 @@ public class RedPackageHandler implements PackageHandler, PackageVersion {
 	}
 
 	@Override
-	public void install () {
+	public void install (final PackageReaderListener reader_listener) {
 		this.status.expectState(PACKAGE_STATUS.NOT_INSTALLED);
 		final FileSystem fs = this.package_folder.getFileSystem();
 		try {
 			fs.copyFolderContentsToFolder(this.package_folder, this.package_cache, FileConflistResolver.OVERWRITE_IF_NEW);
+// if (1 == 1) {
+// throw new IOException("Failed to install");
+// }
 			this.status.switchState(PACKAGE_STATUS.INSTALLED);
+
 		} catch (final IOException e) {
-			this.status.switchState(PACKAGE_STATUS.BROKEN);
-			Err.reportError(e);
+			reader_listener.onFailedToInstall(e);
+// this.status.switchState(PACKAGE_STATUS.BROKEN);
+// Err.reportError(e);
 		}
 
 	}
