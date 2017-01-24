@@ -99,7 +99,7 @@ public class RedPackageHandler implements PackageHandler, PackageVersion {
 	@Override
 	public void install (final PackageReaderListener reader_listener) {
 		this.status.expectState(PACKAGE_STATUS.NOT_INSTALLED);
-		L.d("install ?", this);
+// L.d("install ?", this);
 		final FileSystem fs = this.package_folder.getFileSystem();
 		try {
 			fs.copyFolderContentsToFolder(this.package_folder, this.package_cache, FileConflistResolver.OVERWRITE_IF_NEW);
