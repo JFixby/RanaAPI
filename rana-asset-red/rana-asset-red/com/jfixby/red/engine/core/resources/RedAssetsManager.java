@@ -195,11 +195,13 @@ public class RedAssetsManager implements AssetsManagerComponent {
 		}
 		if (search_result.isEmpty()) {
 			final String msg = "Asset [" + dependency + "] was not found in any package.";
+// L.e()
+			L.d(msg);
 
 			if (SystemSettings.executionModeCovers(ExecutionMode.EARLY_DEVELOPMENT)) {
 				ResourcesManager.printAllPackages();
 			}
-			L.d(msg);
+
 			if (SystemSettings.executionModeCovers(ExecutionMode.EARLY_DEVELOPMENT)) {
 				ResourcesManager.printAllIndexes();
 			}
