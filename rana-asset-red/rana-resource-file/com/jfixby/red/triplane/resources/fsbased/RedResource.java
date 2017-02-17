@@ -12,26 +12,22 @@ import com.jfixby.rana.api.pkg.bank.BankIndex;
 import com.jfixby.rana.api.pkg.fs.PackageDescriptor;
 import com.jfixby.scarabei.api.debug.Debug;
 import com.jfixby.scarabei.api.err.Err;
-import com.jfixby.scarabei.api.file.FilesList;
 import com.jfixby.scarabei.api.file.File;
 import com.jfixby.scarabei.api.file.FileInputStream;
 import com.jfixby.scarabei.api.file.FileSystem;
+import com.jfixby.scarabei.api.file.FilesList;
 import com.jfixby.scarabei.api.log.L;
 import com.jfixby.scarabei.api.sys.settings.ExecutionMode;
 import com.jfixby.scarabei.api.sys.settings.SystemSettings;
 
 public class RedResource implements Resource {
 
-	@Override
-	public String toString () {
-		return "Resource[" + this.name + "] " + this.bank_folder;
-	}
-
-	ResourceIndex index = new ResourceIndex(this);
 	private final File bank_folder;
-	private final String name;
-	private final boolean caching_required;
+
 	private File cache;
+	private final boolean caching_required;
+	ResourceIndex index = new ResourceIndex(this);
+	private final String name;
 
 	RedResource (final ResourceSpecs specs) throws IOException {
 
@@ -52,13 +48,6 @@ public class RedResource implements Resource {
 	}
 
 	@Override
-	public String getName () {
-		return this.name;
-	}
-
-// boolean indexNeverTouched = true;
-
-	@Override
 	public PackageSearchResult findPackages (final PackageSearchParameters search_params) {
 // if (this.indexNeverTouched) {
 // this.rebuildIndex(null);
@@ -66,9 +55,33 @@ public class RedResource implements Resource {
 		return this.index.findPackages(search_params);
 	}
 
+	public File getCacheFolder () {
+		return this.cache;
+	}
+
+// boolean indexNeverTouched = true;
+
+	@Override
+	public String getName () {
+		return this.name;
+	}
+
+	private void index (final PackageDescriptor descriptor, final File package_folder) throws IOException {
+		this.index.add(descriptor, package_folder);
+	}
+
+	public boolean isCachingRequired () {
+		return this.caching_required;
+	}
+
+	@Override
+	public void printIndex () {
+		this.index.print();
+	}
+
 	@Override
 	public void rebuildIndex (final ResourceRebuildIndexListener listener) {
-		L.d("rebuilding index", this);
+		L.d("rebuilding index", this.toString());
 		this.index.reset();
 // this.indexNeverTouched = false;
 		if (this.cache == null) {
@@ -113,28 +126,6 @@ public class RedResource implements Resource {
 		}
 	}
 
-	private void try_to_index (final File package_folder) {
-		final FileSystem FS = package_folder.getFileSystem();
-		final File file = package_folder.child(PackageDescriptor.PACKAGE_DESCRIPTOR_FILE_NAME);
-		try {
-			final PackageDescriptor descriptor = file.readData(PackageDescriptor.class);
-			this.index(descriptor, package_folder);
-		} catch (final Exception e) {
-			L.e(e.toString());
-			e.printStackTrace();
-			try {
-				L.d(file.readToString());
-			} catch (final IOException e1) {
-				// e1.printStackTrace();
-			}
-			L.e("failed to read", file);
-
-			if (SystemSettings.executionModeCovers(ExecutionMode.EARLY_DEVELOPMENT)) {
-				Err.reportError(file + " " + e);
-			}
-		}
-	}
-
 	public long reReadTimeStamp (final RedPackageHandler packageHandlerImpl) {
 		final File package_folder = packageHandlerImpl.getPackageFolder();
 		final File file = package_folder.child(PackageDescriptor.PACKAGE_DESCRIPTOR_FILE_NAME);
@@ -156,21 +147,31 @@ public class RedResource implements Resource {
 		return 0;
 	}
 
-	private void index (final PackageDescriptor descriptor, final File package_folder) throws IOException {
-		this.index.add(descriptor, package_folder);
-	}
-
-	public boolean isCachingRequired () {
-		return this.caching_required;
-	}
-
-	public File getCacheFolder () {
-		return this.cache;
-	}
-
 	@Override
-	public void printIndex () {
-		this.index.print();
+	public String toString () {
+		return "Resource[" + this.name + "] " + this.bank_folder;
+	}
+
+	private void try_to_index (final File package_folder) {
+		final FileSystem FS = package_folder.getFileSystem();
+		final File file = package_folder.child(PackageDescriptor.PACKAGE_DESCRIPTOR_FILE_NAME);
+		try {
+			final PackageDescriptor descriptor = file.readData(PackageDescriptor.class);
+			this.index(descriptor, package_folder);
+		} catch (final Exception e) {
+			L.e(e.toString());
+			e.printStackTrace();
+			try {
+				L.d(file.readToString());
+			} catch (final IOException e1) {
+				// e1.printStackTrace();
+			}
+			L.e("failed to read", file);
+
+			if (SystemSettings.executionModeCovers(ExecutionMode.EARLY_DEVELOPMENT)) {
+				Err.reportError(file + " " + e);
+			}
+		}
 	}
 
 }

@@ -27,20 +27,22 @@ import com.jfixby.scarabei.api.util.StateSwitcher;
 
 public class RedPackageHandler implements PackageHandler, PackageVersion {
 
-	final List<ID> descriptors = Collections.newList();
 	final List<ID> dependencies = Collections.newList();
+	final List<ID> descriptors = Collections.newList();
+
+	// private File root_file;
+	private PackageFormatImpl format;
+	boolean isLoaded = false;
+	private final String name;
+
+	private final File package_cache;
+	private final File package_folder;
+	private final ResourceIndex resourceIndex;
+	private String root_file_name;
+	private final StateSwitcher<PACKAGE_STATUS> status;
+	private long timestamp;
 
 	private String version;
-	private long timestamp;
-	private String root_file_name;
-
-	private final String name;
-// private File root_file;
-	private PackageFormatImpl format;
-	private final ResourceIndex resourceIndex;
-	private final File package_folder;
-	private final StateSwitcher<PACKAGE_STATUS> status;
-	private final File package_cache;
 
 	public RedPackageHandler (final File package_folder, final ResourceIndex resourceIndex) throws IOException {
 		this(package_folder, resourceIndex, null);
@@ -60,60 +62,6 @@ public class RedPackageHandler implements PackageHandler, PackageVersion {
 		}
 		this.package_cache = package_cache;
 		this.name = package_folder.getName();
-	}
-
-	public File getPackageFolder () {
-		return this.package_folder;
-	}
-
-	@Override
-	public PackageVersion getVersion () {
-		return this;
-	}
-
-	@Override
-	public PackageFormatImpl getFormat () {
-		return this.format;
-	}
-
-	@Override
-	public PACKAGE_STATUS getStatus () {
-		return this.status.currentState();
-	}
-
-	@Override
-	public Collection<ID> listPackedAssets () {
-		return this.descriptors;
-	}
-
-	@Override
-	public String toString () {
-		return "PackageHandler[" + this.format + "] ver." + this.version + " " + this.descriptors + " timestamp=" + this.timestamp;
-	}
-
-	@Override
-	public void print () {
-		L.d(this);
-	}
-
-	@Override
-	public void install (final PackageReaderListener reader_listener) {
-		this.status.expectState(PACKAGE_STATUS.NOT_INSTALLED);
-// L.d("install ?", this);
-		final FileSystem fs = this.package_folder.getFileSystem();
-		try {
-			fs.copyFolderContentsToFolder(this.package_folder, this.package_cache, FileConflistResolver.OVERWRITE_IF_NEW);
-// if (1 == 1) {
-// throw new IOException("Failed to install");
-// }
-			this.status.switchState(PACKAGE_STATUS.INSTALLED);
-
-		} catch (final IOException e) {
-			reader_listener.onFailedToInstall(e);
-// this.status.switchState(PACKAGE_STATUS.BROKEN);
-// Err.reportError(e);
-		}
-
 	}
 
 	@Override
@@ -149,7 +97,7 @@ public class RedPackageHandler implements PackageHandler, PackageVersion {
 		try {
 			final RedSealedContainer packageData = new RedSealedContainer(this, reader_listener, reader);
 			final PackageInputImpl input = new PackageInputImpl(reader_listener, root_file, packageData, this);
-			L.d("reading", root_file);
+// L.d("reading", root_file);
 			reader.doReadPackage(input);
 			packageData.seal();
 			this.isLoaded = true;
@@ -166,17 +114,97 @@ public class RedPackageHandler implements PackageHandler, PackageVersion {
 		this.isLoaded = false;
 	}
 
-	boolean isLoaded = false;
+	@Override
+	public PackageFormatImpl getFormat () {
+		return this.format;
+	}
+
+	public File getPackageFolder () {
+		return this.package_folder;
+	}
+
+	@Override
+	public String getPackageName () {
+		return this.name;
+	}
+
+	@Override
+	public PACKAGE_STATUS getStatus () {
+		return this.status.currentState();
+	}
+
+	@Override
+	public long getTimeStamp () {
+		return this.timestamp;
+	}
+
+	@Override
+	public PackageVersion getVersion () {
+		return this;
+	}
+
+	@Override
+	public String getVersionName () {
+		return this.version;
+	}
+
+	@Override
+	public void install (final PackageReaderListener reader_listener) {
+		this.status.expectState(PACKAGE_STATUS.NOT_INSTALLED);
+// L.d("install ?", this);
+		final FileSystem fs = this.package_folder.getFileSystem();
+		try {
+			fs.copyFolderContentsToFolder(this.package_folder, this.package_cache, FileConflistResolver.OVERWRITE_IF_NEW);
+// if (1 == 1) {
+// throw new IOException("Failed to install");
+// }
+			this.status.switchState(PACKAGE_STATUS.INSTALLED);
+
+		} catch (final IOException e) {
+			reader_listener.onFailedToInstall(e);
+// this.status.switchState(PACKAGE_STATUS.BROKEN);
+// Err.reportError(e);
+		}
+
+	}
 
 	@Override
 	public boolean isLoaded () {
 		return this.isLoaded;
 	}
 
+	@Override
+	public Collection<ID> listDependencies () {
+		return this.dependencies;
+	}
+
+	@Override
+	public Collection<ID> listPackedAssets () {
+		return this.descriptors;
+	}
+
+	@Override
+	public void print () {
+		L.d(this);
+	}
+
+	@Override
+	public long reReadTimeStamp () {
+		return this.resourceIndex.reReadTimeStamp(this);
+	}
+
 	public void setFormat (final String format_string) {
 		Debug.checkNull("format", format_string);
 		Debug.checkEmpty("format", format_string);
 		this.format = new PackageFormatImpl(format_string);
+	}
+
+	public void setRootFileName (final String root_file_name) {
+		this.root_file_name = root_file_name;
+	}
+
+	public void setTimestamp (final long timestamp) {
+		this.timestamp = timestamp;
 	}
 
 	public void setVersion (final String version) {
@@ -186,36 +214,8 @@ public class RedPackageHandler implements PackageHandler, PackageVersion {
 	}
 
 	@Override
-	public long getTimeStamp () {
-		return this.timestamp;
-	}
-
-	@Override
-	public String getVersionName () {
-		return this.version;
-	}
-
-	public void setTimestamp (final long timestamp) {
-		this.timestamp = timestamp;
-	}
-
-	public void setRootFileName (final String root_file_name) {
-		this.root_file_name = root_file_name;
-	}
-
-	@Override
-	public String getPackageName () {
-		return this.name;
-	}
-
-	@Override
-	public Collection<ID> listDependencies () {
-		return this.dependencies;
-	}
-
-	@Override
-	public long reReadTimeStamp () {
-		return this.resourceIndex.reReadTimeStamp(this);
+	public String toString () {
+		return "PackageHandler[" + this.format + "] ver." + this.version + " " + this.descriptors + " timestamp=" + this.timestamp;
 	}
 
 }
