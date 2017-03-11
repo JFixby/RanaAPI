@@ -126,6 +126,7 @@ public class ResourceIndex {
 	}
 
 	public void print () {
+		
 		this.handlers_by_asset_id.print("index");
 	}
 
