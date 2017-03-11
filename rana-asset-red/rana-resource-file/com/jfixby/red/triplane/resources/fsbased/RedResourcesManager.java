@@ -266,6 +266,7 @@ public class RedResourcesManager implements ResourcesManagerComponent {
 
 	Collection<ResourcesGroup> loadAssetsFolder (final File assets_folder, final ResourceRebuildIndexListener listener)
 		throws IOException {
+		Debug.checkNull("assets_folder", assets_folder);
 		if (assets_folder.exists() && assets_folder.isFolder()) {
 			final Collection<ResourcesGroup> locals = this.findAndInstallResources(assets_folder);
 // locals.print("locals");
