@@ -4,6 +4,10 @@ apply plugin: "maven"
 sourceCompatibility = 1.8
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
+repositories {
+        	 maven { url 'https://jitpack.io' }
+        	 mavenCentral()
+}
 
 dependencies {
       compile project(":rana-api")
