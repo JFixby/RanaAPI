@@ -10,8 +10,8 @@ repositories {
 }
 
 dependencies {
-      compile project(":rana-api")
-      compile 'com.github.Scarabei.Scarabei:scarabei-api:-SNAPSHOT'
+      //compile project(":rana-api")
+      //compile 'com.github.Scarabei.Scarabei:scarabei-api:-SNAPSHOT'
 }
 
 sourceSets {
