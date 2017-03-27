@@ -12,7 +12,7 @@ import com.jfixby.scarabei.api.io.OutputStream;
 import com.jfixby.scarabei.api.java.ByteArray;
 import com.jfixby.scarabei.api.json.Json;
 import com.jfixby.scarabei.api.json.JsonString;
-import com.jfixby.scarabei.api.util.JUtils;
+import com.jfixby.scarabei.api.strings.Strings;
 
 public class BankIndexPacker {
 	public static void serializeGZIPJava (final BankIndex index, final OutputStream os) throws IOException {
@@ -30,7 +30,7 @@ public class BankIndexPacker {
 
 	public static BankIndex deSerializeJson (final InputStream is) throws IOException {
 		final ByteArray data = is.readAll();
-		final String raw_json_string = JUtils.newString(data);
+		final String raw_json_string = Strings.newString(data);
 		final JsonString string = Json.newJsonString(raw_json_string);
 		return Json.deserializeFromString(BankIndex.class, string);
 	}
