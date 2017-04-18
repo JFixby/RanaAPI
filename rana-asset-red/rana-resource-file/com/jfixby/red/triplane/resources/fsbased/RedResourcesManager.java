@@ -26,6 +26,7 @@ import com.jfixby.scarabei.api.debug.Debug;
 import com.jfixby.scarabei.api.err.Err;
 import com.jfixby.scarabei.api.file.File;
 import com.jfixby.scarabei.api.file.FilesList;
+import com.jfixby.scarabei.api.file.LocalFileSystem;
 import com.jfixby.scarabei.api.json.Json;
 import com.jfixby.scarabei.api.json.JsonString;
 import com.jfixby.scarabei.api.log.L;
@@ -47,12 +48,31 @@ public class RedResourcesManager implements ResourcesManagerComponent {
 	private final List<RemoteBankSettings> remoteBanksToDepoloy = Collections.newList();
 
 	Map<ID, ResourcesGroup> resources = Collections.newMap();
+	private final boolean readResourcesConfigFile;
 
 	public RedResourcesManager (final RedResourcesManagerSpecs specs) {
 		this.deployed = false;
 		this.assets_folder = specs.getAssetFolder();
 		this.assets_cache_folder = specs.getAssetCacheFolder();
 		final ResourceRebuildIndexListener listener = specs.getListener();
+		this.readResourcesConfigFile = specs.getReadResourcesConfigFile();
+		if (this.readResourcesConfigFile) {
+// final File resourcesConfigFile = LocalFileSystem.ApplicationHome().child(ResourcesConfigFile.FILE_NAME);
+
+			final ResourcesConfigFile local_config = this.loadConfigFile(LocalFileSystem.ApplicationHome());
+			if (local_config != null) {
+				for (final AssetsFolder folder : local_config.local_assets) {
+					final String java_path = folder.java_path;
+					final File dir = LocalFileSystem.newFile(java_path);
+					try {
+						final Collection<ResourcesGroup> locals = this.loadAssetsFolder(dir, listener);
+					} catch (final IOException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+
 		try {
 			final Collection<ResourcesGroup> locals = this.loadAssetsFolder(this.assets_folder, listener);
 
@@ -283,7 +303,7 @@ public class RedResourcesManager implements ResourcesManagerComponent {
 		ResourcesConfigFile config = null;
 		try {
 			final File resources_config_file = applicationHome.child(ResourcesConfigFile.FILE_NAME);
-// L.d("reading", resources_config_file);
+			L.d("reading", resources_config_file);
 
 			if (!resources_config_file.exists()) {
 				return null;

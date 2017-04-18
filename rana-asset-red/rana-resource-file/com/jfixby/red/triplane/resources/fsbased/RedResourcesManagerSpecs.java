@@ -11,6 +11,7 @@ public class RedResourcesManagerSpecs {
 
 	private File assets_folder;
 	final Set<RemoteBankSpecs> remotebanks = Collections.newSet();
+	boolean readResourcesConfigFile = true;
 
 	public void setAssetsFolder (final File assets_folder) {
 		this.assets_folder = assets_folder;
@@ -44,6 +45,14 @@ public class RedResourcesManagerSpecs {
 
 	public ResourceRebuildIndexListener getListener () {
 		return ResourceRebuildIndexListener.DEFAULT;
+	}
+
+	public void setReadResourcesConfigFile (final boolean readResourcesConfigFile) {
+		this.readResourcesConfigFile = readResourcesConfigFile;
+	}
+
+	public boolean getReadResourcesConfigFile () {
+		return this.readResourcesConfigFile;
 	}
 
 }

@@ -2,8 +2,8 @@
 package com.jfixby.rana.api.pkg.fs;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.Vector;
 
 public class PackageDescriptor implements Serializable {
 
@@ -23,8 +23,8 @@ public class PackageDescriptor implements Serializable {
 	public String version;
 	public String timestamp;
 	public String root_file_name;
-	public Vector<String> packed_assets = new Vector<String>();
-	public Vector<String> package_dependencies = new Vector<String>();
+	public ArrayList<String> packed_assets = new ArrayList<String>();
+	public ArrayList<String> package_dependencies = new ArrayList<String>();
 	public LinkedHashMap<String, String> package_parameters = null;
 
 	public long timestamp () {

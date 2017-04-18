@@ -16,6 +16,7 @@ import com.jfixby.scarabei.api.file.File;
 import com.jfixby.scarabei.api.file.FileInputStream;
 import com.jfixby.scarabei.api.file.FileSystem;
 import com.jfixby.scarabei.api.file.FilesList;
+import com.jfixby.scarabei.api.json.Json;
 import com.jfixby.scarabei.api.log.L;
 import com.jfixby.scarabei.api.sys.settings.ExecutionMode;
 import com.jfixby.scarabei.api.sys.settings.SystemSettings;
@@ -161,6 +162,26 @@ public class RedResource implements Resource {
 		} catch (final Exception e) {
 			L.e(e.toString());
 			e.printStackTrace();
+
+			final File json_file = package_folder.child(PackageDescriptor.PACKAGE_DESCRIPTOR_FILE_NAME + ".json");
+			try {
+				L.e("retry json file", json_file);
+				final String json = json_file.readToString();
+
+				final PackageDescriptor descriptor = Json.deserializeFromString(PackageDescriptor.class, json);
+				this.index(descriptor, package_folder);
+				return;
+			} catch (final IOException e2) {
+				e2.printStackTrace();
+				L.e(e2.toString());
+
+				try {
+					L.d(json_file.readToString());
+				} catch (final IOException e1) {
+					// e1.printStackTrace();
+				}
+			}
+
 			try {
 				L.d(file.readToString());
 			} catch (final IOException e1) {

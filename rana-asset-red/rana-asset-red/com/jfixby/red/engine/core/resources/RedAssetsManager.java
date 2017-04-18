@@ -252,11 +252,11 @@ public class RedAssetsManager implements AssetsManagerComponent {
 			L.d(msg);
 
 			if (SystemSettings.executionModeCovers(ExecutionMode.EARLY_DEVELOPMENT)) {
-// ResourcesManager.printAllPackages();
+				ResourcesManager.printAllPackages();
 			}
 
 			if (SystemSettings.executionModeCovers(ExecutionMode.EARLY_DEVELOPMENT)) {
-// ResourcesManager.printAllIndexes();
+				ResourcesManager.printAllIndexes();
 			}
 			Err.reportError(msg);
 			//

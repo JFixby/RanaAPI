@@ -33,18 +33,17 @@ public class PackageUtils {
 	}
 
 	static public void producePackageDescriptor (final File output_folder, final String format, final String version,
-		final Collection<ID> provisions, final Collection<ID> dependencies, final String root_file_name)
-		throws IOException {
+		final Collection<ID> provisions, final Collection<ID> dependencies, final String root_file_name) throws IOException {
 
 		final PackageDescriptor descriptor = new PackageDescriptor();
 		descriptor.format = format;
 		descriptor.timestamp = "" + Sys.SystemTime().currentTimeMillis();
 		descriptor.version = version;
 		for (final ID d : provisions) {
-			descriptor.packed_assets.addElement(d.toString());
+			descriptor.packed_assets.add(d.toString());
 		}
 		for (final ID d : dependencies) {
-			descriptor.package_dependencies.addElement(d.toString());
+			descriptor.package_dependencies.add(d.toString());
 		}
 
 		descriptor.root_file_name = root_file_name;

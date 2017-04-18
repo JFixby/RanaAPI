@@ -9,7 +9,7 @@ public class StandardPackageFormats {
 	public static final class libGDX {
 		public static final String Atlas = "libGDX.Atlas";
 		public static final String Texture = "libGDX.Texture";
-		public static final String Font = "libGDX.Font.Otf";
+// public static final String Font = "libGDX.Font.Otf";
 		public static final String TTFFont = "TrueTypeFont";
 	}
 
