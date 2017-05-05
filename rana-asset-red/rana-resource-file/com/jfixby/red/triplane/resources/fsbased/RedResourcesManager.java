@@ -4,6 +4,7 @@ package com.jfixby.red.triplane.resources.fsbased;
 import java.io.IOException;
 
 import com.jfixby.rana.api.cfg.AssetsFolder;
+import com.jfixby.rana.api.cfg.RemoteAssetsFolder;
 import com.jfixby.rana.api.cfg.ResourcesConfigFile;
 import com.jfixby.rana.api.pkg.DeployRemoteBanksTask;
 import com.jfixby.rana.api.pkg.PackageFormat;
@@ -69,6 +70,18 @@ public class RedResourcesManager implements ResourcesManagerComponent {
 					} catch (final IOException e) {
 						e.printStackTrace();
 					}
+				}
+
+				for (final RemoteAssetsFolder folder : local_config.remote_assets) {
+
+					final List<String> tanks = Collections.newList(folder.tanks);
+// final HttpURL bankURL = Http.newURL("https://s3.eu-central-1.amazonaws.com/com.red-triplane.assets/bank-tinto/");
+					final HttpURL bankURL = Http.newURL(folder.bank_url_string);
+					final RemoteBankSettings element = new RemoteBankSettings();
+					element.bankURL = Debug.checkNull("remote bank url", bankURL);
+					element.tanks.addAll(tanks);
+					this.remoteBanksToDepoloy.add(element);
+
 				}
 			}
 		}
