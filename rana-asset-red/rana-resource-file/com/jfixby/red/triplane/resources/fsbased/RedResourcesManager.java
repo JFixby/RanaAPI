@@ -109,54 +109,26 @@ public class RedResourcesManager implements ResourcesManagerComponent {
 		return resources;
 	}
 
-	private BankHeader findAndLoadBankHeader (final File bank_folder) throws IOException {
-		if (!(bank_folder.exists() && bank_folder.isFolder())) {
-			return null;
-		}
-
-		final File header_file = bank_folder.child(BankHeaderInfo.FILE_NAME);
-		if (!header_file.exists()) {
-			return null;
-		}
-
-		String data;
-		try {
-			data = header_file.readToString();
-		} catch (final IOException e) {
-			e.printStackTrace();
-			return null;
-		}
-
-		final JsonString json_data = Json.newJsonString(data);
-
-		final BankHeaderInfo headerInfo = Json.deserializeFromString(BankHeaderInfo.class, json_data);
-
-		final BankHeader header = new BankHeader(headerInfo, bank_folder);
-		return header;
-
-	}
-
 	private RedBank findBank (final File bankFolder, final boolean collect_tanks) throws IOException {
 		if (!bankFolder.exists()) {
 			L.e("bank not found", bankFolder);
 			return null;
 		}
+		final BankHeader bankHeader_ = this.findAndLoadBankHeader(bankFolder);
 
-		final BankHeader bankHeader = this.findAndLoadBankHeader(bankFolder);
-
-		if (bankHeader == null) {
+		if (bankHeader_ == null) {
 			return null;
 		}
 
-		L.d("found bank", bankHeader);
+		L.d("found bank", bankHeader_);
 
-		final ID bank_name = Names.newID(bankHeader.getName());
+		final ID bank_name = Names.newID(bankHeader_.getName());
 		final RedBank bank = new RedBank(bank_name);
 		if (!collect_tanks) {
 			return bank;
 		}
 
-		final File bank_root = bankHeader.getRoot();
+		final File bank_root = bankHeader_.getRoot();
 		final FilesList tanks = bank_root.listSubFolders();
 		for (final File tank : tanks) {
 			final ResourceSpecs resSpec = this.newResourceSpecs();
@@ -474,6 +446,33 @@ public class RedResourcesManager implements ResourcesManagerComponent {
 			e.printStackTrace();
 		}
 		return config;
+
+	}
+
+	private BankHeader findAndLoadBankHeader (final File bank_folder) throws IOException {
+		if (!(bank_folder.exists() && bank_folder.isFolder())) {
+			return null;
+		}
+
+		final File header_file = bank_folder.child(BankHeaderInfo.FILE_NAME);
+		if (!header_file.exists()) {
+			return null;
+		}
+
+		String data;
+		try {
+			data = header_file.readToString();
+		} catch (final IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+
+		final JsonString json_data = Json.newJsonString(data);
+
+		final BankHeaderInfo headerInfo = Json.deserializeFromString(BankHeaderInfo.class, json_data);
+
+		final BankHeader header = new BankHeader(headerInfo, bank_folder);
+		return header;
 
 	}
 // }
