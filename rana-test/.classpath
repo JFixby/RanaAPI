@@ -35,23 +35,14 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/scarabei-rmi-client"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/scarabei-rmi-file-server"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/scarabei-rmi-server"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/Rana"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/rana-package-api"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/rana-package-red"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/rana-asset-api"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/rana-asset-red"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/rana-loader-api"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/rana-loader-red"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/BlueMesa-android"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/BlueMesa-core"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/BlueMesa-desktop"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/BlueMesa-server"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/rana-manager-api"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/rana-manager-red"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/red-triplane-api-fokker"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/red-triplane-api-ui"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/red-triplane-fokker"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/RedTriplane"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Scarabei-test"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/scarabei-test-red-aws"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/scarabei-test-red-desktop"/>
