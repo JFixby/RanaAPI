@@ -17,9 +17,6 @@ targetCompatibility = 1.6
 
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
-dependencies {
-	 compile "com.github.Scarabei.Scarabei:scarabei-api:$scarabeiVersion"         
-}
 
 
 task sourcesJar(type: Jar, dependsOn: classes) {

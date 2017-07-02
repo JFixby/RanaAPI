@@ -7,5 +7,5 @@ include 'rana-asset-api'
 include 'rana-asset-red'
 include 'rana-manager-api'
 include 'rana-manager-red'
-include 'rana-test'
+//include 'rana-test'
 
