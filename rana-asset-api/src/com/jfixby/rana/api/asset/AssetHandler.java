@@ -1,6 +1,7 @@
 
 package com.jfixby.rana.api.asset;
 
+import com.jfixby.rana.api.Asset;
 import com.jfixby.scarabei.api.assets.ID;
 
 public interface AssetHandler {

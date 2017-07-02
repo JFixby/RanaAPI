@@ -3,10 +3,10 @@ package com.jfixby.rana.test;
 
 import java.io.IOException;
 
+import com.jfixby.rana.api.SealedAssetsContainer;
 import com.jfixby.rana.api.asset.AssetsManager;
 import com.jfixby.rana.api.asset.AssetsPurgeResult;
 import com.jfixby.rana.api.asset.LoadedAssets;
-import com.jfixby.rana.api.asset.SealedAssetsContainer;
 import com.jfixby.rana.api.format.PackageFormat;
 import com.jfixby.rana.api.loader.PackageReader;
 import com.jfixby.rana.api.loader.PackageReaderInput;

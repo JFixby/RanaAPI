@@ -1,7 +1,7 @@
 
 package com.jfixby.red.engine.core.resources;
 
-import com.jfixby.rana.api.asset.SealedAssetsContainer;
+import com.jfixby.rana.api.SealedAssetsContainer;
 import com.jfixby.scarabei.api.collections.Collections;
 import com.jfixby.scarabei.api.collections.Map;
 import com.jfixby.scarabei.api.collections.Set;

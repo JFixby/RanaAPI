@@ -1,5 +1,5 @@
 
-package com.jfixby.rana.api.asset;
+package com.jfixby.rana.api;
 
 import com.jfixby.scarabei.api.assets.ID;
 import com.jfixby.scarabei.api.collections.Collection;

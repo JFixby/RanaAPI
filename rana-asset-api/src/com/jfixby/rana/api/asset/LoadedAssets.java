@@ -1,6 +1,8 @@
 
 package com.jfixby.rana.api.asset;
 
+import com.jfixby.rana.api.AssetsContainer;
+import com.jfixby.rana.api.SealedAssetsContainer;
 import com.jfixby.scarabei.api.ComponentInstaller;
 import com.jfixby.scarabei.api.assets.ID;
 import com.jfixby.scarabei.api.collections.Collection;
