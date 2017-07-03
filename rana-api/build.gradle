@@ -1,6 +1,6 @@
 
 
 dependencies {
-    compile "com.github.Scarabei.ScarabeiAPI:scarabei-api:$scarabeiAPILevel"
+    compile "com.github.Scarabei.Scarabei:scarabei-api:$scarabeiAPILevel"
 
 }
