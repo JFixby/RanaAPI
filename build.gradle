@@ -1,22 +1,43 @@
-ext {
-        scarabeiVersion = "1.5.1"
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.2.3'
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
+    }
 }
 
+ext {
+        scarabeiAPILevel = "F.2"
+                           
+}
+
+
+
 allprojects {
-    repositories {
+
+repositories {
           	 maven { url 'https://jitpack.io' }
         	 mavenCentral()
-
-    }
+}
     
-apply plugin: 'java'
-apply plugin: 'maven'
+apply plugin: "java"
+apply plugin: "maven"
 
 sourceCompatibility = 1.6
-targetCompatibility = 1.6
-
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/']
+        }
+        resources {
+            
+        }
+    }
+}
 
 
 task sourcesJar(type: Jar, dependsOn: classes) {
@@ -47,25 +68,9 @@ install {
       }
     }
   }
-}	
-	
-
-sourceSets {
-    main {
-        java {
-            srcDirs = ['src/']
-        }
-        resources {
-            
-        }
-    }
-}
-    
-    
 }
 
-
-
+}
 
 
 
