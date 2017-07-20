@@ -5,9 +5,9 @@ import com.jfixby.rana.api.format.PackageFormat;
 import com.jfixby.scarabei.api.collections.Collection;
 
 public interface PackagesLoaderComponent {
-	Collection<PackageReader> findPackageReaders (PackageFormat format);
+	Collection<PackageLoader> findPackageReaders (PackageFormat format);
 
-	void registerPackageReader (PackageReader reader);
+	void registerPackageReader (PackageLoader reader);
 
 	Collection<PackageFormat> listAcceptablePackageFormats ();
 

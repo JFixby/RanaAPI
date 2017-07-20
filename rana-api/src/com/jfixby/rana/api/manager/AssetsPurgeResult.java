@@ -1,5 +1,5 @@
 
-package com.jfixby.rana.api.asset;
+package com.jfixby.rana.api.manager;
 
 public interface AssetsPurgeResult {
 

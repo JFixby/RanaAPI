@@ -26,7 +26,7 @@ public class PackagesLoader {
 		return componentInstaller.getComponent();
 	}
 
-	public static Collection<PackageReader> findPackageReaders (final PackageFormat format) {
+	public static Collection<PackageLoader> findPackageReaders (final PackageFormat format) {
 		return invoke().findPackageReaders(format);
 	}
 
@@ -34,7 +34,7 @@ public class PackagesLoader {
 		return invoke().listAcceptablePackageFormats();
 	}
 
-	public static void registerPackageReader (final PackageReader reader) {
+	public static void registerPackageReader (final PackageLoader reader) {
 		invoke().registerPackageReader(reader);
 	}
 
