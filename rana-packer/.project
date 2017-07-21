@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>rana-api</name>
-	<comment>Project rana-api created by Buildship.</comment>
+	<name>rana-packer</name>
+	<comment>Project rana-packer created by Buildship.</comment>
 	<projects>
 	</projects>
 	<buildSpec>

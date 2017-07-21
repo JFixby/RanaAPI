@@ -1,4 +1,6 @@
 include 'rana-api'
+include 'rana-io'
 include 'rana-red'
+include 'rana-packer'
 
 
