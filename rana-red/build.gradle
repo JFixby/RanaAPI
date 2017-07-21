@@ -1,0 +1,6 @@
+dependencies {
+      compile project(":rana-api")
+
+    //compile "com.github.RedTriplane.Rana:rana-api:$ranaAPILevel"
+
+}

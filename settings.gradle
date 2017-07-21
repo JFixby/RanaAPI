@@ -1,6 +1,4 @@
 include 'rana-api'
-include 'rana-package-api'
-include 'rana-loader-api'
-include 'rana-asset-api'
-include 'rana-manager-api'
+include 'rana-red'
+
 
