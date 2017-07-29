@@ -6,7 +6,7 @@ import java.io.IOException;
 import com.jfixby.r3.rana.api.pkg.io.BankHeaderInfo;
 import com.jfixby.r3.rana.api.pkg.io.BankIndex;
 import com.jfixby.r3.rana.api.pkg.io.PackageDescriptor;
-import com.jfixby.r3.rana.api.pkg.packer.BankIndexPacker;
+import com.jfixby.r3.rana.red.pkg.bank.BankIndexPacker;
 import com.jfixby.scarabei.api.collections.Collection;
 import com.jfixby.scarabei.api.debug.Debug;
 import com.jfixby.scarabei.api.err.Err;

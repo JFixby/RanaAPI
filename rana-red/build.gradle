@@ -1,0 +1,8 @@
+ dependencies {
+      
+      compile project(":rana-api")
+      compile project(":rana-io")
+ 
+ }
+ 
+ 

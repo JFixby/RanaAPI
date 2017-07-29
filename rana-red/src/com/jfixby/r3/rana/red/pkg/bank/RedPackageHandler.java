@@ -18,8 +18,8 @@ import com.jfixby.scarabei.api.file.FileConflistResolver;
 import com.jfixby.scarabei.api.file.FileSystem;
 import com.jfixby.scarabei.api.file.FileSystemSandBox;
 import com.jfixby.scarabei.api.log.L;
-import com.jfixby.scarabei.api.util.Utils;
 import com.jfixby.scarabei.api.util.StateSwitcher;
+import com.jfixby.scarabei.api.util.Utils;
 
 public class RedPackageHandler implements PackageHandler, PackageVersion {
 

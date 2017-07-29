@@ -6,6 +6,5 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/scarabei-api"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/rana-api"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/rana-io"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/rana-packer"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -11,7 +11,6 @@ import com.jfixby.r3.rana.api.pkg.PackagesTank;
 import com.jfixby.r3.rana.api.pkg.PackerSpecs;
 import com.jfixby.r3.rana.api.pkg.io.BankIndex;
 import com.jfixby.r3.rana.api.pkg.io.PackageDescriptor;
-import com.jfixby.r3.rana.api.pkg.packer.BankIndexPacker;
 import com.jfixby.scarabei.api.debug.Debug;
 import com.jfixby.scarabei.api.file.File;
 import com.jfixby.scarabei.api.file.FileInputStream;
